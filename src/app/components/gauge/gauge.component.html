@@ -1,0 +1,41 @@
+<div class="gauge-wrapper">
+  <svg width="200" height="100" viewBox="0 0 200 100">
+
+
+    <!-- Faixa vermelha -->
+    <path
+      d="M10,100 A90,90 0 0,1 70,25"
+      fill="none"
+      stroke="#e53935"
+      stroke-width="20"
+    ></path>
+
+    <!-- Faixa amarela -->
+    <path
+      d="M70,25 A90,90 0 0,1 130,25"
+      fill="none"
+      stroke="#fdd835"
+      stroke-width="20"
+    ></path>
+
+    <!-- Faixa verde -->
+    <path
+      d="M130,25 A90,90 0 0,1 190,100"
+      fill="none"
+      stroke="#66bb6a"
+      stroke-width="20"
+    ></path>
+  </svg>
+
+  <!-- Valor e legenda -->
+  <div class="centered-text">
+    <div class="value">{{ value | number: '1.2-2' }}</div>
+    <div class="label">{{ label }}</div>
+  </div>
+
+  <!-- Medalhas -->
+  <div class="badges">
+    <ng-icon name="matWorkspacePremium" style="font-size: 26px; color: #8F551C;"/>
+    <ng-icon name="matWorkspacePremium" style="font-size: 26px; color: #B2B2B2;"/>
+  </div>
+</div>

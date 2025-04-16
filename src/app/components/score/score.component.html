@@ -1,0 +1,70 @@
+<section class="container">
+  <div class="pt-8 pb-8 flex justify-between">
+    <div>
+      <h3 class="text-xl font-bold text-amber-300 mb-3">Anabelle (53348)</h3>
+      <p><strong>Fase:</strong> Ouro (01/02/2025)</p>
+      <p><strong>Meta:</strong> 4.00 (Pontos)</p>
+      <p class="mb-2"><strong>Acesso:</strong> 10/04/2025 11:46:02</p>
+      <small class="text-amber-300">Oi ANABELLE! Precisamos melhorar em: Pedal</small>
+    </div>
+    <app-gauge [value]="2.38" label="Insuficiente" class="me-12 h-auto"></app-gauge>
+  </div>
+</section>
+
+<section class="container pb-10 border-b-4 flex flex-col flex-wrap" style="border-color: #1d1d1d;">
+  <h2 class="font-bold text-3xl">Resumo</h2>
+  <div class="flex gap-6 mt-4">
+    <div class="bg-amber-400 w-56 h-52 text-black p-6 flex flex-col justify-between" style="border-radius: 36px;">
+      <div>
+        <p class="font-bold text-2xl">Acessos</p>
+        <small class="font-light text-lg" style="line-height: 0;">App</small>
+      </div>
+      <span class="font-bold" style="font-size: 40px; line-height: 1;">28</span>
+    </div>
+    <div class="w-56 h-52 p-6 flex flex-col justify-between" style="background-color: #242427; border-radius: 36px;">
+      <div>
+        <p class="font-bold text-2xl">Giro</p>
+        <small class="font-light text-lg" style="line-height: 0;">Mês</small>
+      </div>
+      <div class="flex items-end justify-between">
+        <span class="font-bold" style="font-size: 40px; line-height: 1;">8</span>
+        <ng-icon name="matArrowDownward" class="text-red-700" style="font-size: 34px;" />
+      </div>
+    </div>
+    <div class="w-56 h-52 p-6 flex flex-col justify-between" style="background-color: #242427; border-radius: 36px;">
+      <div>
+        <p class="font-bold text-2xl">Freio</p>
+        <small class="font-light text-lg" style="line-height: 0;">Mês</small>
+      </div>
+      <div class="flex items-end justify-between">
+        <span class="font-bold" style="font-size: 40px; line-height: 1;">5</span>
+        <ng-icon name="matArrowUpward" class="text-green-700" style="font-size: 34px;" />
+      </div>
+    </div>
+    <div class="w-56 h-52 p-6 flex flex-col justify-between" style="background-color: #242427; border-radius: 36px;">
+      <div>
+        <p class="font-bold text-2xl">Giro</p>
+        <small class="font-light text-lg" style="line-height: 0;">Mês</small>
+      </div>
+      <div class="flex items-end justify-between">
+        <span class="font-bold" style="font-size: 40px; line-height: 1;">8</span>
+        <ng-icon name="matArrowDownward" class="text-red-700" style="font-size: 34px;" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container pt-10">
+  <div class="flex justify-between items-center">
+    <h2 class="font-bold text-3xl">Últimos Turnos</h2>
+    <a class="rounded-full ms-4 w-8 h-8 border-2 border-yellow-400 flex items-center justify-center">
+      <ng-icon name="matArrowForwardIos" style="font-size: 12px;"/>
+    </a>
+  </div>
+  <div class="flex flex-wrap justify-center gap-8">
+    <app-card-turno />
+    <app-card-turno />
+    <app-card-turno />
+    <app-card-turno />
+  </div>
+</section>
