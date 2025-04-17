@@ -1,14 +1,19 @@
 import { Route } from '@angular/router';
-import { ScoreComponent } from './components/score/score.component';
+import { HomeComponent } from './components/home/home.component';
+import { GameComponent } from './components/game/game.component';
 
 export const appRoutes: Route[] = [
   {
     path: '',
-    redirectTo: 'score',
+    redirectTo: 'home',
     pathMatch: 'full'
   },
   {
-    path: 'score',
-    component: ScoreComponent,
+    path: 'home',
+    component: HomeComponent,
+  },
+  {
+    path: 'as-no-ace',
+    component: GameComponent,
   }
 ];

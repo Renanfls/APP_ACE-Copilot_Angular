@@ -23,6 +23,9 @@
       ],
       "@spartan-ng/ui-carousel-helm": [
         "src/libs/ui/ui-carousel-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-dialog-helm": [
+        "src/libs/ui/ui-dialog-helm/src/index.ts"
       ]
     }
   },

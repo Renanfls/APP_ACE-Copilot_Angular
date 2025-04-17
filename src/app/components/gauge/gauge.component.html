@@ -1,5 +1,5 @@
 <div class="gauge-wrapper">
-  <svg width="200" height="100" viewBox="0 0 200 100">
+  <svg width="200" height="100" viewBox="0 0 200 120">
 
 
     <!-- Faixa vermelha -->
@@ -33,9 +33,16 @@
     <div class="label">{{ label }}</div>
   </div>
 
-  <!-- Medalhas -->
-  <div class="badges">
-    <ng-icon name="matWorkspacePremium" style="font-size: 32px; color: #8F551C;"/>
-    <ng-icon name="matWorkspacePremium" style="font-size: 32px; color: #B2B2B2;"/>
+  <div class="badges"> 
+    <ng-container *ngFor="let medal of visibleMedals">
+      <ng-icon
+        [name]="medal.icon"
+        [style.color]="medal.color"
+        [ngClass]="{ 'active': medal.name === currentMedal.name }"
+        class="medal-icon"
+        style="font-size: 32px;"
+      ></ng-icon>
+    </ng-container>
   </div>
+  
 </div>

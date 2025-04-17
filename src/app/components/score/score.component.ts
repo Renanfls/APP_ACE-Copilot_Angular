@@ -6,11 +6,10 @@ import {
   matArrowBackIos,
   matArrowForwardIos,
   matArrowUpward,
-  matHelp,
   matWorkspacePremium,
 } from '@ng-icons/material-icons/baseline';
-import { CardTurnoComponent } from '../card-turno.component';
-import { GaugeComponent } from '../gauge/gauge.component';
+import { CardTurnoComponent } from '../turno/card-turno.component';
+import { StatisticComponent } from '../statistic/statistic.component';
 
 @Component({
   selector: 'app-score',
@@ -18,8 +17,8 @@ import { GaugeComponent } from '../gauge/gauge.component';
   imports: [
     CommonModule,
     NgIconComponent,
-    GaugeComponent,
     CardTurnoComponent,
+    StatisticComponent
   ],
   templateUrl: './score.component.html',
   styleUrl: './score.component.css',
@@ -28,7 +27,6 @@ import { GaugeComponent } from '../gauge/gauge.component';
       matArrowBackIos,
       matArrowForwardIos,
       matArrowDownward,
-      matHelp,
       matWorkspacePremium,
       matArrowUpward,
     }),

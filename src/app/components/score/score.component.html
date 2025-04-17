@@ -1,17 +1,4 @@
-<section class="container mx-auto px-4">
-  <div class="pt-4 md:pt-8 pb-4 md:pb-8 flex flex-col md:flex-row justify-evenly">
-    <div>
-      <h3 class="text-xl font-bold text-amber-300 mb-3">Anabelle (53348)</h3>
-      <p class="text-base md:text-lg"><strong>Fase:</strong> Ouro (01/02/2025)</p>
-      <p class="text-base md:text-lg"><strong>Meta:</strong> 4.00 (Pontos)</p>
-      <p class="mb-2 text-base md:text-lg"><strong>Acesso:</strong> 10/04/2025 11:46:02</p>
-      <small class="text-amber-300 font-semibold text-base md:text-lg">Oi ANABELLE! Precisamos melhorar em: Pedal</small>
-    </div>
-    <div class="mt-4 md:mt-0 md:me-6 self-center">
-      <app-gauge [value]="2.38" label="Insuficiente" class="h-auto"></app-gauge>
-    </div>
-  </div>
-</section>
+<app-statistic />
 
 <section class="container mx-auto mt-10 px-4 pb-6 md:pb-10 border-b-4 flex flex-col" style="border-color: #1d1d1d;">
   <div class="flex justify-between items-center">
@@ -80,9 +67,9 @@
 <section class="container mx-auto px-4 pt-6 md:pt-10">
   <div class="flex justify-between items-center">
     <h2 class="font-bold text-2xl md:text-3xl">Últimos Turnos</h2>
-    <a class="rounded-full ms-4 w-8 h-8 border-2 border-yellow-400 flex items-center justify-center">
+    <button hlmBtn variant="default" class="rounded-full ms-4 w-8 h-8 border-2 border-yellow-400 flex items-center justify-center">
       <ng-icon name="matArrowForwardIos" style="font-size: 12px;"></ng-icon>
-    </a>
+    </button>
   </div>
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 mt-4 flex-wrap">
     <app-card-turno></app-card-turno>
