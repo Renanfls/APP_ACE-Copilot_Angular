@@ -1,21 +1,33 @@
 <section class="container mx-auto px-4">
-  <div class="pt-4 md:pt-8 pb-4 md:pb-8 flex flex-col-reverse md:flex-row justify-evenly">
-    <div class="px-4">
-      <h3 class="text-xl font-bold text-amber-300 mb-3">Anabelle (53348)</h3>
-      <p class="text-base md:text-lg"><strong>Fase:</strong> Ouro (01/02/2025)</p>
+  <div
+    class="pt-4 md:pt-8 pb-4 md:pb-8 flex flex-col-reverse md:flex-row justify-evenly"
+  >
+    <div class="px-4 mt-8 md:mt-0 text-center md:text-left">
+      <h3 class="text-2xl font-bold text-amber-400 mb-3">Anabelle (53348)</h3>
+      <p class="text-base md:text-lg">
+        <strong>Fase:</strong> Ouro (01/02/2025)
+      </p>
       <p class="text-base md:text-lg"><strong>Meta:</strong> 4.00 (Pontos)</p>
-      <p class="mb-2 text-base md:text-lg"><strong>Acesso:</strong> 10/04/2025 11:46:02</p>
-      <small class="text-amber-300 font-semibold text-base md:text-lg">Oi ANABELLE! Precisamos melhorar em: Pedal</small>
+      <p class="mb-2 text-base md:text-lg">
+        <strong>Acesso:</strong> 10/04/2025 11:46:02
+      </p>
+      <small class="text-amber-400 font-semibold text-base md:text-lg"
+        >Oi ANABELLE! Precisamos melhorar em: Pedal</small
+      >
     </div>
-    <div class="mb-16 md:mb-0 md:mt-0 md:me-6 self-center relative">
-      <button hlmBtn variant="default" (click)="openHelpDialog()"> 
+    <div class="mb-23 md:mb-0 md:mt-0 md:me-6 self-center relative">
+      <button hlmBtn variant="default" (click)="openHelpDialog()">
         <ng-icon
           name="matHelp"
-          class="text-amber-400 absolute left-48 mt-2 md:mt-0"
-          style="font-size: 24px;"
+          class="text-amber-400 absolute left-48 top-0"
+          style="font-size: 24px"
         />
       </button>
-      <app-gauge [value]="2.38" [medal1]="true" [medal2]="true" [medal3]="false" />
+      <app-gauge
+        [value]="2.38"
+        [label]="'Insuficiente'"
+        [fase]="'Ouro'"
+      />
     </div>
   </div>
 </section>
@@ -23,19 +35,60 @@
 <!-- Modal custom -->
 <div
   *ngIf="isHelpDialogOpen"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+  class="fixed inset-0 z-50 p-4 flex items-center justify-center bg-black bg-opacity-50"
 >
-  <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md relative animate-fade-in">
-    <h2 class="text-xl font-semibold mb-4">Ajuda</h2>
-    <p class="text-gray-700">
-      Aqui vão suas instruções, explicações ou qualquer conteúdo relevante para o usuário.
-    </p>
+  <div
+    class="rounded-2xl shadow-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto animate-fade-in"
+    style="background-color: #242427"
+  >
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-semibold text-amber-400">Ajuda</h2>
+      <button
+        (click)="closeHelpDialog()"
+        class="text-xl font-semibold text-gray-500 hover:text-amber-400"
+      >
+        ✕
+      </button>
+    </div>
+    <div class="row ng-star-inserted">
+      <div class="col-12">
+        <h4 class="text-white font-bold text-xl text-center mb-4">
+          Metas por Indicador
+        </h4>
+        <img src="assets/ajuda-meta.png" alt="" />
+        <div>
+          <h4 class="text-white font-bold text-xl text-center mt-6 mb-4">
+            Definição dos Turnos
+          </h4>
+          <div
+            class="overflow-x-auto rounded-xl shadow-md border border-gray-200"
+          >
+            <table class="min-w-full table-auto text-sm text-left text-white">
+              <thead class="bg-gray-100 text-gray-800 font-semibold">
+                <tr>
+                  <th class="px-4 py-3">Turno</th>
+                  <th class="px-4 py-3">Início</th>
+                  <th class="px-4 py-3">Fim</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <tr *ngFor="let turno of turnos">
+                  <td class="px-4 py-2">{{ turno.turno }}</td>
+                  <td class="px-4 py-2">{{ turno.start }}</td>
+                  <td class="px-4 py-2">{{ turno.end }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
-    <button
-      (click)="closeHelpDialog()"
-      class="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
-    >
-      ✕
-    </button>
+        <div>
+          <h4 class="text-white font-bold text-xl text-center mt-6 mb-4">
+            Pontuação ACE por Fase
+          </h4>
+          <img src="assets/ajuda-resultado.png" alt="" />
+        </div>
+      </div>
+    </div>
   </div>
 </div>

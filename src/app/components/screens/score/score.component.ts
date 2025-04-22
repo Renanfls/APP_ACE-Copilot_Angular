@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
-  matArrowDownward,
   matArrowBackIos,
+  matArrowDownward,
   matArrowForwardIos,
   matArrowUpward,
   matWorkspacePremium,
 } from '@ng-icons/material-icons/baseline';
-import { CardTurnoComponent } from '../turno/card-turno.component';
-import { StatisticComponent } from '../statistic/statistic.component';
+import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
+import { StatisticComponent } from '../../statistic/statistic.component';
+import { CardTurnoComponent } from '../../turno/card-turno.component';
 
 @Component({
   selector: 'app-score',
@@ -18,7 +19,8 @@ import { StatisticComponent } from '../statistic/statistic.component';
     CommonModule,
     NgIconComponent,
     CardTurnoComponent,
-    StatisticComponent
+    StatisticComponent,
+    HlmButtonDirective,
   ],
   templateUrl: './score.component.html',
   styleUrl: './score.component.css',
@@ -50,29 +52,32 @@ export class ScoreComponent implements OnInit {
 
   updateLayout() {
     const viewportWidth = window.innerWidth;
-    
-    if (viewportWidth >= 1024) { // lg
+
+    if (viewportWidth >= 1024) {
+      // lg
       this.itemsPerView = 4;
-    } else if (viewportWidth >= 768) { // md
+    } else if (viewportWidth >= 768) {
+      // md
       this.itemsPerView = 3;
-    } else if (viewportWidth >= 640) { // sm
+    } else if (viewportWidth >= 640) {
+      // sm
       this.itemsPerView = 2;
     } else {
       this.itemsPerView = 1;
     }
-    
+
     // Encontre o container do carousel e calcule a largura do item
     const container = document.querySelector('.carousel-container');
     if (container) {
       const containerWidth = container.clientWidth;
       this.itemWidth = containerWidth / this.itemsPerView;
-      
+
       // Ajustar a posição atual para não ficar com espaço vazio à direita
       const maxIndex = Math.max(0, this.totalItems - this.itemsPerView);
       if (this.currentIndex > maxIndex) {
         this.currentIndex = maxIndex;
       }
-      
+
       this.updateCarousel();
     }
   }

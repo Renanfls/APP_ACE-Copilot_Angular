@@ -1,0 +1,31 @@
+<div>
+  <p class="font-bold ps-3 md:ps-6 mt-6 mb-2 text-sm md:text-lg">{{ label }}</p>
+
+  <div class="flex justify-between items-center gap-2 md:gap-3 md:px-2">
+    <!-- Barra de progresso -->
+    <div class="relative w-full h-9 bg-[#242427] rounded-full overflow-hidden flex items-center">
+      <div
+        class="h-full rounded-full transition-all duration-300 flex items-center justify-center"
+        [ngStyle]="{
+          width: progressPercentage + '%',
+          backgroundColor: '#D7B318'
+        }"
+      ></div>
+      <span
+        class="absolute w-full text-center text-sm font-bold"
+        [ngStyle]="{ color: status === 'active' ? '#1C1C1E' : '#626262' }"
+      >
+        {{ progressLabel }}
+      </span>
+    
+    </div>
+
+    <!-- Ícone com cor dinâmica -->
+    <ng-icon
+      [name]="visibleIcon.icon"
+      [style.color]="visibleIcon.color"
+      class="medal-icon transition-all duration-300 pe-3"
+      style="font-size: 32px;"
+    ></ng-icon>
+  </div>
+</div>

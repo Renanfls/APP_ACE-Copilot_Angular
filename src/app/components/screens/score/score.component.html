@@ -67,14 +67,20 @@
 <section class="container mx-auto px-4 pt-6 md:pt-10">
   <div class="flex justify-between items-center">
     <h2 class="font-bold text-2xl md:text-3xl">Últimos Turnos</h2>
-    <button hlmBtn variant="default" class="rounded-full ms-4 w-8 h-8 border-2 border-yellow-400 flex items-center justify-center">
-      <ng-icon name="matArrowForwardIos" style="font-size: 12px;"></ng-icon>
-    </button>
+    <div class="flex gap-2">
+      <div class="rounded-full font-semibold shadow-md px-2 md:px-4 py-2 text-xs md:text-sm" style="background-color: #313135;">
+        <span class="ml-1">08/04</span>
+      </div>
+      <button class="rounded-full w-8 h-8 border-2 border-yellow-400 flex items-center justify-center ">
+        <ng-icon name="matArrowForwardIos" style="font-size: 12px;"></ng-icon>
+      </button>
+    </div>
   </div>
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 mt-4 flex-wrap">
-    <app-card-turno></app-card-turno>
-    <app-card-turno></app-card-turno>
-    <app-card-turno></app-card-turno>
-    <app-card-turno></app-card-turno>
+    <app-card-turno [kmlAnterior]="2.51" [kmlAtual]="2.08" [giro]="3" [freio]="7" [pedal]="10" [placa]="'51540'" [linha]="'624'" [turno]="'Intervalo'" [data]="'08/04'"></app-card-turno>
+    <app-card-turno [kmlAnterior]="2.51" [kmlAtual]="2.40" [giro]="2" [freio]="7" [pedal]="4" [placa]="'51540'" [linha]="'624'" [turno]="'Manhã'" [data]="'08/04'"></app-card-turno>
+    <app-card-turno [kmlAnterior]="2.51" [kmlAtual]="3.01" [giro]="2" [freio]="10" [pedal]="4" [placa]="'51540'" [linha]="'624'" [turno]="'Madrugada'" [data]="'08/04'"></app-card-turno>
+    <app-card-turno [kmlAnterior]="2.51" [kmlAtual]="2.96" [giro]="0" [freio]="2" [pedal]="4" [placa]="'51540'" [linha]="'624'" [turno]="'Intervalo'" [data]="'07/04'"></app-card-turno>
+    <app-card-turno [kmlAnterior]="2.51" [kmlAtual]="2.51" [giro]="2" [freio]="8" [pedal]="3" [placa]="'51540'" [linha]="'624'" [turno]="'Manhã'" [data]="'07/04'"></app-card-turno>
   </div>
 </section>
