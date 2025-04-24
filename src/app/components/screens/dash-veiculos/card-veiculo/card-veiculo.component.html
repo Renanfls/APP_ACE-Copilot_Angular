@@ -1,8 +1,11 @@
 <!-- Lista de veículos para clicar -->
-<div *ngIf="veiculos.length > 0" class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-12 lg:flex flex-wrap gap-4">
+<div
+  *ngIf="veiculos.length > 0"
+  class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-12 lg:flex flex-wrap items-center justify-center gap-4"
+>
   <div
     *ngFor="let v of veiculos"
-    class="shadow-2xl p-3 rounded-2xl flex flex-col items-center justify-center cursor-pointer"
+    class="shadow-2xl p-3 rounded-2xl flex flex-col items-center justify-center cursor-pointer border-2 relative"
     [ngStyle]="{ 'background-color': getBackgroundColor(v.status) }"
     (click)="openHelpDialog(v)"
     (keydown.enter)="openHelpDialog(v)"
@@ -11,8 +14,20 @@
     role="button"
     [attr.aria-label]="'Mostrar detalhes do veículo ' + v.id"
   >
-    <h3 class="text-black font-bold mb-1 text-2xl">{{ v.id }}</h3>
-    <div class="p-1.5 rounded-xl w-full flex justify-center gap-1" style="background-color: #141416">
+    <!-- Indicador de comentários no card principal -->
+    <div
+      *ngIf="v.comentarios && v.comentarios.length > 0"
+      class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm"
+      aria-label="Este veículo possui comentários"
+    >
+      {{ v.comentarios.length }}
+    </div>
+
+    <h3 class="text-black font-bold mb-2 text-3xl">{{ v.id }}</h3>
+    <div
+      class="p-1.5 rounded-xl w-full flex justify-center gap-1"
+      style="background-color: #141416"
+    >
       <span
         *ngFor="let a of v.atributos; let i = index"
         class="w-7 h-7 rounded-full flex items-center justify-center"
@@ -33,7 +48,7 @@
   aria-labelledby="modal-title"
 >
   <div
-    class="rounded-3xl shadow-lg w-max max-w-[90vw] h-max 2xl:max-w-[75vw] 2xl:max-h-[50vh] overflow-y-auto animate-fade-in relative"
+    class="rounded-3xl shadow-lg w-max max-w-[90vw] h-max 2xl:max-w-[75vw] 2xl:max-h-[75vh] overflow-y-auto animate-fade-in relative"
     style="background-color: #141416"
   >
     <div class="absolute right-6 top-6 2xl:top-12 2xl:right-12">
@@ -49,11 +64,13 @@
     </div>
 
     <!-- Conteúdo do veículo selecionado -->
-    <div class="rounded-2xl flex flex-col-reverse lg:flex-row justify-center w-max 2xl:max-w-[100vw] h-max 2xl:max-h-[100vh]">
+    <div
+      class="rounded-2xl flex flex-col-reverse lg:flex-row justify-center w-max 2xl:max-w-[100vw] h-max 2xl:max-h-[100vh]"
+    >
       <div>
         <!-- Atributos com edição de cor -->
         <div
-          class="grid grid-cols-3 lg:grid-cols-1 lg:flex lg: flex-col rounded-3xl gap-3 w-full h-max 2xl:max-h-[100vh] p-6 2xl:p-24"
+          class="grid grid-cols-3 lg:grid-cols-1 lg:flex lg: flex-col justify-center rounded-2xl gap-3 w-full h-full 2xl:max-h-[100vh] p-6 2xl:p-24"
           style="background-color: #242427"
         >
           <div
@@ -73,9 +90,10 @@
                 />
               </span>
               <div class="flex flex-col">
-                <span class="text-white text-sm 2xl:text-3xl lg:text-nowrap font-bold">{{
-                  getAttributeName(j)
-                }}</span>
+                <span
+                  class="text-white text-sm 2xl:text-3xl lg:text-nowrap font-bold"
+                  >{{ getAttributeName(j) }}</span
+                >
                 <span class="text-amber-500 2xl:text-4xl font-bold">0</span>
               </div>
             </div>
@@ -92,7 +110,7 @@
                 <option
                   *ngFor="let colorOption of getColorOptions()"
                   [value]="colorOption.value"
-                  class="xl:text-sm 2xl:text-3xl"
+                  class="text-lg"
                 >
                   {{ colorOption.label }}
                 </option>
@@ -103,33 +121,43 @@
 
         <!-- Informações adicionais do veículo -->
       </div>
-      <div class="p-8 2xl:p-20 flex flex-col justify-between w-full 2xl:max-w-[100vw] 2xl:max-h-[100vh]">
-        <div class="lg:pt-12 lg:pe-20">
-          <div class="flex gap-6 mb-4">
-            <p class="text-amber-400 text-md lg:text-lg 2xl:text-4xl font-bold">
-              KM: <span class="text-white">6.431,4</span>
-            </p>
-            <p class="text-amber-400 text-md lg:text-lg 2xl:text-4xl font-bold">
-              Litros: <span class="text-white">3.061,9</span>
-            </p>
-            <p class="text-amber-400 text-md lg:text-lg 2xl:text-4xl font-bold flex gap-1">
-              KM/L:
-              <span class="text-white flex gap-1"
-                >2,10 <img src="assets/trending_up.svg" class="2xl:w-10" alt="seta verde cima"
-              /></span>
-            </p>
-          </div>
-          <h3 class="font-bold text-2xl lg:text-4xl 2xl:text-7xl text-amber-400">
-            {{ selectedVehicle.id }} (E:51556)
-          </h3>
-          <div class="flex gap-6 text-sm 2xl:text-4xl font-bold">
+      <div
+        class="p-8 2xl:p-20 flex flex-col justify-between w-full 2xl:max-w-[100vw] 2xl:max-h-[100vh]"
+      >
+        <div class="lg:pt-10">
+          <div class="flex gap-6 text-sm 2xl:text-3xl mb-1 font-bold">
             <span>Euro 5</span>
             <span>1721</span>
           </div>
+          <h3
+            class="font-bold text-2xl lg:text-4xl 2xl:text-7xl text-amber-400 mb-6"
+          >
+            {{ selectedVehicle.id }}
+          </h3>
+          <div class="flex justify-between gap-6 mb-4">
+            <div>
+              <p
+                class="text-amber-400 text-md lg:text-lg 2xl:text-3xl font-bold mb-2"
+              >
+                Odometro: <span class="text-white">540.271,1</span>
+              </p>
+              <span class="text-md">Registro: 24/04/2025 03:00</span>
+            </div>
+            <div>
+              <p
+                class="text-amber-400 text-md lg:text-lg 2xl:text-3xl font-bold mb-2"
+              >
+                KM: <span class="text-white">6.431,4</span>
+              </p>
+              <span class="text-md">Troca de óleo: 01/04/2025</span>
+            </div>
+          </div>
         </div>
-        <div>
-          <div class="w-full text-gray-300">
-            <div class="flex justify-between py-2 border-b border-gray-700 2xl:text-4xl">
+        <div class="pt-10">
+          <div class="w-full text-gray-300 flex flex-col gap-4">
+            <div
+              class="flex justify-between py-2 border-b border-gray-700 2xl:text-2xl"
+            >
               <span>Status:</span>
               <span
                 [ngClass]="{
@@ -143,50 +171,111 @@
             </div>
 
             <div
-              *ngIf="selectedVehicle.placa"
-              class="flex justify-between py-2 border-b border-gray-700"
+              *ngIf="selectedVehicle.ultPedidoID"
+              class="flex justify-between py-2 border-b border-gray-700 2xl:text-2xl"
             >
-              <span>Placa:</span>
-              <span>{{ selectedVehicle.placa }}</span>
+              <span>UltPedidoID:</span>
+              <span>{{ selectedVehicle.ultPedidoID }}</span>
             </div>
 
             <div
-              *ngIf="selectedVehicle.modelo"
-              class="flex justify-between py-2 border-b border-gray-700"
+              *ngIf="selectedVehicle.ultIntegracao"
+              class="flex justify-between py-2 border-b border-gray-700 2xl:text-2xl"
             >
-              <span>Modelo:</span>
-              <span>{{ selectedVehicle.modelo }}</span>
+              <span>Integração:</span>
+              <span>{{ selectedVehicle.ultIntegracao }}</span>
+            </div>
+          </div>
+
+          <!-- Acordeão de comentários - sempre visível quando ativo -->
+          <div
+            *ngIf="showComments"
+            [@slideUpDown]="showComments ? 'open' : 'closed'"
+            class="mt-4 w-full bg-gray-800 rounded-lg p-4 border border-gray-700"
+          >
+            <h4 class="text-amber-400 text-lg 2xl:text-3xl font-bold mb-3">
+              Comentários
+            </h4>
+            <div class="flex flex-col gap-3 max-h-44 overflow-y-auto">
+              <div
+                *ngFor="let comment of selectedVehicle.comentarios"
+                class="bg-gray-900 p-3 mb-2 rounded-md"
+              >
+                <div class="flex justify-between mb-1">
+                  <span class="text-amber-400 font-semibold">{{
+                    comment.author
+                  }}</span>
+                  <span class="text-gray-500 text-sm">{{ comment.date }}</span>
+                </div>
+                <p class="text-white">{{ comment.text }}</p>
+              </div>
+            </div>
+            <!-- Input para novo comentário -->
+            <div class="mt-2 flex gap-2">
+              <input
+                type="text"
+                placeholder="Adicionar comentário..."
+                class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white"
+                [(ngModel)]="newComment"
+              />
+              <button
+                (click)="addComment()"
+                class="bg-amber-600 text-white rounded-lg px-4 py-2 hover:bg-amber-700"
+              >
+                Enviar
+              </button>
             </div>
           </div>
 
           <!-- Botões de ação -->
-          <div class="flex justify-end gap-3 mt-4 w-full">
-            <button
-              (click)="cancelChanges()"
-              class="px-4 xl:px-8 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition 2xl:text-3xl"
-              aria-label="Cancelar alterações"
-            >
-              Cancelar
-            </button>
-            <button
-              (click)="saveChanges()"
-              class="px-4 2xl:px-8 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition 2xl:text-3xl"
-              aria-label="Salvar alterações"
-            >
-              Salvar
-            </button>
-            <button
-              class="px-4 2xl:px-8 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition 2xl:text-3xl"
-              style="background-color: #242427;"
-            >
-              <img src="assets/bar_chart.svg" class="2xl:w-10" alt="gráfico">
-            </button>
-            <button
-              class="px-4 2xl:px-8 py-2 2xl:py-4 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition 2xl:text-3xl"
-              style="background-color: #242427;"
-            >
-              <img src="assets/chat.svg" class="2xl:w-10" alt="chat">
-            </button>
+          <div class="flex justify-between mt-4 gap-4 w-full">
+            <div class="flex gap-4">
+              <button
+                (click)="cancelChanges()"
+                class="px-4 xl:px-8 py-2 bg-gray-600 text-white rounded-2xl hover:bg-gray-700 transition 2xl:text-3xl"
+                aria-label="Cancelar alterações"
+              >
+                Cancelar
+              </button>
+              <button
+                (click)="saveChanges()"
+                class="px-4 2xl:px-8 py-2 bg-amber-600 text-white rounded-2xl hover:bg-amber-700 transition 2xl:text-3xl"
+                aria-label="Salvar alterações"
+              >
+                Salvar
+              </button>
+            </div>
+            <div class="flex gap-4">
+              <button
+                class="px-4 2xl:px-8 py-2 bg-amber-500 text-white rounded-2xl hover:bg-amber-600 transition 2xl:text-3xl"
+                style="background-color: #242427"
+              >
+                <img
+                  src="assets/bar_chart.svg"
+                  class="2xl:w-10"
+                  alt="gráfico"
+                />
+              </button>
+              <button
+                (click)="toggleComments()"
+                class="px-4 2xl:px-8 py-2 2xl:py-4 text-white rounded-2xl hover:bg-amber-600 transition 2xl:text-3xl relative"
+                [ngClass]="{ 'bg-amber-700': showComments }"
+                style="background-color: #242427"
+                aria-label="Mostrar comentários"
+              >
+                <img src="assets/chat.svg" class="2xl:w-10" alt="chat" />
+                <!-- Indicador de quantidade de comentários -->
+                <div
+                  *ngIf="
+                    selectedVehicle.comentarios &&
+                    selectedVehicle.comentarios.length > 0
+                  "
+                  class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm"
+                >
+                  {{ selectedVehicle.comentarios.length }}
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       </div>

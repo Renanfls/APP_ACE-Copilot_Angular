@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
+
 @Component({
   selector: 'app-card-veiculo',
   standalone: true, 
   imports: [CommonModule, FormsModule],
   templateUrl: './card-veiculo.component.html',
-  styleUrls: ['./card-veiculo.component.css']
+  styleUrls: ['./card-veiculo.component.css'],
 })
 export class CardVeiculoComponent implements OnInit {
   veiculos: any[] = [];
@@ -16,13 +17,18 @@ export class CardVeiculoComponent implements OnInit {
   isHelpDialogOpen = false;
   originalData: any = null; // Para armazenar os dados JSON originais
   originalVehicleState: any = null; // Para armazenar o estado original do veículo selecionado
+  
+  // Variáveis para o acordeão de comentários
+  showComments = false;
+  newComment = '';
 
   private readonly icones = [
     'assets/device_thermostat.svg',
     'assets/shutter_speed_minus.svg',
     'assets/compress.svg',
     'assets/do_not_step.svg',
-    'assets/air.svg'
+    'assets/air.svg',
+    'assets/speed.svg'
   ];
 
   constructor(private http: HttpClient, private renderer: Renderer2) {}
@@ -45,7 +51,9 @@ export class CardVeiculoComponent implements OnInit {
           atributos: v.cores.map((cor: string, index: number) => ({
             cor,
             icone: this.icones[index] || ''
-          }))
+          })),
+          // Inicializar comentários para cada veículo
+          comentarios: v.comentarios || []
         }));
         
         // Assegurar que todas as cores estejam no formato esperado
@@ -95,7 +103,8 @@ export class CardVeiculoComponent implements OnInit {
       'Torque',
       'Pressão Turbina',
       'Pedal',
-      'Ar Comprimido'
+      'Ar Comprimido',
+      'Max. Velocidade'
     ];
     
     return attributeNames[index] || `Atributo ${index + 1}`;
@@ -104,7 +113,7 @@ export class CardVeiculoComponent implements OnInit {
   // Método para obter as opções de cores com os novos nomes
   getColorOptions() {
     return [
-      { label: 'Cinza', value: '#242427' },
+      { label: 'Inativo', value: '#242427' },
       { label: 'Verde', value: '#387E38' },
       { label: 'Laranja', value: '#F56B15' },
       { label: 'Vermelho', value: '#AE2724' },
@@ -125,6 +134,13 @@ export class CardVeiculoComponent implements OnInit {
     this.isHelpDialogOpen = true;
     this.renderer.addClass(document.body, 'overflow-hidden');
     
+    // Automaticamente exibe os comentários se houver algum
+    if (this.selectedVehicle.comentarios && this.selectedVehicle.comentarios.length > 0) {
+      this.showComments = true;
+    } else {
+      this.showComments = false;
+    }
+    
     // Foco no modal para acessibilidade
     setTimeout(() => {
       const closeButton = document.querySelector('#modal-close-button');
@@ -139,6 +155,44 @@ export class CardVeiculoComponent implements OnInit {
     this.renderer.removeClass(document.body, 'overflow-hidden');
     this.selectedVehicle = null;
     this.originalVehicleState = null;
+    this.showComments = false;
+  }
+
+  // Método para alternar a exibição do acordeão de comentários
+  toggleComments() {
+    this.showComments = !this.showComments;
+  }
+
+  // Método para adicionar um novo comentário
+  addComment() {
+    if (this.newComment.trim() && this.selectedVehicle) {
+      const now = new Date();
+      const formattedDate = `${now.toLocaleDateString('pt-BR')} ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+      
+      // Certifique-se de que o array de comentários existe
+      if (!this.selectedVehicle.comentarios) {
+        this.selectedVehicle.comentarios = [];
+      }
+      
+      // Adicionar novo comentário
+      this.selectedVehicle.comentarios.unshift({
+        author: 'Usuário Atual',
+        date: formattedDate,
+        text: this.newComment.trim()
+      });
+      
+      // Encontrar o veículo na lista original e atualizar também
+      const vehicleIndex = this.veiculos.findIndex(v => v.id === this.selectedVehicle.id);
+      if (vehicleIndex !== -1) {
+        if (!this.veiculos[vehicleIndex].comentarios) {
+          this.veiculos[vehicleIndex].comentarios = [];
+        }
+        // Atualizar comentários no veículo original
+        this.veiculos[vehicleIndex].comentarios = [...this.selectedVehicle.comentarios];
+      }
+      
+      this.newComment = '';
+    }
   }
 
   // Método para obter todas as cores únicas usadas em todos os atributos
@@ -188,15 +242,24 @@ export class CardVeiculoComponent implements OnInit {
           }
         });
         
+        // Atualizar comentários
+        this.veiculos[vehicleIndex].comentarios = [...this.selectedVehicle.comentarios];
+        
         // Atualizar também no originalData para salvar no JSON
         if (this.originalData && this.originalData.veiculos && 
-            this.originalData.veiculos[vehicleIndex] && 
-            this.originalData.veiculos[vehicleIndex].cores) {
-          this.selectedVehicle.atributos.forEach((atributo: any, idx: number) => {
-            if (idx < this.originalData.veiculos[vehicleIndex].cores.length) {
-              this.originalData.veiculos[vehicleIndex].cores[idx] = atributo.cor;
-            }
-          });
+            this.originalData.veiculos[vehicleIndex]) {
+          
+          // Atualizar cores
+          if (this.originalData.veiculos[vehicleIndex].cores) {
+            this.selectedVehicle.atributos.forEach((atributo: any, idx: number) => {
+              if (idx < this.originalData.veiculos[vehicleIndex].cores.length) {
+                this.originalData.veiculos[vehicleIndex].cores[idx] = atributo.cor;
+              }
+            });
+          }
+          
+          // Atualizar comentários
+          this.originalData.veiculos[vehicleIndex].comentarios = [...this.selectedVehicle.comentarios];
         }
         
         // Salvar alterações no JSON
