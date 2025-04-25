@@ -2,16 +2,15 @@ import { Component, OnInit, Renderer2, HostListener, ChangeDetectorRef } from '@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { ModalComponent } from '../modal/modal.component';
 
 @Component({
-  selector: 'app-card-veiculo',
+  selector: 'app-card-veiculo-velocidade',
   standalone: true, 
-  imports: [CommonModule, FormsModule, ModalComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './card-veiculo.component.html',
   styleUrls: ['./card-veiculo.component.css'],
 })
-export class CardVeiculoComponent implements OnInit {
+export class CardVeiculoVelocidadeComponent implements OnInit {
   veiculos: any[] = [];
   selectedVehicle: any = null;
   isHelpDialogOpen = false;

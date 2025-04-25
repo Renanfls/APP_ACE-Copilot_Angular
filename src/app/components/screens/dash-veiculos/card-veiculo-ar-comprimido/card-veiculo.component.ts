@@ -5,13 +5,13 @@ import { FormsModule } from '@angular/forms';
 import { ModalComponent } from '../modal/modal.component';
 
 @Component({
-  selector: 'app-card-veiculo',
+  selector: 'app-card-veiculo-ar-comprimido',
   standalone: true, 
   imports: [CommonModule, FormsModule, ModalComponent],
   templateUrl: './card-veiculo.component.html',
   styleUrls: ['./card-veiculo.component.css'],
 })
-export class CardVeiculoComponent implements OnInit {
+export class CardVeiculoArComponent implements OnInit {
   veiculos: any[] = [];
   selectedVehicle: any = null;
   isHelpDialogOpen = false;
