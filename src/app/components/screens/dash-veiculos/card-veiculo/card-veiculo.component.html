@@ -23,6 +23,17 @@
       {{ v.comentarios.length }}
     </div>
 
+    <!-- Indicador de alerta de troca de óleo -->
+    <div
+      *ngIf="shouldShowOilChangeAlert(v)"
+      class="absolute top-2 left-2 bg-amber-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm"
+      aria-label="Este veículo precisa de troca de óleo"
+    >
+      <span class="text-xs"
+        ><img src="assets/water_drop.svg" alt="Alerta de troca de óleo"
+      /></span>
+    </div>
+
     <h3 class="text-black font-bold mb-2 text-3xl">{{ v.id }}</h3>
     <div
       class="p-1.5 rounded-xl w-full flex justify-center gap-1"
@@ -42,13 +53,13 @@
 <!-- Modal para exibir apenas o veículo selecionado -->
 <div
   *ngIf="isHelpDialogOpen && selectedVehicle"
-  class="fixed inset-0 z-50 p-4 flex items-center justify-center bg-black bg-opacity-50"
+  class="fixed inset-0 z-50 md:p-4 flex items-center justify-center bg-black bg-opacity-50 overflow-y-scroll"
   role="dialog"
   aria-modal="true"
   aria-labelledby="modal-title"
 >
   <div
-    class="rounded-3xl shadow-lg w-max max-w-[90vw] h-max 2xl:max-w-[75vw] 2xl:max-h-[75vh] overflow-y-auto animate-fade-in relative"
+    class="rounded-3xl shadow-lg w-max max-w-[90vw] h-max 2xl:max-w-[100vw] 2xl:max-h-[100vh] overflow-y-auto animate-fade-in relative"
     style="background-color: #141416"
   >
     <div class="absolute right-6 top-6 2xl:top-12 2xl:right-12">
@@ -65,96 +76,149 @@
 
     <!-- Conteúdo do veículo selecionado -->
     <div
-      class="rounded-2xl flex flex-col-reverse lg:flex-row justify-center w-max 2xl:max-w-[100vw] h-max 2xl:max-h-[100vh]"
+      class="rounded-3xl flex flex-col-reverse lg:flex-row justify-center w-max 2xl:max-w-[100vw] h-max 2xl:max-h-[100vh]"
     >
-      <div>
-        <!-- Atributos com edição de cor -->
+      <!-- Atributos com edição de cor -->
+      <div
+        class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-1 lg:flex lg:flex-col justify-center rounded-3xl gap-3 w-full 2xl:max-h-[100vh] p-6 2xl:p-24"
+        style="background-color: #242427"
+      >
         <div
-          class="grid grid-cols-3 lg:grid-cols-1 lg:flex lg: flex-col justify-center rounded-2xl gap-3 w-full h-full 2xl:max-h-[100vh] p-6 2xl:p-24"
-          style="background-color: #242427"
+          *ngFor="let a of selectedVehicle.atributos; let j = index"
+          class="flex flex-col lg:flex-row justify-between gap-3 2xl:gap-8 p-2 rounded-lg"
         >
-          <div
-            *ngFor="let a of selectedVehicle.atributos; let j = index"
-            class="flex flex-col lg:flex-row justify-between gap-3 2xl:gap-8 p-2 rounded-lg"
-          >
-            <!-- Visualização do atributo -->
-            <div class="flex items-center gap-3 xl:gap-8">
+          <!-- Visualização do atributo -->
+          <div class="flex items-center gap-3 xl:gap-8">
+            <span
+              class="w-8 h-8 lg:w-14 lg:h-14 2xl:w-20 2xl:h-20 rounded-full flex items-center justify-center"
+              [ngStyle]="{ 'background-color': a.cor }"
+            >
+              <img
+                [src]="a.icone"
+                [alt]="getAttributeName(j)"
+                class="w-4 h-4 lg:w-7 lg:h-7 2xl:w-10 2xl:h-10"
+              />
+            </span>
+            <div class="flex flex-col">
               <span
-                class="w-8 h-8 lg:w-14 lg:h-14 2xl:w-24 2xl:h-24 rounded-full flex items-center justify-center"
-                [ngStyle]="{ 'background-color': a.cor }"
+                class="text-white text-sm 2xl:text-2xl lg:text-nowrap font-bold"
+                >{{ getAttributeName(j) }}</span
               >
-                <img
-                  [src]="a.icone"
-                  [alt]="getAttributeName(j)"
-                  class="w-4 h-4 lg:w-7 lg:h-7 2xl:w-12 2xl:h-12"
-                />
-              </span>
-              <div class="flex flex-col">
-                <span
-                  class="text-white text-sm 2xl:text-3xl lg:text-nowrap font-bold"
-                  >{{ getAttributeName(j) }}</span
-                >
-                <span class="text-amber-500 2xl:text-4xl font-bold">0</span>
-              </div>
+              <span class="text-amber-500 2xl:text-2xl font-bold">0</span>
             </div>
+          </div>
 
-            <!-- Seletor de cor com select -->
-            <div class="flex items-center gap-2 pb-2">
-              <select
-                [(ngModel)]="selectedVehicle.atributos[j].cor"
-                (change)="updateAttributeColor(j, $event)"
-                class="text-white px-2 2xl:px-4 py-1 2xl:py-3 rounded cursor-pointer text-sm 2xl:text-3xl"
-                style="background-color: #141416"
-                [attr.aria-label]="'Selecionar cor do ' + getAttributeName(j)"
+          <!-- Seletor de cor com select -->
+          <div class="flex items-center gap-2 pb-2">
+            <select
+              [(ngModel)]="selectedVehicle.atributos[j].cor"
+              (change)="updateAttributeColor(j, $event)"
+              class="text-white p-2 rounded-lg cursor-pointer text-sm 2xl:text-2xl"
+              style="background-color: #141416"
+              [attr.aria-label]="'Selecionar cor do ' + getAttributeName(j)"
+            >
+              <option
+                *ngFor="let colorOption of getColorOptions()"
+                [value]="colorOption.value"
+                class="text-lg"
               >
-                <option
-                  *ngFor="let colorOption of getColorOptions()"
-                  [value]="colorOption.value"
-                  class="text-lg"
-                >
-                  {{ colorOption.label }}
-                </option>
-              </select>
+                {{ colorOption.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <!-- Informações adicionais do veículo -->
+      <div
+        class="p-8 2xl:p-20 flex flex-col justify-between w-full 2xl:max-w-[100vw] 2xl:max-h-[100vh]"
+      >
+        <div class="flex flex-col mb-10">
+          <h3
+            class="font-bold text-2xl lg:text-4xl 2xl:text-6xl text-amber-400"
+          >
+            {{ selectedVehicle.id }}
+          </h3>
+          <div class="flex gap-4 text-sm 2xl:text-2xl mb-1 font-bold">
+            <span>Euro 5</span>
+            <span>1721</span>
+          </div>
+        </div>
+        <div class="flex flex-col justify-between gap-6 mb-4">
+          <div>
+            <p
+              class="text-amber-400 text-md lg:text-lg 2xl:text-3xl font-bold mb-2"
+            >
+              Odômetro:
+              <span class="text-white">{{ selectedVehicle.odoAtual }}</span>
+            </p>
+            <span class="text-md">Registro: 24/04/2025 03:00</span>
+          </div>
+          <div>
+            <p
+              class="text-amber-400 text-md lg:text-lg 2xl:text-2xl font-bold mb-2"
+              [ngClass]="{
+                'text-red-400': selectedVehicle.precisaTrocaOleo
+              }"
+            >
+              KM desde última troca:
+              <span class="text-white">{{
+                selectedVehicle.odoDesdeUltimaTroca || 0
+              }}</span>
+              <span
+                *ngIf="selectedVehicle.precisaTrocaOleo"
+                class="ml-2 text-red-400"
+              ></span>
+            </p>
+            <div class="flex items-center gap-2">
+              <span class="text-md"
+                >Última troca de óleo:
+                {{ selectedVehicle.ultimaTrocaOleo || 'Não registrada' }}</span
+              >
+              <button
+                *ngIf="selectedVehicle.precisaTrocaOleo"
+                (click)="toggleOilChangeForm()"
+                class="ml-2 bg-amber-600 text-white text-xs px-2 py-1 rounded hover:bg-amber-700"
+                aria-label="Registrar troca de óleo"
+              >
+                Registrar troca
+              </button>
             </div>
           </div>
         </div>
 
-        <!-- Informações adicionais do veículo -->
-      </div>
-      <div
-        class="p-8 2xl:p-20 flex flex-col justify-between w-full 2xl:max-w-[100vw] 2xl:max-h-[100vh]"
-      >
-        <div class="lg:pt-10">
-          <div class="flex gap-6 text-sm 2xl:text-3xl mb-1 font-bold">
-            <span>Euro 5</span>
-            <span>1721</span>
-          </div>
-          <h3
-            class="font-bold text-2xl lg:text-4xl 2xl:text-7xl text-amber-400 mb-6"
-          >
-            {{ selectedVehicle.id }}
-          </h3>
-          <div class="flex justify-between gap-6 mb-4">
-            <div>
-              <p
-                class="text-amber-400 text-md lg:text-lg 2xl:text-3xl font-bold mb-2"
-              >
-                Odometro: <span class="text-white">540.271,1</span>
+        <!-- Formulário de troca de óleo -->
+        <div
+          *ngIf="showOilChangeForm"
+          class="mt-4 mb-4 w-full bg-gray-800 rounded-lg p-4 border border-gray-700 animate-fade-in"
+        >
+          <h4 class="text-amber-400 text-lg 2xl:text-3xl font-bold mb-3">
+            Registrar Troca de Óleo
+          </h4>
+          <div class="flex flex-col gap-3">
+            <div class="flex gap-3 justify-between items-center">
+              <p class="text-white">
+                Confirma a troca de óleo para o veículo
+                {{ selectedVehicle.id }}?
               </p>
-              <span class="text-md">Registro: 24/04/2025 03:00</span>
-            </div>
-            <div>
-              <p
-                class="text-amber-400 text-md lg:text-lg 2xl:text-3xl font-bold mb-2"
-              >
-                KM: <span class="text-white">6.431,4</span>
-              </p>
-              <span class="text-md">Troca de óleo: 01/04/2025</span>
+              <div class="flex gap-2">
+                <button
+                  (click)="toggleOilChangeForm()"
+                  class="bg-gray-600 text-white px-4 py-1 rounded hover:bg-gray-700"
+                >
+                  Cancelar
+                </button>
+                <button
+                  (click)="registrarTrocaOleo()"
+                  class="bg-amber-600 text-white px-4 py-1 rounded hover:bg-amber-700"
+                >
+                  Confirmar
+                </button>
+              </div>
             </div>
           </div>
         </div>
         <div class="pt-10">
-          <div class="w-full text-gray-300 flex flex-col gap-4">
+          <div class="w-full text-gray-300 flex flex-col gap-4 pb-6">
             <div
               class="flex justify-between py-2 border-b border-gray-700 2xl:text-2xl"
             >
@@ -184,6 +248,21 @@
             >
               <span>Integração:</span>
               <span>{{ selectedVehicle.ultIntegracao }}</span>
+            </div>
+
+            <!-- Indicador de troca de óleo -->
+            <div
+              class="flex justify-between py-2 border-b border-gray-700 2xl:text-2xl"
+            >
+              <span>Troca de Óleo:</span>
+              <span
+                [ngClass]="{
+                  'text-red-400': selectedVehicle.precisaTrocaOleo,
+                  'text-green-400': !selectedVehicle.precisaTrocaOleo
+                }"
+              >
+                {{ selectedVehicle.precisaTrocaOleo ? 'Necessária' : 'OK' }}
+              </span>
             </div>
           </div>
 
@@ -227,19 +306,53 @@
             </div>
           </div>
 
+          <!-- MODIFICADO: Acordeão de registros de troca de óleo -->
+          <div
+            *ngIf="showOilChangeRecords"
+            [@slideUpDown]="showOilChangeRecords ? 'open' : 'closed'"
+            class="mt-4 w-full bg-gray-800 rounded-lg p-4 border border-gray-700"
+          >
+            <h4 class="text-amber-400 text-lg 2xl:text-3xl font-bold mb-3">
+              Registros
+            </h4>
+            <div class="flex flex-col gap-3 max-h-44 overflow-y-auto">
+              <div
+                *ngFor="let registro of selectedVehicle.trocasOleo"
+                class="bg-gray-900 p-3 mb-2 rounded-md"
+              >
+                <div class="flex justify-between mb-1">
+                  <span class="text-amber-400 font-semibold">{{
+                    registro.author
+                  }}</span>
+                  <span class="text-gray-500 text-sm">{{ registro.date }}</span>
+                </div>
+                <p class="text-white">{{ registro.text }}</p>
+              </div>
+              <div
+                *ngIf="
+                  !selectedVehicle.trocasOleo ||
+                  selectedVehicle.trocasOleo.length === 0
+                "
+                class="text-gray-400 text-center p-4"
+              >
+                Nenhum registro de troca de óleo encontrado.
+              </div>
+            </div>
+          </div>
+
           <!-- Botões de ação -->
           <div class="flex justify-between mt-4 gap-4 w-full">
             <div class="flex gap-4">
               <button
                 (click)="cancelChanges()"
-                class="px-4 xl:px-8 py-2 bg-gray-600 text-white rounded-2xl hover:bg-gray-700 transition 2xl:text-3xl"
+                class="px-4 py-2 bg-gray-600 text-white rounded-2xl hover:bg-gray-700 transition 2xl:text-xl"
                 aria-label="Cancelar alterações"
               >
                 Cancelar
               </button>
               <button
                 (click)="saveChanges()"
-                class="px-4 2xl:px-8 py-2 bg-amber-600 text-white rounded-2xl hover:bg-amber-700 transition 2xl:text-3xl"
+                class="px-4 py-2 bg-amber-600 text-white rounded-2xl hover:bg-amber-700 transition 2xl:text-xl"
                 aria-label="Salvar alterações"
               >
                 Salvar
@@ -247,23 +360,45 @@
             </div>
             <div class="flex gap-4">
               <button
-                class="px-4 2xl:px-8 py-2 bg-amber-500 text-white rounded-2xl hover:bg-amber-600 transition 2xl:text-3xl"
+                class="px-4 py-2  text-white rounded-2xl hover:bg-amber-600 transition 2xl:text-xl"
                 style="background-color: #242427"
+                title="Gráfico"
+              >
+                <img src="assets/bar_chart.svg" class="2xl:w-9" alt="gráfico" />
+              </button>
+              <button
+                (click)="toggleOilChangeRecords()"
+                class="px-4 py-4 text-white rounded-2xl hover:bg-amber-600 transition 2xl:text-xl relative"
+                [ngClass]="{ 'bg-amber-700': showOilChangeRecords }"
+                style="background-color: #242427"
+                title="Registros"
+                aria-label="Mostrar registros"
               >
                 <img
-                  src="assets/bar_chart.svg"
-                  class="2xl:w-10"
-                  alt="gráfico"
+                  src="assets/overview.svg"
+                  class="2xl:w-9"
+                  alt="visão geral"
                 />
+                <!-- Indicador de quantidade de registros -->
+                <div
+                  *ngIf="
+                    selectedVehicle.trocasOleo &&
+                    selectedVehicle.trocasOleo.length > 0
+                  "
+                  class="absolute -top-2 -right-2 bg-amber-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm"
+                >
+                  {{ selectedVehicle.trocasOleo.length }}
+                </div>
               </button>
               <button
                 (click)="toggleComments()"
-                class="px-4 2xl:px-8 py-2 2xl:py-4 text-white rounded-2xl hover:bg-amber-600 transition 2xl:text-3xl relative"
+                class="px-4 py-4 text-white rounded-2xl hover:bg-amber-600 transition 2xl:text-xl relative"
                 [ngClass]="{ 'bg-amber-700': showComments }"
                 style="background-color: #242427"
+                title="Comentários"
                 aria-label="Mostrar comentários"
               >
-                <img src="assets/chat.svg" class="2xl:w-10" alt="chat" />
+                <img src="assets/chat.svg" class="2xl:w-9" alt="chat" />
                 <!-- Indicador de quantidade de comentários -->
                 <div
                   *ngIf="

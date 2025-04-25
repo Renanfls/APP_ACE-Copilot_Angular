@@ -5,6 +5,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -12,6 +15,9 @@
       "status": "Oficina",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "10/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#6224AE", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -19,6 +25,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#387E38", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -26,6 +35,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#242427", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -33,6 +45,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -40,6 +55,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#6224AE", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -47,6 +65,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 560000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -54,6 +75,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -61,6 +85,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#387E38", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -68,6 +95,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#242427", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -75,6 +105,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#6224AE", "#F56B15", "#242427", "#6224AE", "#242427"]
     },
     {
@@ -82,6 +115,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -89,6 +125,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#6224AE", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -96,6 +135,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#242427", "#F56B15", "#242427", "#242427", "#242427"]
     },
     {
@@ -103,6 +145,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#6224AE", "#387E38", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -110,6 +155,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#242427", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -117,6 +165,9 @@
       "status": "Oficina",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "10/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -124,6 +175,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#387E38", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -131,6 +185,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#242427", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -138,6 +195,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#6224AE", "#F56B15", "#242427", "#6224AE", "#242427"]
     },
     {
@@ -145,6 +205,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -152,6 +215,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#6224AE", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -159,6 +225,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#242427", "#F56B15", "#242427", "#242427", "#242427"]
     },
     {
@@ -166,6 +235,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#6224AE", "#387E38", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -173,6 +245,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 560000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#242427", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -180,6 +255,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#242427", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -187,6 +265,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#6224AE", "#387E38", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -194,6 +275,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#242427", "#6224AE", "#F56B15", "#242427"]
     },
     {
@@ -201,6 +285,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#242427", "#F56B15", "#387E38", "#242427", "#242427"]
     },
     {
@@ -208,6 +295,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#6224AE", "#387E38", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -215,6 +305,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#242427", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -222,6 +315,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -229,6 +325,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#6224AE", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -236,6 +335,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#387E38", "#6224AE", "#F56B15", "#242427"]
     },
     {
@@ -243,6 +345,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#387E38", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -250,6 +355,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#242427", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -257,6 +365,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#6224AE", "#F56B15", "#387E38", "#6224AE", "#242427"]
     },
     {
@@ -264,6 +375,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 560000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -271,6 +385,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#6224AE", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -278,6 +395,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#387E38", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -285,6 +405,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#242427", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -292,6 +415,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -299,6 +425,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 560000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#6224AE", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -306,6 +435,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -313,6 +445,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 560000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -320,6 +455,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#387E38", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -327,6 +465,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#242427", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -334,6 +475,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#6224AE", "#F56B15", "#242427", "#6224AE", "#242427"]
     },
     {
@@ -341,6 +485,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -348,6 +495,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 560000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#6224AE", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -355,6 +505,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#242427", "#F56B15", "#242427", "#242427", "#242427"]
     },
     {
@@ -362,6 +515,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#6224AE", "#387E38", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -369,6 +525,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#242427", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -376,6 +535,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -383,6 +545,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#387E38", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -390,6 +555,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#242427", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -397,6 +565,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#6224AE", "#F56B15", "#242427", "#6224AE", "#242427"]
     },
     {
@@ -404,6 +575,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -411,6 +585,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#6224AE", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -418,6 +595,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#242427", "#F56B15", "#242427", "#242427", "#242427"]
     },
     {
@@ -425,6 +605,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#6224AE", "#387E38", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -432,6 +615,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#242427", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -439,6 +625,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#242427", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -446,6 +635,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 560000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#6224AE", "#387E38", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -453,6 +645,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#242427", "#6224AE", "#F56B15", "#242427"]
     },
     {
@@ -460,6 +655,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#242427", "#F56B15", "#387E38", "#242427", "#242427"]
     },
     {
@@ -467,6 +665,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#6224AE", "#387E38", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -474,6 +675,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#242427", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -481,6 +685,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 560000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -488,6 +695,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#6224AE", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -495,6 +705,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#387E38", "#6224AE", "#F56B15", "#242427"]
     },
     {
@@ -502,6 +715,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#387E38", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -509,6 +725,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#242427", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -516,6 +735,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#6224AE", "#F56B15", "#387E38", "#6224AE", "#242427"]
     },
     {
@@ -523,6 +745,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -530,6 +755,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#6224AE", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -537,6 +765,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#387E38", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -544,6 +775,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#242427", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -551,6 +785,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -558,6 +795,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#6224AE", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -565,6 +805,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -572,6 +815,9 @@
       "status": "Oficina",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "10/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -579,6 +825,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#387E38", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -586,11 +835,17 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#242427", "#387E38", "#F56B15", "#242427"]
     },
     {
       "id": 47643,
       "status": "#OK",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#6224AE", "#387E38", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -598,6 +853,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#242427", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -605,6 +863,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#242427", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -612,6 +873,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#6224AE", "#387E38", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -619,6 +883,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#387E38", "#6224AE", "#F56B15", "#242427"]
     },
     {
@@ -626,6 +893,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#387E38", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -633,6 +903,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#6224AE", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -640,6 +913,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#242427", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -647,6 +923,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -654,6 +933,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#387E38", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -661,6 +943,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#6224AE", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -668,6 +953,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -675,6 +963,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#6224AE", "#387E38", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -682,6 +973,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#242427", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -689,6 +983,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -696,6 +993,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#242427", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -703,6 +1003,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -710,6 +1013,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -717,6 +1023,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#6224AE", "#F56B15", "#387E38", "#6224AE", "#242427"]
     },
     {
@@ -724,6 +1033,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#387E38", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -731,6 +1043,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#242427", "#6224AE", "#F56B15", "#242427"]
     },
     {
@@ -738,6 +1053,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#387E38", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -745,6 +1063,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#6224AE", "#387E38", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -752,6 +1073,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#242427", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -759,6 +1083,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#242427", "#F56B15", "#6224AE", "#242427", "#242427"]
     },
     {
@@ -766,6 +1093,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#6224AE", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -773,6 +1103,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -780,6 +1113,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#242427", "#F56B15", "#387E38", "#242427", "#242427"]
     },
     {
@@ -787,6 +1123,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#6224AE", "#242427", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -794,6 +1133,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#387E38", "#6224AE", "#F56B15", "#242427"]
     },
     {
@@ -801,6 +1143,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#387E38", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -808,6 +1153,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#387E38", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -815,6 +1163,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#242427", "#387E38", "#F56B15", "#242427"]
     },
     {
@@ -822,6 +1173,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -829,6 +1183,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#6224AE", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -836,6 +1193,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -843,6 +1203,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#6224AE", "#F56B15", "#387E38", "#6224AE", "#242427"]
     },
     {
@@ -850,6 +1213,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -857,6 +1223,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#387E38", "#6224AE", "#F56B15", "#242427"]
     },
     {
@@ -864,6 +1233,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#387E38", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -871,6 +1243,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#6224AE", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -878,6 +1253,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -885,6 +1263,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -892,6 +1273,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#242427", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -899,6 +1283,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -906,6 +1293,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#6224AE", "#F56B15", "#387E38", "#242427", "#242427"]
     },
     {
@@ -913,6 +1303,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -920,6 +1313,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#387E38", "#6224AE", "#F56B15", "#242427"]
     },
     {
@@ -927,6 +1323,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#387E38", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -934,6 +1333,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#6224AE", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -941,6 +1343,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -948,6 +1353,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -955,6 +1363,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#242427", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -962,6 +1373,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -969,6 +1383,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#6224AE", "#F56B15", "#387E38", "#242427", "#242427"]
     },
     {
@@ -976,6 +1393,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -983,6 +1403,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#387E38", "#6224AE", "#F56B15", "#242427"]
     },
     {
@@ -990,6 +1413,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#387E38", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -997,6 +1423,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#6224AE", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -1004,6 +1433,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1011,6 +1443,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -1018,6 +1453,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#242427", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -1025,6 +1463,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1032,6 +1473,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#6224AE", "#F56B15", "#387E38", "#242427", "#242427"]
     },
     {
@@ -1039,6 +1483,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -1046,6 +1493,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#387E38", "#6224AE", "#F56B15", "#242427"]
     },
     {
@@ -1053,6 +1503,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#387E38", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -1060,6 +1513,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#6224AE", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -1067,6 +1523,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1074,6 +1533,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -1081,6 +1543,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#242427", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -1088,6 +1553,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1095,6 +1563,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#6224AE", "#F56B15", "#387E38", "#242427", "#242427"]
     },
     {
@@ -1102,6 +1573,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -1109,6 +1583,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#387E38", "#6224AE", "#F56B15", "#242427"]
     },
     {
@@ -1116,6 +1593,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#387E38", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -1123,6 +1603,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#6224AE", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -1130,6 +1613,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1137,6 +1623,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -1144,6 +1633,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#242427", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -1151,6 +1643,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1158,6 +1653,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#6224AE", "#F56B15", "#387E38", "#242427", "#242427"]
     },
     {
@@ -1165,6 +1663,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -1172,6 +1673,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#387E38", "#6224AE", "#F56B15", "#242427"]
     },
     {
@@ -1179,6 +1683,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#387E38", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -1186,6 +1693,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#6224AE", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -1193,6 +1703,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1200,6 +1713,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -1207,6 +1723,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#242427", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -1214,6 +1733,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1221,6 +1743,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#6224AE", "#F56B15", "#387E38", "#242427", "#242427"]
     },
     {
@@ -1228,6 +1753,9 @@
       "status": "Oficina",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "10/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -1235,6 +1763,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#387E38", "#6224AE", "#F56B15", "#242427"]
     },
     {
@@ -1242,6 +1773,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#387E38", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -1249,6 +1783,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#6224AE", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -1256,6 +1793,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1263,6 +1803,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -1270,6 +1813,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#242427", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -1277,6 +1823,9 @@
       "status": "Oficina",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "10/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1284,6 +1833,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#6224AE", "#F56B15", "#387E38", "#242427", "#242427"]
     },
     {
@@ -1291,6 +1843,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -1298,6 +1853,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#387E38", "#6224AE", "#F56B15", "#242427"]
     },
     {
@@ -1305,6 +1863,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#387E38", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -1312,6 +1873,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#6224AE", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -1319,6 +1883,9 @@
       "status": "Oficina",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "10/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1326,6 +1893,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -1333,6 +1903,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#242427", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -1340,6 +1913,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1347,6 +1923,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#6224AE", "#F56B15", "#387E38", "#242427", "#242427"]
     },
     {
@@ -1354,6 +1933,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -1361,6 +1943,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#387E38", "#6224AE", "#F56B15", "#242427"]
     },
     {
@@ -1368,6 +1953,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#387E38", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -1375,6 +1963,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#6224AE", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -1382,6 +1973,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1389,6 +1983,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -1396,6 +1993,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#242427", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -1403,6 +2003,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1410,6 +2013,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#6224AE", "#F56B15", "#387E38", "#242427", "#242427"]
     },
     {
@@ -1417,6 +2023,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -1424,6 +2033,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#387E38", "#6224AE", "#F56B15", "#242427"]
     },
     {
@@ -1431,6 +2043,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#387E38", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -1438,6 +2053,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#6224AE", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -1445,6 +2063,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1452,6 +2073,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -1459,6 +2083,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#242427", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -1466,6 +2093,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1473,6 +2103,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#6224AE", "#F56B15", "#387E38", "#242427", "#242427"]
     },
     {
@@ -1480,6 +2113,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -1487,6 +2123,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#387E38", "#6224AE", "#F56B15", "#242427"]
     },
     {
@@ -1494,6 +2133,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#387E38", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -1501,6 +2143,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#6224AE", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -1508,6 +2153,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1515,6 +2163,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -1522,6 +2173,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#242427", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -1529,6 +2183,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1536,6 +2193,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#6224AE", "#F56B15", "#387E38", "#242427", "#242427"]
     },
     {
@@ -1543,6 +2203,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -1550,6 +2213,9 @@
       "status": "Oficina",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "10/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#387E38", "#6224AE", "#F56B15", "#242427"]
     },
     {
@@ -1557,6 +2223,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#387E38", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -1564,6 +2233,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#6224AE", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -1571,6 +2243,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1578,6 +2253,9 @@
       "status": "Sem Comunicar",
       "ultPedidoID": "21/04/2025",
       "ultIntegracao": "24/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -1585,6 +2263,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#242427", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -1592,6 +2273,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1599,6 +2283,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#6224AE", "#F56B15", "#387E38", "#242427", "#242427"]
     },
     {
@@ -1606,6 +2293,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -1613,6 +2303,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#387E38", "#6224AE", "#F56B15", "#242427"]
     },
     {
@@ -1620,6 +2313,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#387E38", "#F56B15", "#242427", "#387E38", "#242427"]
     },
     {
@@ -1627,6 +2323,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#6224AE", "#F56B15", "#242427", "#242427"]
     },
     {
@@ -1634,6 +2333,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1641,6 +2343,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#387E38", "#F56B15", "#6224AE", "#387E38", "#242427"]
     },
     {
@@ -1648,6 +2353,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#242427", "#242427", "#F56B15", "#6224AE", "#242427"]
     },
     {
@@ -1655,6 +2363,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#F56B15", "#387E38", "#242427", "#F56B15", "#242427"]
     },
     {
@@ -1662,6 +2373,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#6224AE", "#F56B15", "#387E38", "#242427", "#242427"]
     },
     {
@@ -1669,6 +2383,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#F56B15", "#387E38", "#242427", "#F56B15", "#387E38", "#242427"]
     },
     {
@@ -1676,6 +2393,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#6224AE", "#F56B15", "#387E38", "#6224AE", "#F56B15", "#242427"]
     },
     {
@@ -1683,6 +2403,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1690,6 +2413,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1697,6 +2423,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1704,6 +2433,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1711,6 +2443,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1718,6 +2453,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1725,6 +2463,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1732,6 +2473,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1739,6 +2483,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1746,6 +2493,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1753,6 +2503,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1760,6 +2513,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1767,6 +2523,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1774,6 +2533,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1781,6 +2543,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1788,6 +2553,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1795,6 +2563,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1802,6 +2573,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1809,6 +2583,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1816,6 +2593,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1823,6 +2603,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1830,6 +2613,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1837,6 +2623,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1844,6 +2633,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1851,6 +2643,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1858,6 +2653,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1865,6 +2663,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1872,6 +2673,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1879,6 +2683,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1886,6 +2693,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1893,6 +2703,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1900,6 +2713,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1907,6 +2723,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1914,6 +2733,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1921,6 +2743,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1928,6 +2753,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1935,6 +2763,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1942,6 +2773,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1949,6 +2783,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1956,6 +2793,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1963,6 +2803,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1970,6 +2813,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1977,6 +2823,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1984,6 +2833,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1991,6 +2843,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -1998,6 +2853,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2005,6 +2863,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2012,6 +2873,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2019,6 +2883,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2026,6 +2893,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2033,6 +2903,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2040,6 +2913,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2047,6 +2923,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2054,6 +2933,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2061,6 +2943,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2068,6 +2953,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2075,6 +2963,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2082,6 +2973,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2089,6 +2983,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2096,6 +2993,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2103,6 +3003,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2110,6 +3013,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2117,6 +3023,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2124,6 +3033,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2131,6 +3043,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2138,6 +3053,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2145,6 +3063,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2152,6 +3073,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2159,6 +3083,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2166,6 +3093,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2173,6 +3103,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2180,6 +3113,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2187,6 +3123,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2194,6 +3133,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2201,6 +3143,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2208,6 +3153,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2215,6 +3163,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2222,6 +3173,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2229,6 +3183,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2236,6 +3193,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2243,6 +3203,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2250,6 +3213,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2257,6 +3223,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2264,6 +3233,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2271,6 +3243,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2278,6 +3253,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2285,6 +3263,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2292,6 +3273,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2299,6 +3283,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2306,6 +3293,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2313,6 +3303,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2320,6 +3313,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2327,6 +3323,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2334,6 +3333,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2341,6 +3343,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2348,6 +3353,9 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
@@ -2355,31 +3363,49 @@
       "status": "OK",
       "ultPedidoID": "24/04/2025",
       "ultIntegracao": "23/04/2025",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#387E38", "#387E38", "#387E38", "#387E38", "#387E38", "#242427"]
     },
     {
       "id": 47895,
       "status": "Inativo",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#242427", "#242427", "#242427", "#242427", "#242427"]
     },
     {
       "id": 47896,
       "status": "Inativo",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#242427", "#242427", "#242427", "#242427", "#242427"]
     },
     {
       "id": 47897,
       "status": "Inativo",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#242427", "#242427", "#242427", "#242427", "#242427"]
     },
     {
       "id": 47898,
       "status": "Inativo",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#242427", "#242427", "#242427", "#242427", "#242427"]
     },
     {
       "id": 47899,
       "status": "Inativo",
+      "odoNaUltimaTroca": 566000,
+      "odoAtual": 570000,
+      "ultimaTrocaOleo": "01/04/2025",
       "cores": ["#242427", "#242427", "#242427", "#242427", "#242427", "#242427"]
     }
   ]
