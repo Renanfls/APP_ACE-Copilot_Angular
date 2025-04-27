@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Event, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
-import { Subscription, filter } from 'rxjs';
+import { Subscription, filter, interval } from 'rxjs';
 
 @Component({
   selector: 'app-header-dsveiculos',
@@ -19,18 +19,26 @@ import { Subscription, filter } from 'rxjs';
           src="assets/Logo_AceCopilot 1.png"
           alt="Logo da ACE Copilot"
         />
-        <h1 class="text-4xl ms-3 font-semibold text-white">DashBus - <span class="text-amber-400">{{ pageTitle }}</span></h1>
+        <h1 class="text-3xl 2xl:text-4xl ms-3 font-semibold text-white">DashBus - <span class="text-amber-400">{{ pageTitle }}</span></h1>
       </div>
+      
+      <!-- Relógio centralizado -->
+      <div class="absolute left-1/2 transform -translate-x-1/2 text-white font-bold text-center mb-3">
+        <div style="font-size: 3.5rem;">{{ currentTime | date:'HH:mm:ss' }}</div>
+        <small style="font-size: 1.5rem; line-height: .25;">{{ currentTime | date:'dd/MM/yyyy' }}</small>
+      </div>
+      
       <div
         class="flex items-center justify-between"
-        style="background-color: #141416;"
       >
         <button
           hlmBtn
           variant="ghost"
           routerLink="/dsbcarros"
           (click)="scrollToTop()"
-          class="flex flex-col justify-center items-center h-14 hover:opacity-100 focus:opacity-100 opacity-25"
+          style="background-color: transparent;"
+          class="flex flex-col justify-center items-center h-14"
+          [ngClass]="{'opacity-100': currentUrl === '/dsbcarros', 'opacity-25': currentUrl !== '/dsbcarros'}"
         >
           <img class="h-6 md:h-8" src="assets/home.svg" alt="Icone Home" />
           <small class="text-lg mt-2 md:mt-3">Home</small>
@@ -40,7 +48,9 @@ import { Subscription, filter } from 'rxjs';
           variant="ghost"
           routerLink="/dsb-carros-temp"
           (click)="scrollToTop()"
-          class="flex flex-col justify-center items-center h-14 hover:opacity-100 focus:opacity-100 opacity-25"
+          style="background-color: transparent;"
+          class="flex flex-col justify-center items-center h-14"
+          [ngClass]="{'opacity-100': currentUrl === '/dsb-carros-temp', 'opacity-25': currentUrl !== '/dsb-carros-temp'}"
         >
           <img
             class="w-6 h-6 md:h-8"
@@ -54,7 +64,9 @@ import { Subscription, filter } from 'rxjs';
           variant="ghost"
           routerLink="/dsb-carros-torque"
           (click)="scrollToTop()"
-          class="flex flex-col justify-center items-center h-14 hover:opacity-100 focus:opacity-100 opacity-25"
+          style="background-color: transparent;"
+          class="flex flex-col justify-center items-center h-14"
+          [ngClass]="{'opacity-100': currentUrl === '/dsb-carros-torque', 'opacity-25': currentUrl !== '/dsb-carros-torque'}"
         >
           <img
             class="w-8 h-6 md:h-8"
@@ -68,7 +80,9 @@ import { Subscription, filter } from 'rxjs';
           variant="ghost"
           routerLink="/dsb-carros-turbina"
           (click)="scrollToTop()"
-          class="flex flex-col justify-center items-center h-14 focus:opacity-100 hover:opacity-100 opacity-25"
+          style="background-color: transparent;"
+          class="flex flex-col justify-center items-center h-14"
+          [ngClass]="{'opacity-100': currentUrl === '/dsb-carros-turbina', 'opacity-25': currentUrl !== '/dsb-carros-turbina'}"
         >
           <img
             class="w-6 h-6 md:h-8"
@@ -82,7 +96,9 @@ import { Subscription, filter } from 'rxjs';
           variant="ghost"
           routerLink="/dsb-carros-pedal"
           (click)="scrollToTop()"
-          class="flex flex-col justify-center items-center h-14 focus:opacity-100 hover:opacity-100 opacity-25"
+          style="background-color: transparent;"
+          class="flex flex-col justify-center items-center h-14"
+          [ngClass]="{'opacity-100': currentUrl === '/dsb-carros-pedal', 'opacity-25': currentUrl !== '/dsb-carros-pedal'}"
         >
           <img
             class="w-8 h-6 md:h-8"
@@ -96,7 +112,9 @@ import { Subscription, filter } from 'rxjs';
           variant="ghost"
           routerLink="/dsb-carros-ar-comprimido"
           (click)="scrollToTop()"
-          class="flex flex-col justify-center items-center h-14 focus:opacity-100 hover:opacity-100 opacity-25"
+          style="background-color: transparent;"
+          class="flex flex-col justify-center items-center h-14"
+          [ngClass]="{'opacity-100': currentUrl === '/dsb-carros-ar-comprimido', 'opacity-25': currentUrl !== '/dsb-carros-ar-comprimido'}"
         >
           <img
             class="w-8 h-6 md:h-8"
@@ -110,7 +128,9 @@ import { Subscription, filter } from 'rxjs';
           variant="ghost"
           routerLink="/dsb-carros-velocidade"
           (click)="scrollToTop()"
-          class="flex flex-col justify-center items-center h-14 focus:opacity-100 hover:opacity-100 opacity-25"
+          style="background-color: transparent;"
+          class="flex flex-col justify-center items-center h-14"
+          [ngClass]="{'opacity-100': currentUrl === '/dsb-carros-velocidade', 'opacity-25': currentUrl !== '/dsb-carros-velocidade'}"
         >
           <img
             class="w-8 h-6 md:h-8"
@@ -125,7 +145,24 @@ import { Subscription, filter } from 'rxjs';
 })
 export class HeaderDashVeiculosComponent implements OnInit, OnDestroy {
   pageTitle = 'DashBus';
+  currentTime = new Date();
+  currentUrl = '';
   private routerSubscription: Subscription | undefined;
+  private clockSubscription: Subscription | undefined;
+  private urlRotationSubscription: Subscription | undefined;
+  
+  // Array of available routes to rotate through
+  private routes = [
+    '/dsbcarros',
+    '/dsb-carros-temp',
+    '/dsb-carros-torque',
+    '/dsb-carros-turbina',
+    '/dsb-carros-pedal',
+    '/dsb-carros-ar-comprimido',
+    '/dsb-carros-velocidade'
+  ];
+  
+  private currentRouteIndex = 0;
 
   constructor(private router: Router) {}
 
@@ -140,18 +177,51 @@ export class HeaderDashVeiculosComponent implements OnInit, OnDestroy {
       )
       .subscribe((event: NavigationEnd) => {
         // Atualiza o título com base na URL atual
+        this.currentUrl = event.urlAfterRedirects;
         this.updateTitle(event.urlAfterRedirects);
+        
+        // Atualiza o índice atual com base na URL
+        const index = this.routes.indexOf(this.currentUrl);
+        if (index !== -1) {
+          this.currentRouteIndex = index;
+        }
       });
 
     // Define o título inicial com base na URL atual
+    this.currentUrl = this.router.url;
     this.updateTitle(this.router.url);
+    
+    // Inicia o relógio que atualiza a cada segundo
+    this.clockSubscription = interval(1000).subscribe(() => {
+      this.currentTime = new Date();
+    });
+    
+    // Inicia o intervalo para alternar entre as URLs a cada 2 minutos
+    this.urlRotationSubscription = interval(120000).subscribe(() => {
+      this.rotateToNextRoute();
+    });
   }
 
   ngOnDestroy() {
-    // Cancela a inscrição ao destruir o componente
+    // Cancela as inscrições ao destruir o componente
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
     }
+    
+    if (this.clockSubscription) {
+      this.clockSubscription.unsubscribe();
+    }
+    
+    if (this.urlRotationSubscription) {
+      this.urlRotationSubscription.unsubscribe();
+    }
+  }
+  
+  // Método para rotacionar para a próxima rota
+  rotateToNextRoute() {
+    this.currentRouteIndex = (this.currentRouteIndex + 1) % this.routes.length;
+    const nextRoute = this.routes[this.currentRouteIndex];
+    this.router.navigate([nextRoute]);
   }
 
   updateTitle(url: string) {

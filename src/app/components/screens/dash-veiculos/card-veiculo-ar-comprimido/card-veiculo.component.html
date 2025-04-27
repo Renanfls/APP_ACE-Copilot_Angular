@@ -108,7 +108,7 @@
             </div>
           </div>
 
-          <!-- Seletor de cor com select -->
+          <!-- Seletor de cor com select 
           <div class="flex items-center gap-2 pb-2">
             <select
               [(ngModel)]="selectedVehicle.atributos[j].cor"
@@ -126,6 +126,7 @@
               </option>
             </select>
           </div>
+          -->
         </div>
       </div>
       <!-- Informações adicionais do veículo -->
@@ -151,7 +152,7 @@
               Odômetro:
               <span class="text-white">{{ selectedVehicle.odoAtual }}</span>
             </p>
-            <span class="text-md">Registro: 24/04/2025 03:00</span>
+            <span class="text-lg">Registro: 24/04/2025 03:00</span>
           </div>
           <div>
             <p
@@ -170,7 +171,7 @@
               ></span>
             </p>
             <div class="flex items-center gap-2">
-              <span class="text-md"
+              <span class="text-lg"
                 >Última troca de óleo:
                 {{ selectedVehicle.ultimaTrocaOleo || 'Não registrada' }}</span
               >
@@ -364,7 +365,7 @@
                 style="background-color: #242427"
                 title="Gráfico"
               >
-                <img src="assets/bar_chart.svg" class="2xl:w-9" alt="gráfico" />
+                <img src="assets/bar_chart.svg" class="2xl:w-20" alt="gráfico" />
               </button>
               <button
                 (click)="toggleOilChangeRecords()"
@@ -376,7 +377,7 @@
               >
                 <img
                   src="assets/overview.svg"
-                  class="2xl:w-9"
+                  class="2xl:w-20"
                   alt="visão geral"
                 />
                 <!-- Indicador de quantidade de registros -->
@@ -398,7 +399,7 @@
                 title="Comentários"
                 aria-label="Mostrar comentários"
               >
-                <img src="assets/chat.svg" class="2xl:w-9" alt="chat" />
+                <img src="assets/chat.svg" class="2xl:w-20" alt="chat" />
                 <!-- Indicador de quantidade de comentários -->
                 <div
                   *ngIf="

@@ -6,7 +6,7 @@
   <div
     *ngFor="let v of veiculos"
     class="shadow-2xl p-3 rounded-2xl flex flex-col items-center justify-center cursor-pointer border-2 relative transition-transform duration-300 hover:scale-105 hover:opacity-50"
-    [ngStyle]="{ 'background-color': getBackgroundColor(v.status) }"
+    [ngStyle]="{ 'background-color': getBackgroundColor(v.status) + '99' }"
     (click)="openHelpDialog(v)"
     (keydown.enter)="openHelpDialog(v)"
     (keydown.space)="openHelpDialog(v); $event.preventDefault()"
@@ -108,7 +108,7 @@
             </div>
           </div>
 
-          <!-- Seletor de cor com select -->
+          <!-- Seletor de cor com select 
           <div class="flex items-center gap-2 pb-2">
             <select
               [(ngModel)]="selectedVehicle.atributos[j].cor"
@@ -126,6 +126,7 @@
               </option>
             </select>
           </div>
+          -->
         </div>
       </div>
       <!-- Informações adicionais do veículo -->
@@ -151,7 +152,7 @@
               Odômetro:
               <span class="text-white">{{ selectedVehicle.odoAtual }}</span>
             </p>
-            <span class="text-md">Registro: 24/04/2025 03:00</span>
+            <span class="text-lg">Registro: 24/04/2025 03:00</span>
           </div>
           <div>
             <p
@@ -170,7 +171,7 @@
               ></span>
             </p>
             <div class="flex items-center gap-2">
-              <span class="text-md"
+              <span class="text-lg"
                 >Última troca de óleo:
                 {{ selectedVehicle.ultimaTrocaOleo || 'Não registrada' }}</span
               >
@@ -335,7 +336,7 @@
                 "
                 class="text-gray-400 text-center p-4"
               >
-                Nenhum registro de troca de óleo encontrado.
+                Nenhum registro.
               </div>
             </div>
           </div>
@@ -364,7 +365,7 @@
                 style="background-color: #242427"
                 title="Gráfico"
               >
-                <img src="assets/bar_chart.svg" class="2xl:w-9" alt="gráfico" />
+                <img src="assets/bar_chart.svg" class="2xl:w-20" alt="gráfico" />
               </button>
               <button
                 (click)="toggleOilChangeRecords()"
@@ -376,7 +377,7 @@
               >
                 <img
                   src="assets/overview.svg"
-                  class="2xl:w-9"
+                  class="2xl:w-20"
                   alt="visão geral"
                 />
                 <!-- Indicador de quantidade de registros -->
@@ -398,7 +399,7 @@
                 title="Comentários"
                 aria-label="Mostrar comentários"
               >
-                <img src="assets/chat.svg" class="2xl:w-9" alt="chat" />
+                <img src="assets/chat.svg" class="2xl:w-20" alt="chat" />
                 <!-- Indicador de quantidade de comentários -->
                 <div
                   *ngIf="
