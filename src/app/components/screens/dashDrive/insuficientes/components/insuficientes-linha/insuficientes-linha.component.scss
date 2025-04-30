@@ -1,0 +1,109 @@
+/* src/app/modules/insuficientes/components/insuficientes-linha/insuficientes-linha.component.scss */
+.insuficientes-container {
+  padding: 15px;
+
+  .card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #f8f9fa;
+      border-bottom: 1px solid #e9ecef;
+
+      h2 {
+        margin-bottom: 0;
+        font-size: 1.5rem;
+        font-weight: 500;
+      }
+
+      .view-toggle {
+        .btn {
+          margin-left: 8px;
+        }
+      }
+    }
+
+    .card-body {
+      padding: 20px;
+
+      .filtros-container {
+        margin-bottom: 25px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+
+        .form-group {
+          margin-bottom: 15px;
+
+          label {
+            font-weight: 500;
+            margin-bottom: 5px;
+          }
+        }
+      }
+
+      .loading-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 300px;
+      }
+
+      .visualizacao-container {
+        .chart-container {
+          height: 450px;
+          margin-bottom: 20px;
+
+          .no-data-message {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            color: #6c757d;
+            font-style: italic;
+          }
+        }
+
+        .tabela-container {
+          h4 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: 500;
+          }
+
+          .table {
+            font-size: 0.9rem;
+
+            th {
+              background-color: #f8f9fa;
+              font-weight: 600;
+            }
+
+            .text-end {
+              text-align: right;
+            }
+          }
+        }
+
+        .apexcharts-datalabel {
+          white-space: pre-line; // permite quebra de linha no texto (ex: "117\n6%")
+          text-align: center;
+          font-size: 11px;
+          fill: #fff !important; // texto branco para contraste em fundos escuros
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}
+
+::ng-deep .apexcharts-datalabel {
+  white-space: pre-line !important;
+  text-align: center;
+  font-size: 12px;
+  fill: #000 !important;
+  font-weight: 600;
+}

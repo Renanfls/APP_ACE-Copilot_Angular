@@ -1,0 +1,41 @@
+<!-- Loading indicator -->
+<div *ngIf="isLoading" class="flex justify-center items-center p-8">
+  <div
+    class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gray-900"
+  ></div>
+</div>
+
+<!-- Gráficos -->
+<div *ngIf="!isLoading" class="bg-white rounded-md shadow-md p-4">
+  <button
+    (click)="toggleViewMode()"
+    class="p-2 rounded-sm text-xs font-bold"
+    style="background-color: #242427"
+  >
+    Ver {{ viewMode === 'heatmap' ? 'Gráfico de Barras' : 'Heatmap' }}
+  </button>
+
+  <div *ngIf="viewMode === 'heatmap'" class="text-black">
+    <apx-chart
+      [series]="heatmapOptions.series!"
+      [chart]="heatmapOptions.chart!"
+      [dataLabels]="heatmapOptions.dataLabels!"
+      [plotOptions]="heatmapOptions.plotOptions!"
+      [xaxis]="heatmapOptions.xaxis!"
+      [tooltip]="heatmapOptions.tooltip!"
+    ></apx-chart>
+  </div>
+
+  <div *ngIf="viewMode === 'barras'" class="text-black">
+    <apx-chart
+      [series]="barChartOptions.series!"
+      [chart]="barChartOptions.chart!"
+      [xaxis]="barChartOptions.xaxis!"
+      [yaxis]="barChartOptions.yaxis!"
+      [plotOptions]="barChartOptions.plotOptions!"
+      [tooltip]="barChartOptions.tooltip!"
+      [legend]="barChartOptions.legend!"
+      [fill]="barChartOptions.fill!"
+    ></apx-chart>
+  </div>
+</div>

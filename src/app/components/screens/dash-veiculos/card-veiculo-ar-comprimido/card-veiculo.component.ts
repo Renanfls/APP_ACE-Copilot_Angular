@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ModalComponent } from '../modal/modal.component';
+import { HeaderDashVeiculosComponent } from '../header/header.component';
+import { FooterDashVeiculosComponent } from '../footer/footer.component';
 
 @Component({
   selector: 'app-card-veiculo-ar-comprimido',
   standalone: true, 
-  imports: [CommonModule, FormsModule, ModalComponent],
+  imports: [CommonModule, FormsModule, ModalComponent, HeaderDashVeiculosComponent, FooterDashVeiculosComponent],
   templateUrl: './card-veiculo.component.html',
   styleUrls: ['./card-veiculo.component.css'],
 })
