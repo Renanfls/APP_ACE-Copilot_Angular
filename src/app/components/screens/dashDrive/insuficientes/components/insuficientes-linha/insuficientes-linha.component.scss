@@ -1,109 +1,145 @@
-/* src/app/modules/insuficientes/components/insuficientes-linha/insuficientes-linha.component.scss */
-.insuficientes-container {
-  padding: 15px;
+.card {
+  border: 1px solid #2c2c2e;
+  border-radius: 1rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
 
-  .card {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
 
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #f8f9fa;
-      border-bottom: 1px solid #e9ecef;
+.subtitle {
+  font-size: 0.875rem;
+  color: #a1a1aa;
+}
 
-      h2 {
-        margin-bottom: 0;
-        font-size: 1.5rem;
-        font-weight: 500;
-      }
+.apexcharts-tooltip {
+  background-color: #2c2c2e !important;
+  color: #ffffff !important;
+  border: none !important;
+}
 
-      .view-toggle {
-        .btn {
-          margin-left: 8px;
-        }
-      }
-    }
 
-    .card-body {
-      padding: 20px;
 
-      .filtros-container {
-        margin-bottom: 25px;
-        padding: 15px;
-        background-color: #f8f9fa;
-        border-radius: 5px;
+// Estilos principais do componente
+:host {
+  display: block;
+  font-family: 'Inter', sans-serif;
 
-        .form-group {
-          margin-bottom: 15px;
+  color: #e5e7eb;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
 
-          label {
-            font-weight: 500;
-            margin-bottom: 5px;
-          }
-        }
-      }
-
-      .loading-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 300px;
-      }
-
-      .visualizacao-container {
-        .chart-container {
-          height: 450px;
-          margin-bottom: 20px;
-
-          .no-data-message {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            color: #6c757d;
-            font-style: italic;
-          }
-        }
-
-        .tabela-container {
-          h4 {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            font-weight: 500;
-          }
-
-          .table {
-            font-size: 0.9rem;
-
-            th {
-              background-color: #f8f9fa;
-              font-weight: 600;
-            }
-
-            .text-end {
-              text-align: right;
-            }
-          }
-        }
-
-        .apexcharts-datalabel {
-          white-space: pre-line; // permite quebra de linha no texto (ex: "117\n6%")
-          text-align: center;
-          font-size: 11px;
-          fill: #fff !important; // texto branco para contraste em fundos escuros
-          font-weight: 500;
-        }
-      }
-    }
+// Estilos para o card principal
+.bg-white {
+  transition: all 0.2s ease;
+  
+  &:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   }
 }
 
-::ng-deep .apexcharts-datalabel {
-  white-space: pre-line !important;
-  text-align: center;
-  font-size: 12px;
-  fill: #000 !important;
-  font-weight: 600;
+// Cores para os botões e elementos interativos
+button {
+  transition: all 0.2s ease;
+  
+  &:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Personalização da lista de motoristas
+.motorista-item {
+  border-left: 3px solid transparent;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-left-color: #E53935;
+    background-color: rgba(229, 57, 53, 0.05);
+  }
+  
+  &.selected {
+    border-left-color: #E53935;
+    background-color: rgba(229, 57, 53, 0.1);
+    font-weight: 500;
+  }
+}
+
+
+
+// Animação para os cards de indicadores
+.indicador-card {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Estilo para ícones de tendência
+.tendencia-up {
+  color: #4CAF50;
+}
+
+.tendencia-down {
+  color: #F44336;
+}
+
+/* Adicione estes estilos ao arquivo insuficientes-linha.component.scss */
+
+/* Animações para o modal */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-20px); }
+  to { transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out, slideIn 0.3s ease-out;
+}
+
+/* Classes auxiliares para o modal */
+.max-h-90vh {
+  max-height: 90vh;
+}
+
+/* Estilos para scroll customizado */
+.overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: #E53935 #f5f5f5;
+}
+
+.overflow-y-auto::-webkit-scrollbar {
+  width: 8px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-radius: 10px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background-color: #E53935;
+  border-radius: 10px;
+}
+
+/* Overlay do modal com efeito de desfoque */
+.bg-black.bg-opacity-50 {
+  backdrop-filter: blur(4px);
 }

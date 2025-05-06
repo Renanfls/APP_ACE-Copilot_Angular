@@ -1,0 +1,287 @@
+[
+  {
+    "linha": "117",
+    "quantidade": 6,
+    "percentual": 6,
+    "motoristas": [
+      {
+        "nome": "João Silva",
+        "matricula": "10023",
+        "percentualInsuficiencia": 8.5
+      },
+      {
+        "nome": "Maria Oliveira",
+        "matricula": "10456",
+        "percentualInsuficiencia": 6.2
+      },
+      {
+        "nome": "Pedro Santos",
+        "matricula": "10789",
+        "percentualInsuficiencia": 7.1
+      },
+      {
+        "nome": "Ana Costa",
+        "matricula": "11032",
+        "percentualInsuficiencia": 5.8
+      },
+      {
+        "nome": "Carlos Ferreira",
+        "matricula": "10655",
+        "percentualInsuficiencia": 9.2
+      },
+      {
+        "nome": "Luiza Souza",
+        "matricula": "10987",
+        "percentualInsuficiencia": 4.5
+      }
+    ]
+  },
+  {
+    "linha": "133",
+    "quantidade": 0,
+    "percentual": 0,
+    "motoristas": []
+  },
+  {
+    "linha": "161",
+    "quantidade": 0,
+    "percentual": 0,
+    "motoristas": []
+  },
+  {
+    "linha": "201",
+    "quantidade": 2,
+    "percentual": 20,
+    "motoristas": [
+      {
+        "nome": "Roberto Almeida",
+        "matricula": "11234",
+        "percentualInsuficiencia": 22.1
+      },
+      {
+        "nome": "Juliana Lima",
+        "matricula": "11567",
+        "percentualInsuficiencia": 18.5
+      }
+    ]
+  },
+  {
+    "linha": "202",
+    "quantidade": 2,
+    "percentual": 20,
+    "motoristas": [
+      {
+        "nome": "Marcos Ribeiro",
+        "matricula": "11890",
+        "percentualInsuficiencia": 19.8
+      },
+      {
+        "nome": "Fernanda Gomes",
+        "matricula": "12134",
+        "percentualInsuficiencia": 21.3
+      }
+    ]
+  },
+  {
+    "linha": "415",
+    "quantidade": 56,
+    "percentual": 56,
+    "motoristas": [
+      {
+        "nome": "Ricardo Martins",
+        "matricula": "12456",
+        "percentualInsuficiencia": 58.7
+      },
+      {
+        "nome": "Paula Cardoso",
+        "matricula": "12789",
+        "percentualInsuficiencia": 55.2
+      },
+      {
+        "nome": "André Pereira",
+        "matricula": "13023",
+        "percentualInsuficiencia": 62.1
+      },
+      {
+        "nome": "Camila Rodrigues",
+        "matricula": "13456",
+        "percentualInsuficiencia": 49.5
+      },
+      {
+        "nome": "Bruno Carvalho",
+        "matricula": "13789",
+        "percentualInsuficiencia": 53.8
+      },
+      {
+        "nome": "Diego Moreira",
+        "matricula": "14023",
+        "percentualInsuficiencia": 57.9
+      },
+      {
+        "nome": "Aline Santos",
+        "matricula": "14356",
+        "percentualInsuficiencia": 51.2
+      },
+      {
+        "nome": "Thiago Menezes",
+        "matricula": "14689",
+        "percentualInsuficiencia": 60.5
+      },
+      {
+        "nome": "Renata Alves",
+        "matricula": "15023",
+        "percentualInsuficiencia": 54.3
+      },
+      {
+        "nome": "Gustavo Mendes",
+        "matricula": "15356",
+        "percentualInsuficiencia": 59.8
+      }
+    ]
+  },
+  {
+    "linha": "426",
+    "quantidade": 33,
+    "percentual": 33,
+    "motoristas": [
+      {
+        "nome": "Mariana Costa",
+        "matricula": "15689",
+        "percentualInsuficiencia": 34.7
+      },
+      {
+        "nome": "Lucas Ferreira",
+        "matricula": "16023",
+        "percentualInsuficiencia": 31.2
+      },
+      {
+        "nome": "Julia Oliveira",
+        "matricula": "16356",
+        "percentualInsuficiencia": 35.8
+      },
+      {
+        "nome": "Rafael Santos",
+        "matricula": "16689",
+        "percentualInsuficiencia": 30.1
+      },
+      {
+        "nome": "Carolina Lima",
+        "matricula": "17023",
+        "percentualInsuficiencia": 36.5
+      },
+      {
+        "nome": "Matheus Ribeiro",
+        "matricula": "17356",
+        "percentualInsuficiencia": 29.8
+      },
+      {
+        "nome": "Amanda Gomes",
+        "matricula": "17689",
+        "percentualInsuficiencia": 37.2
+      },
+      {
+        "nome": "Vinicius Pereira",
+        "matricula": "18023",
+        "percentualInsuficiencia": 32.9
+      }
+    ]
+  },
+  {
+    "linha": "539",
+    "quantidade": 2,
+    "percentual": 20,
+    "motoristas": [
+      {
+        "nome": "Patricia Carvalho",
+        "matricula": "18356",
+        "percentualInsuficiencia": 21.5
+      },
+      {
+        "nome": "Felipe Moreira",
+        "matricula": "18689",
+        "percentualInsuficiencia": 19.3
+      }
+    ]
+  },
+  {
+    "linha": "585",
+    "quantidade": 0,
+    "percentual": 0,
+    "motoristas": []
+  },
+  {
+    "linha": "626",
+    "quantidade": 0,
+    "percentual": 0,
+    "motoristas": []
+  },
+  {
+    "linha": "700",
+    "quantidade": 12,
+    "percentual": 12,
+    "motoristas": [
+      {
+        "nome": "Bianca Alves",
+        "matricula": "19023",
+        "percentualInsuficiencia": 11.7
+      },
+      {
+        "nome": "Leonardo Mendes",
+        "matricula": "19356",
+        "percentualInsuficiencia": 13.2
+      },
+      {
+        "nome": "Gabriela Sousa",
+        "matricula": "19689",
+        "percentualInsuficiencia": 10.8
+      },
+      {
+        "nome": "Daniel Castro",
+        "matricula": "20023",
+        "percentualInsuficiencia": 14.5
+      },
+      {
+        "nome": "Isabela Martins",
+        "matricula": "20356",
+        "percentualInsuficiencia": 12.3
+      }
+    ]
+  },
+  {
+    "linha": "701",
+    "quantidade": 15,
+    "percentual": 15,
+    "motoristas": [
+      {
+        "nome": "Eduardo Santos",
+        "matricula": "20689",
+        "percentualInsuficiencia": 16.7
+      },
+      {
+        "nome": "Natália Lima",
+        "matricula": "21023",
+        "percentualInsuficiencia": 14.5
+      },
+      {
+        "nome": "Marcelo Costa",
+        "matricula": "21356",
+        "percentualInsuficiencia": 17.2
+      },
+      {
+        "nome": "Fernanda Oliveira",
+        "matricula": "21689",
+        "percentualInsuficiencia": 13.8
+      },
+      {
+        "nome": "Rodrigo Ferreira",
+        "matricula": "22023",
+        "percentualInsuficiencia": 16.1
+      },
+      {
+        "nome": "Tatiane Ribeiro",
+        "matricula": "22356",
+        "percentualInsuficiencia": 15.3
+      }
+    ]
+  }
+]

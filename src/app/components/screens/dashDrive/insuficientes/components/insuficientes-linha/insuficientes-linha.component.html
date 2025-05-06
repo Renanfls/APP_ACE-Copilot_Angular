@@ -1,41 +1,245 @@
-<!-- Loading indicator -->
-<div *ngIf="isLoading" class="flex justify-center items-center p-8">
-  <div
-    class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gray-900"
-  ></div>
-</div>
+<!-- Layout principal com grid responsivo -->
+<div class="p-4 text-black">
+  <!-- Filtros 
+  <div class="mb-4 bg-white rounded-md shadow-md p-4">
+    <form
+      [formGroup]="filterForm"
+      class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4"
+    >
+      <div>
+        <label for="periodoInicioInput" class="block text-sm font-medium text-gray-700"
+          >Período Início</label
+        >
+        <input
+          id="periodoInicioInput"
+          type="date"
+          formControlName="periodoInicio"
+          class="mt-1 w-full rounded-md border-gray-300 shadow-sm"
+        />
+      </div>
+      <div>
+        <label for="periodoFimInput" class="block text-sm font-medium text-gray-700"
+          >Período Fim</label
+        >
+        <input
+          id="periodoFimInput"
+          type="date"
+          formControlName="periodoFim"
+          class="mt-1 w-full rounded-md border-gray-300 shadow-sm"
+        />
+      </div>
+      <div>
+        <label for="empresaSelect" class="block text-sm font-medium text-gray-700">Empresa</label>
+        <select
+          id="empresaSelect"
+          formControlName="empresa"
+          class="mt-1 w-full rounded-md border-gray-300 shadow-sm"
+        >
+          <option value="">Todas</option>
+          <option
+            *ngFor="let empresa of filterOptions.empresas"
+            [value]="empresa"
+          >
+            {{ empresa }}
+          </option>
+        </select>
+      </div>
+      <div>
+        <label for="garagemSelect" class="block text-sm font-medium text-gray-700">Garagem</label>
+        <select
+          id="garagemSelect"
+          formControlName="garagem"
+          class="mt-1 w-full rounded-md border-gray-300 shadow-sm"
+        >
+          <option value="">Todas</option>
+          <option
+            *ngFor="let garagem of filterOptions.garagens"
+            [value]="garagem"
+          >
+            {{ garagem }}
+          </option>
+        </select>
+      </div>
+      <div>
+        <label for="tipoTurnoSelect" class="block text-sm font-medium text-gray-700"
+          >Tipo de Turno</label
+        >
+        <select
+          id="tipoTurnoSelect"
+          formControlName="tipoTurno"
+          class="mt-1 w-full rounded-md border-gray-300 shadow-sm"
+        >
+          <option value="">Todos</option>
+          <option *ngFor="let tipo of filterOptions.tiposTurno" [value]="tipo">
+            {{ tipo }}
+          </option>
+        </select>
+      </div>
+    </form>
+  </div>
+  -->
 
-<!-- Gráficos -->
-<div *ngIf="!isLoading" class="bg-white rounded-md shadow-md p-4">
-  <button
-    (click)="toggleViewMode()"
-    class="p-2 rounded-sm text-xs font-bold"
-    style="background-color: #242427"
-  >
-    Ver {{ viewMode === 'heatmap' ? 'Gráfico de Barras' : 'Heatmap' }}
-  </button>
-
-  <div *ngIf="viewMode === 'heatmap'" class="text-black">
-    <apx-chart
-      [series]="heatmapOptions.series!"
-      [chart]="heatmapOptions.chart!"
-      [dataLabels]="heatmapOptions.dataLabels!"
-      [plotOptions]="heatmapOptions.plotOptions!"
-      [xaxis]="heatmapOptions.xaxis!"
-      [tooltip]="heatmapOptions.tooltip!"
-    ></apx-chart>
+  <!-- Loading indicator -->
+  <div *ngIf="isLoading" class="flex justify-center items-center p-8">
+    <div
+      class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gray-900"
+    ></div>
   </div>
 
-  <div *ngIf="viewMode === 'barras'" class="text-black">
-    <apx-chart
-      [series]="barChartOptions.series!"
-      [chart]="barChartOptions.chart!"
-      [xaxis]="barChartOptions.xaxis!"
-      [yaxis]="barChartOptions.yaxis!"
-      [plotOptions]="barChartOptions.plotOptions!"
-      [tooltip]="barChartOptions.tooltip!"
-      [legend]="barChartOptions.legend!"
-      [fill]="barChartOptions.fill!"
-    ></apx-chart>
+  <!-- Grid de indicadores -->
+  <div
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 text-center gap-6 mb-4"
+  >
+    <div
+      *ngFor="let indicador of indicadoresMotorista"
+      class="bg-black text-white p-3 rounded-2xl flex flex-col items-center justify-center card"
+    >
+      <div class="text-xl text-amber-500 font-bold mb-2">
+        {{ indicador.nome }}
+      </div>
+      <div class="flex items-end">
+        <span class="text-3xl font-bold">{{ indicador.valor }}</span>
+        <span
+          class="ml-2 text-xl font-bold"
+          [ngClass]="
+            indicador.tendencia > 0
+              ? 'text-green-500'
+              : indicador.tendencia < 0
+              ? 'text-red-500'
+              : 'text-gray-500'
+          "
+        >
+          {{
+            indicador.tendencia > 0 ? '↑' : indicador.tendencia < 0 ? '↓' : '→'
+          }}
+          {{ indicador.unidade }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Container principal para conteúdo -->
+  <div *ngIf="!isLoading" class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    <!-- Painel do gráfico principal -->
+    <div class="lg:col-span-2 rounded-2xl p-4">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="title">&nbsp;</h2>
+        <div class="flex gap-2">
+          <button
+            (click)="toggleViewMode()"
+            class="px-3 py-3 rounded-md text-xs font-bold text-white border border-cyan-100"
+          >
+            Ver {{ viewMode === 'heatmap' ? 'Gráfico de Barras' : 'Heatmap' }}
+          </button>
+          <button
+            (click)="exportarDados()"
+            class="px-3 py-1 rounded-md text-xs font-bold text-white bg-cyan-500"
+          >
+            Exportar
+          </button>
+        </div>
+      </div>
+
+      <!-- Heatmap -->
+      <div *ngIf="viewMode === 'heatmap'" class="text-black">
+        <h2 class="title">Insuficiências por Linha</h2>
+        <div id="chart">
+          <apx-chart
+            #chart
+            [series]="heatmapOptions.series!"
+            [chart]="heatmapOptions.chart!"
+            [dataLabels]="heatmapOptions.dataLabels!"
+            [plotOptions]="heatmapOptions.plotOptions!"
+            [xaxis]="heatmapOptions.xaxis!"
+            [tooltip]="heatmapOptions.tooltip!"
+          ></apx-chart>
+        </div>
+      </div>
+
+      <!-- Gráfico de barras -->
+      <div *ngIf="viewMode === 'barras'" class="card">
+        <h2 class="title">Insuficiências por Linha</h2>
+        <div id="chart">
+          <apx-chart
+            #chart
+            [series]="barChartOptions.series!"
+            [chart]="barChartOptions.chart!"
+            [xaxis]="barChartOptions.xaxis!"
+            [yaxis]="barChartOptions.yaxis!"
+            [plotOptions]="barChartOptions.plotOptions!"
+            [tooltip]="barChartOptions.tooltip!"
+            [legend]="barChartOptions.legend!"
+            [fill]="barChartOptions.fill!"
+          ></apx-chart>
+        </div>
+      </div>
+
+      <div>
+        <!-- Gráfico 3: Giro do Motor -->
+        <div class="card">
+          <h3 class="title">Giro do Motor</h3>
+          <div id="chart">
+            <apx-chart
+              [series]="giroChartOptions.series!"
+              [chart]="giroChartOptions.chart!"
+              [xaxis]="giroChartOptions.xaxis!"
+              [fill]="giroChartOptions.fill!"
+              [markers]="giroChartOptions.markers!"
+              [colors]="giroChartOptions.colors!"
+            ></apx-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Painel de motoristas da linha selecionada -->
+    <div class="bg-black text-white rounded-2xl p-4 h-fit">
+      <h2 class="font-bold text-lg mb-4">
+        {{
+          linhaSelecionada
+            ? 'Motoristas da Linha ' + linhaSelecionada
+            : 'Selecione uma linha'
+        }}
+      </h2>
+
+      <div *ngIf="!linhaSelecionada" class="text-center text-gray-500 py-8">
+        Clique em uma linha no gráfico para ver os motoristas
+      </div>
+
+      <div
+        *ngIf="linhaSelecionada && motoristasSelecionados.length === 0"
+        class="text-center text-gray-500 py-8"
+      >
+        Nenhum motorista insuficiente nesta linha
+      </div>
+
+      <div *ngIf="linhaSelecionada && motoristasSelecionados.length > 0">
+        <ul class="divide-y divide-gray-200">
+          <li
+            *ngFor="let motorista of motoristasSelecionados"
+            class="py-3 px-2 hover:bg-gray-25 focus:bg-gray-25 cursor-pointer focus:outline-none cursor-pointer transition-colors"
+            (click)="selecionarMotorista(motorista)"
+            (keydown.enter)="selecionarMotorista(motorista)"
+            tabindex="0"
+            role="button"
+          >
+            {{ motorista }}
+          </li>
+        </ul>
+      </div>
+      <!-- Gráfico 2: Pontuação Geral -->
+      <div class="card">
+        <h3 class="title">Taxa Insuficientes</h3>
+        <div id="chart">
+          <apx-chart
+            [series]="pontuacaoChartOptions.series!"
+            [chart]="pontuacaoChartOptions.chart!"
+            [plotOptions]="pontuacaoChartOptions.plotOptions!"
+            [colors]="pontuacaoChartOptions.colors!"
+            [labels]="pontuacaoChartOptions.labels!"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

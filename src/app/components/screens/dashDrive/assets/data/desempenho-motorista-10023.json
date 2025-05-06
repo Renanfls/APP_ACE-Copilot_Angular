@@ -1,0 +1,47 @@
+{
+  "pontuacao": 78,
+  "kml": [2.3, 2.5, 2.1, 2.4, 2.7, 2.6, 2.5],
+  "kmTotal": [145, 132, 156, 138, 142, 150, 143],
+  "freio": [23, 25, 30, 28, 22, 21, 24],
+  "pedal": [35, 32, 38, 33, 30, 35, 31],
+  "giroMotor": [1820, 1950, 1780, 1860, 1790, 1830, 1900],
+  "datas": ["29/4", "30/4", "1/5", "2/5", "3/5", "4/5", "5/5"],
+  "indicadores": [
+    {
+      "nome": "Pontuação",
+      "valor": "78",
+      "tendencia": 1,
+      "unidade": "%"
+    },
+    {
+      "nome": "KM/L",
+      "valor": "2.5",
+      "tendencia": 1,
+      "unidade": "km/l"
+    },
+    {
+      "nome": "Total KM",
+      "valor": "1456",
+      "tendencia": 0,
+      "unidade": "km"
+    },
+    {
+      "nome": "Freio",
+      "valor": "24",
+      "tendencia": -1,
+      "unidade": "%"
+    },
+    {
+      "nome": "Pedal",
+      "valor": "33",
+      "tendencia": -1,
+      "unidade": "%"
+    },
+    {
+      "nome": "Giro",
+      "valor": "1850",
+      "tendencia": 1,
+      "unidade": "rpm"
+    }
+  ]
+}
