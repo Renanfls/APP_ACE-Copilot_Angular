@@ -1,86 +1,94 @@
-<app-statistic />
+<app-header/>
 
-<section class="container mt-12 grid xs:grid-cols-2 gap-3 md:gap-4 xl:px-52 pb-6 md:pb-10 border-b-4" style="border-color: #1d1d1d;">
-  <button hlmBtn variant="ghost" routerLink="/score" class="bg-amber-400 hover:bg-white flex justify-between md:p-5 gap-4 h-20 md:h-24 rounded-2xl md:rounded-3xl">
-    <img src="assets/cards_star.svg" class="w-10 md:w-auto" alt="Icone Pontuação">
-    <div class="flex items-center">
-      <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg mt-4 md:mt-8">Pontuação ACE</p>
-    </div>
-  </button>
-  <button hlmBtn variant="ghost" routerLink="/" class="bg-amber-400 hover:bg-white flex justify-between items-center md:p-5 gap-4 md:gap-8 h-20 md:h-24 rounded-2xl md:rounded-3xl">
-    <img src="assets/animated_images.svg" class="w-10 md:w-auto" alt="Icone Treinamento">
-    <div class="flex flex-col justify-between relative">
-      <span class="font-bold text-xs bg-red-500 px-2 md:px-3 md:py-1 rounded-full absolute right-0">1</span>
-      <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg mt-8 xs:mt-7">Treinamento Online</p>
-    </div>
-  </button>
-  <button hlmBtn variant="ghost" routerLink="/" class="bg-amber-400 hover:bg-white flex justify-between items-center md:p-5 gap-4 md:gap-8 h-20 md:h-24 rounded-2xl md:rounded-3xl">
-    <img src="assets/Vector.svg" class="w-10 md:w-auto" alt="Icone Ás no ACE">
-    <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg mt-4 md:mt-8">Ás no ACE</p>
-  </button>
-  <button hlmBtn variant="ghost" routerLink="/" class="bg-amber-400 hover:bg-white flex justify-between items-center md:p-5 gap-4 md:gap-8 h-20 md:h-24 rounded-2xl md:rounded-3xl">
-    <img src="assets/cognition_2.svg" class="w-10 md:w-auto" alt="Icone Quiz">
-    <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg mt-4 md:mt-8">Quiz</p>
-  </button>
-  <button hlmBtn variant="ghost" routerLink="/" class="bg-amber-400 hover:bg-white flex justify-between md:p-5 gap-16 xs:gap-3 md:gap-8 h-20 md:h-24 rounded-2xl md:rounded-3xl">
-    <img src="assets/PES.svg" alt="Icone PES" class="w-10 md:w-auto">
-    <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg ps-1.5 min-sm:ps-5">Programa de Emissão Sustentável</p>
+<div class="flex-1 md:container py-28">
+  <app-statistic />
+
+  <section class="container mt-12 grid xs:grid-cols-2 gap-3 md:gap-4 xl:px-52 pb-6 md:pb-10 dark:border-b-4" style="border-color: #1d1d1d;">
+    <button hlmBtn variant="ghost" routerLink="/pontuacao-ace" class="bg-[#D7B318] hover:bg-white flex justify-between md:p-5 gap-4 h-20 md:h-24 rounded-2xl md:rounded-3xl">
+      <img src="assets/cards_star.svg" class="w-10 md:w-auto" alt="Icone Pontuação">
+      <div class="flex items-center">
+        <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg mt-4 md:mt-8">Pontuação ACE</p>
+      </div>
     </button>
-  <button hlmBtn variant="ghost" routerLink="/" class="bg-amber-400 hover:bg-white flex justify-between items-center md:p-5 gap-4 md:gap-8 h-20 md:h-24 rounded-2xl md:rounded-3xl">
-    <img src="assets/auto_stories.svg" class="w-10 md:w-auto" alt="Icone Dica">
-    <div class="flex flex-col justify-between relative">
-      <span class="font-bold text-xs bg-red-500 px-2 md:px-3 md:py-1 rounded-full absolute right-0">1</span>
-      <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg mt-8 xs:mt-7">Dica</p>
-    </div>
-  </button>
-</section>
+    <button hlmBtn variant="ghost" routerLink="/" class="bg-[#D7B318] hover:bg-white flex justify-between items-center md:p-5 gap-4 md:gap-8 h-20 md:h-24 rounded-2xl md:rounded-3xl">
+      <img src="assets/animated_images.svg" class="w-10 md:w-auto" alt="Icone Treinamento">
+      <div class="flex flex-col justify-between relative">
+        <span class="font-bold text-xs text-white bg-red-500 px-2 md:px-3 md:py-1 rounded-full absolute right-0">1</span>
+        <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg mt-8 xs:mt-7">Treinamento Online</p>
+      </div>
+    </button>
+    <button hlmBtn variant="ghost" routerLink="/as-no-ace" class="bg-[#D7B318] hover:bg-white flex justify-between items-center md:p-5 gap-4 md:gap-8 h-20 md:h-24 rounded-2xl md:rounded-3xl">
+      <img src="assets/Vector.svg" class="w-10 md:w-auto" alt="Icone Ás no ACE">
+      <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg mt-4 md:mt-8">Ás no ACE</p>
+    </button>
+    <button hlmBtn variant="ghost" routerLink="/" class="bg-[#D7B318] hover:bg-white flex justify-between items-center md:p-5 gap-4 md:gap-8 h-20 md:h-24 rounded-2xl md:rounded-3xl">
+      <img src="assets/cognition_2.svg" class="w-10 md:w-auto" alt="Icone Quiz">
+      <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg mt-4 md:mt-8">Quiz</p>
+    </button>
+    <button hlmBtn variant="ghost" routerLink="/" class="bg-[#D7B318] hover:bg-white flex justify-between md:p-5 gap-16 xs:gap-3 md:gap-8 h-20 md:h-24 rounded-2xl md:rounded-3xl">
+      <img src="assets/PES.svg" alt="Icone PES" class="w-10 md:w-auto">
+      <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg ps-1.5 min-sm:ps-5">Programa de Emissão Sustentável</p>
+      </button>
+    <button hlmBtn variant="ghost" routerLink="/" class="bg-[#D7B318] hover:bg-white flex justify-between items-center md:p-5 gap-4 md:gap-8 h-20 md:h-24 rounded-2xl md:rounded-3xl">
+      <img src="assets/auto_stories.svg" class="w-10 md:w-auto" alt="Icone Dica">
+      <div class="flex flex-col justify-between relative">
+        <span class="font-bold text-xs text-white bg-red-500 px-2 md:px-3 md:py-1 rounded-full absolute right-0">1</span>
+        <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg mt-8 xs:mt-7">Dica</p>
+      </div>
+    </button>
+  </section>
+  
+  <section class="container xl:px-52 pt-6 md:pt-10 pb-6 md:pb-10 dark:border-b-4" style="border-color: #1d1d1d;">
+    <h2 class="font-bold text-2xl md:text-3xl">Tarefas Diárias</h2>
+    <app-task
+    [label]="'Abrir o Aplicativo'"
+    [quantity]="1"
+    [current]="0"
+    [icon]="'matAddToHomeScreenRound'"
+    />
+    <app-task
+    [label]="'Abrir Pontuação ACE'"
+    [quantity]="1"
+    [current]="0"
+    [icon]="'matLocalPlayRound'"
+    />
+    <app-task
+    [label]="'Responder a um Quiz'"
+    [quantity]="1"
+    [current]="0"
+    [icon]="'matQuizRound'"
+    />
+    <app-task
+    [label]="'Ler uma Dica de Economia'"
+    [quantity]="1"
+    [current]="0"
+    [icon]="'matAddCommentRound'"
+    />
+  </section>
+  
+  <section class="container xl:px-52 pt-6 md:pt-10 pb-6 md:pb-10 dark:border-b-4" style="border-color: #1d1d1d;">
+    <h2 class="font-bold text-2xl md:text-3xl">Tarefas Mensais</h2>
+    <app-task
+    [label]="'Refazer o treinamento'"
+    [quantity]="10"
+    [current]="10"
+    [icon]="'matVideoLibraryRound'"
+    />
+    <app-task
+    [label]="'5 Acessos ao Aplicativo'"
+    [quantity]="5"
+    [current]="2"
+    [icon]="'matAddToHomeScreenRound'"
+    />
+    <app-task
+    [label]="'20 Acessos ao Aplicativo'"
+    [quantity]="20"
+    [current]="2"
+    [icon]="'matAddToHomeScreenRound'"
+    />
+  </section>
 
-<section class="container xl:px-52 pt-6 md:pt-10 pb-6 md:pb-10 border-b-4" style="border-color: #1d1d1d;">
-  <h2 class="font-bold text-2xl md:text-3xl">Tarefas Diárias</h2>
-  <app-task
-  [label]="'Abrir o Aplicativo'"
-  [quantity]="1"
-  [current]="0"
-  [icon]="'matAddToHomeScreenRound'"
-  />
-  <app-task
-  [label]="'Abrir Pontuação ACE'"
-  [quantity]="1"
-  [current]="0"
-  [icon]="'matLocalPlayRound'"
-  />
-  <app-task
-  [label]="'Responder a um Quiz'"
-  [quantity]="1"
-  [current]="0"
-  [icon]="'matQuizRound'"
-  />
-  <app-task
-  [label]="'Ler uma Dica de Economia'"
-  [quantity]="1"
-  [current]="0"
-  [icon]="'matAddCommentRound'"
-  />
-</section>
+  <app-faq-dropdown class="container xl:px-52 pt-4 md:pt-10 pb-6 md:pb-10"/>
+</div>
 
-<section class="container xl:px-52 pt-6 md:pt-10">
-  <h2 class="font-bold text-2xl md:text-3xl">Tarefas Mensais</h2>
-  <app-task
-  [label]="'Refazer o treinamento'"
-  [quantity]="10"
-  [current]="10"
-  [icon]="'matVideoLibraryRound'"
-  />
-  <app-task
-  [label]="'5 Acessos ao Aplicativo'"
-  [quantity]="5"
-  [current]="2"
-  [icon]="'matAddToHomeScreenRound'"
-  />
-  <app-task
-  [label]="'20 Acessos ao Aplicativo'"
-  [quantity]="20"
-  [current]="2"
-  [icon]="'matAddToHomeScreenRound'"
-  />
-</section>
+<app-footer/>

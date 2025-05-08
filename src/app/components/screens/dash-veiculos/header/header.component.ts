@@ -47,7 +47,7 @@ import { LoadingScreenComponent } from '../loading-screen/loading-screen.compone
         </div>
       </div>
 
-      <div class="flex items-center justify-between">
+      <div class="flex items-center justify-between text-white">
         <button
           routerLink="/dsbcarros"
           (click)="scrollToTop()"
@@ -247,7 +247,7 @@ export class HeaderDashVeiculosComponent implements OnInit, OnDestroy {
     });
 
     // Inicia o intervalo para alternar entre as URLs a cada 2 minutos
-    this.urlRotationSubscription = interval(120000).subscribe(() => {
+    this.urlRotationSubscription = interval(12000).subscribe(() => {
       this.rotateToNextRoute();
     });
   }

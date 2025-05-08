@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
   imports: [RouterModule, CommonModule],
   template: `
     <footer class="container py-3 flex items-center justify-evenly z-40 relative text-xs md:text-sm font-bold">
-      <div *ngIf="showLegend" class="py-6 flex items-center justify-center gap-16 w-full fixed bottom-0" style="background-color: #141416;">
+      <div *ngIf="showLegend" class="py-6 flex items-center justify-center gap-16 w-full fixed bottom-0 text-white" style="background-color: #141416;">
         <div *ngFor="let item of legendItems" class="flex items-center gap-3">
           <span class="w-10 h-4 rounded-full" [style.background-color]="item.color"></span>
           <small class="text-2xl">{{ item.label }}</small>

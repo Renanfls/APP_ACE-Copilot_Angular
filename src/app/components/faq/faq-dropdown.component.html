@@ -1,0 +1,35 @@
+<div class="w-full mx-auto p-4">
+  <h2 class="font-bold text-2xl md:text-3xl mb-8">FAQ Ace Copilot</h2>
+  
+  <div class="space-y-2">
+    <div *ngFor="let category of faqData" class="rounded-lg overflow-hidden">
+      <!-- Cabeçalho da categoria -->
+      <button
+        class="w-full p-4 text-left bg-[#D7B318] text-black font-bold flex justify-between items-center hover:bg-[#1d1d1d] active:text-white focus:text-white hover-text-white transition-colors"
+        (click)="toggleCategory(category.id)"
+      >
+        <span>{{ category.id }}. {{ category.title }}</span>
+        <ng-icon name="{{ openCategory === category.id ? 'lucideArrowUp' : 'lucideArrowDown' }}" />
+      </button>
+      
+      <!-- Perguntas da categoria -->
+      <div *ngIf="openCategory === category.id" class="bg-dark p-2">
+        <div *ngFor="let item of category.questions" class="gap-3">
+          <button
+            class="w-full p-3 text-left flex justify-between items-center my-2 bg-[#1D1D1D] text-white hover:bg-[#1d1d1d] active:text-black focus:text-black hover-text-black active:text-black hover:text-black font-bold hover:text-black rounded-xl"
+            (click)="toggleQuestion(item.id)"
+          >
+            <span class="font-bold">{{ item.question }}</span>
+            <ng-icon name="{{ openQuestion === item.id ? 'lucideArrowUp' : 'lucideArrowDown' }}" />
+          </button>
+          
+          <!-- Resposta -->
+          <div *ngIf="openQuestion === item.id" class="p-3 bg-dark">
+            <span *ngIf="!item.isHtml">{{ item.answer }}</span>
+            <span *ngIf="item.isHtml" [innerHTML]="item.answer"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

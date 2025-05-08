@@ -1,17 +1,16 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { HeaderComponent } from './components/header/header.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { FooterDashVeiculosComponent } from './components/screens/dash-veiculos/footer/footer.component';
-import { HeaderDashVeiculosComponent } from './components/screens/dash-veiculos/header/header.component';
 
 @Component({
   standalone: true,
-  imports: [RouterModule, HeaderComponent, FooterComponent, HeaderDashVeiculosComponent, FooterDashVeiculosComponent],
+  imports: [RouterModule],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
 export class AppComponent {
+isDarkMode() {
+throw new Error('Method not implemented.');
+}
   title = 'app-ace-copilot';
 }

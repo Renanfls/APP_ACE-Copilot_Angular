@@ -11,6 +11,8 @@ import {
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { StatisticComponent } from '../../statistic/statistic.component';
 import { CardTurnoComponent } from '../../turno/card-turno.component';
+import { HeaderComponent } from '../../header/header.component';
+import { FooterComponent } from '../../footer/footer.component';
 
 @Component({
   selector: 'app-score',
@@ -21,6 +23,8 @@ import { CardTurnoComponent } from '../../turno/card-turno.component';
     CardTurnoComponent,
     StatisticComponent,
     HlmButtonDirective,
+    HeaderComponent,
+    FooterComponent
   ],
   templateUrl: './score.component.html',
   styleUrl: './score.component.css',
