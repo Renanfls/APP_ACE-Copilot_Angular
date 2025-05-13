@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { matPerson } from '@ng-icons/material-icons/baseline';
+import { matDirectionsBus } from '@ng-icons/material-icons/baseline';
 
 interface Turno {
   turno: string;
@@ -14,7 +14,7 @@ interface Turno {
   imports: [CommonModule, NgIconComponent],
   templateUrl: './card-turno.component.html',
   styleUrl: './card-turno.component.css',
-  viewProviders: [provideIcons({ matPerson })],
+  viewProviders: [provideIcons({ matDirectionsBus })],
 })
 export class CardTurnoComponent {
   @Input() kmlAnterior = 0;

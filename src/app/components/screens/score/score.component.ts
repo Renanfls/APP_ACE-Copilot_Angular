@@ -6,6 +6,7 @@ import {
   matArrowDownward,
   matArrowForwardIos,
   matArrowUpward,
+  matCalendarMonth,
   matWorkspacePremium,
 } from '@ng-icons/material-icons/baseline';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
@@ -35,6 +36,7 @@ import { FooterComponent } from '../../footer/footer.component';
       matArrowDownward,
       matWorkspacePremium,
       matArrowUpward,
+      matCalendarMonth
     }),
   ],
 })

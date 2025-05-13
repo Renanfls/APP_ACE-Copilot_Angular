@@ -1,52 +1,83 @@
-<div class="py-4 mt-4" style="background-color: #242427; border-radius: 20px;">
+<div class="py-4 mt-4 shadow-lg dark:bg-[#242427]" style="border-radius: 20px">
   <div class="flex px-4 justify-between rounded-lg">
-    <div class="flex w-max items-center rounded-full overflow-hidden text-black font-bold shadow-md">
-      <div class="relative bg-yellow-400 font-bold ps-4 py-2 text-lg flex items-center">
-        <p class="z-30 text-xs md:text-lg">{{horaTurno.start}}</p>
-        <div class="absolute right-0 left-6 md:left-11 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 bg-yellow-400 rotate-45 rounded-xl origin-center"></div>
-      </div>
-      <div class="bg-yellow-500 font-bold ps-5 md:ps-9 pe-4 py-2 text-lg flex items-center">
-        <p class="text-xs md:text-lg">{{horaTurno.end}}</p>
-      </div>
+    <div
+      class="flex w-max items-center rounded-full font-bold shadow-md px-4 py-2 text-xs text-white md:text-sm gap-1"
+      style="background-color: #313135"
+    >
+      <span class="ml-1">{{ turno }}</span>
+      <span class="ml-1">{{ data }}</span>
     </div>
-    <div class="flex w-max items-center rounded-full font-bold shadow-md px-2 md:px-4 py-2 text-xs text-white md:text-sm gap-1" style="background-color: #313135;">
-      <span class="ml-1">{{turno}}</span>
-      <span class="ml-1">{{data}}</span>
+    <div
+      class="flex w-max items-center rounded-full overflow-hidden text-black font-bold shadow-md"
+    >
+      <div
+        class="relative bg-yellow-400 font-bold ps-4 py-2 text-lg flex items-center"
+      >
+        <p class="z-30 text-xs md:text-lg">{{ horaTurno.start }}</p>
+        <div
+          class="absolute right-0 left-6 md:left-11 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 bg-yellow-400 rotate-45 rounded-xl origin-center"
+        ></div>
+      </div>
+      <div
+        class="bg-yellow-500 font-bold ps-5 md:ps-9 pe-4 py-2 text-lg flex items-center"
+      >
+        <p class="text-xs md:text-lg">{{ horaTurno.end }}</p>
+      </div>
     </div>
   </div>
-  <div class="flex justify-center mt-4 p-3 md:p-4 gap-2 md:gap-4 text-white" style="background-color: #141416;">
-    <div class="rounded-lg md:rounded-2xl w-screen p-2 text-center flex flex-col justify-center" [ngClass]="kmlAnteriorClass">
-      <p class="text-xs font-bold" style="font-size: 8px;">Semana Anterior</p>
-      <span class="font-bold md:text-2xl">{{kmlAnterior}}</span>
+  <div
+    class="flex justify-center mt-4 p-3 md:p-4 gap-2 md:gap-4 text-white"
+    style="background-color: #141416"
+  >
+    <div
+      class="rounded-lg md:rounded-2xl w-screen p-2 text-center flex flex-col justify-center"
+      [ngClass]="kmlAnteriorClass"
+    >
+      <p class="text-xs font-bold" style="font-size: 8px">Semana Anterior</p>
+      <span class="font-bold md:text-2xl">{{ kmlAnterior }}</span>
       <p class="font-bold text-xs">KM/L</p>
     </div>
-    <div class="rounded-lg md:rounded-2xl w-screen md:p-3 text-center flex flex-col justify-center" [ngClass]="kmlAtualClass                   ">
-      <span class="font-bold md:text-2xl">{{kmlAtual}}</span>
+    <div
+      class="rounded-lg md:rounded-2xl w-screen md:p-3 text-center flex flex-col justify-center"
+      [ngClass]="kmlAtualClass"
+    >
+      <span class="font-bold md:text-2xl">{{ kmlAtual }}</span>
       <p class="font-bold text-xs">KM/L</p>
     </div>
-    <div class="rounded-lg md:rounded-2xl w-screen md:p-3 text-center flex flex-col justify-center" [ngClass]="giroClass">
-      <span class="font-bold md:text-2xl">{{giro}}</span>
+    <div
+      class="rounded-lg md:rounded-2xl w-screen md:p-3 text-center flex flex-col justify-center"
+      [ngClass]="giroClass"
+    >
+      <span class="font-bold md:text-2xl">{{ giro }}</span>
       <p class="font-bold text-xs">Giro</p>
     </div>
-    <div class="rounded-lg md:rounded-2xl w-screen md:p-3 text-center flex flex-col justify-center" [ngClass]="freioClass">
-      <span class="font-bold md:text-2xl">{{freio}}</span>
+    <div
+      class="rounded-lg md:rounded-2xl w-screen md:p-3 text-center flex flex-col justify-center"
+      [ngClass]="freioClass"
+    >
+      <span class="font-bold md:text-2xl">{{ freio }}</span>
       <p class="font-bold text-xs">Freio</p>
     </div>
-    <div class="rounded-lg md:rounded-2xl w-screen md:p-3 text-center flex flex-col justify-center" [ngClass]="pedalClass">
-      <span class="font-bold md:text-2xl">{{pedal}}</span>
+    <div
+      class="rounded-lg md:rounded-2xl w-screen md:p-3 text-center flex flex-col justify-center"
+      [ngClass]="pedalClass"
+    >
+      <span class="font-bold md:text-2xl">{{ pedal }}</span>
       <p class="font-bold text-xs">Pedal</p>
     </div>
   </div>
   <div class="flex gap-4 items-center text-white">
-    <div class="rounded-full ms-4 mt-4 w-12 h-12 border-4 border-yellow-400 flex items-center justify-center">
-      <ng-icon name="matPerson" style="font-size: 24px;"/>
+    <div
+      class="rounded-full ms-4 mt-4 w-12 h-12 border-4 border-yellow-400 flex items-center justify-center"
+    >
+      <ng-icon name="matDirectionsBus" class="text-[#1D1D1D] dark:text-white" style="font-size: 24px" />
     </div>
-    <div class="flex flex-col font-bold pt-3">
-      <p class="text-lg">{{placa}}</p>
+    <div class="flex flex-col font-bold pt-3 text-[#1D1D1D] dark:text-white">
+      <p class="text-lg">{{ placa }}</p>
       <small class="text-sm">Placa</small>
     </div>
-    <div class="flex flex-col font-bold pt-3">
-      <p class="text-lg">{{linha}}</p>
+    <div class="flex flex-col font-bold pt-3 text-[#1D1D1D] dark:text-white">
+      <p class="text-lg">{{ linha }}</p>
       <small class="text-sm">Linha</small>
     </div>
   </div>
