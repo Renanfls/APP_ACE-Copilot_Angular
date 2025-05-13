@@ -7,9 +7,11 @@ import { CardVeiculoTurbinaComponent } from './components/screens/dash-veiculos/
 import { CardVeiculoVelocidadeComponent } from './components/screens/dash-veiculos/card-veiculo-velocidade/card-veiculo.component';
 import { DashVeiculosComponent } from './components/screens/dash-veiculos/dash-veiculos.component';
 import { DashDriveComponent } from './components/screens/dashDrive/dash-drive.component';
-import { HomeComponent } from './components/screens/home/home.component';
-import { ScoreComponent } from './components/screens/score/score.component';
 import { GameComponent } from './components/screens/game/game.component';
+import { HomeComponent } from './components/screens/home/home.component';
+import { ProfileComponent } from './components/screens/profile/profile.component';
+import { ScoreComponent } from './components/screens/score/score.component';
+import { CanDeactivateGuard } from './guards/can-deactivate.guard';
 
 export const appRoutes: Route[] = [
   {
@@ -60,5 +62,10 @@ export const appRoutes: Route[] = [
   {
     path: 'as-no-ace',
     component: GameComponent,
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    canDeactivate: [CanDeactivateGuard]
   },
 ];

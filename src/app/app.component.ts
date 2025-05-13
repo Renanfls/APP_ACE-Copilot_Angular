@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { ThemeService } from './services/theme.service';
 
 @Component({
   standalone: true,
@@ -8,9 +9,12 @@ import { RouterModule } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {
-isDarkMode() {
-throw new Error('Method not implemented.');
-}
+export class AppComponent implements OnInit {
   title = 'app-ace-copilot';
+
+  constructor(private themeService: ThemeService) {}
+
+  ngOnInit() {
+    // Theme service will handle the initial theme setup in its constructor
+  }
 }

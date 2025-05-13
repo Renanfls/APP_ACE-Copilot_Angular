@@ -3,163 +3,159 @@
 <div class="flex-1 px-4 md:container py-28">
   <app-statistic />
 
-  <section
-    class="container mx-auto mt-10 px-4 pb-6 md:pb-10 dark:border-b-4 flex flex-col"
+  <section 
+    id="resumo"
+    class="container mx-auto mt-10 px-2 sm:px-4 pb-6 md:pb-10 dark:border-b-4 flex flex-col"
     style="border-color: #1d1d1d"
   >
-    <div class="flex justify-between items-center">
-      <h2 class="font-bold text-2xl md:text-3xl">Resumo</h2>
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="font-bold text-xl sm:text-2xl md:text-3xl">Resumo</h2>
       <div class="flex">
         <button
           (click)="prevSlide()"
-          class="rounded-full w-8 h-8 border-2 border-yellow-400 flex items-center justify-center mr-2 ps-1"
+          class="rounded-full w-7 h-7 sm:w-8 sm:h-8 border-2 border-yellow-400 flex items-center justify-center mr-2 ps-1 disabled:opacity-50 disabled:cursor-not-allowed z-10"
+          [disabled]="!canScrollPrev"
         >
-          <ng-icon name="matArrowBackIos" style="font-size: 12px"></ng-icon>
+          <ng-icon name="matArrowBackIos" class="text-[10px] sm:text-xs"></ng-icon>
         </button>
         <button
           (click)="nextSlide()"
-          class="rounded-full w-8 h-8 border-2 border-yellow-400 flex items-center justify-center"
+          class="rounded-full w-7 h-7 sm:w-8 sm:h-8 border-2 border-yellow-400 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed z-10"
+          [disabled]="!canScrollNext"
         >
-          <ng-icon name="matArrowForwardIos" style="font-size: 12px"></ng-icon>
+          <ng-icon name="matArrowForwardIos" class="text-[10px] sm:text-xs"></ng-icon>
         </button>
       </div>
     </div>
 
-    <div class="carousel-container mt-4 overflow-x-hidden">
-      <div
-        class="carousel-track flex transition-transform duration-300 gap-4 p-2 md:pe-10 lg:pe-12"
-        [ngStyle]="{ transform: 'translateX(-' + currentTranslate + 'px)' }"
-      >
-        <!-- Acessos Card -->
-        <div class="carousel-item flex-shrink-0 w-64 md:w-72">
-          <div
-            class="bg-amber-400 h-52 text-black p-6 flex flex-col justify-between rounded-3xl shadow-lg"
-          >
-            <div>
-              <p class="font-bold text-xl">Acessos</p>
-              <small class="font-light">App</small>
-            </div>
-            <span class="font-bold text-5xl">28</span>
-            <div class="mt-2">
-              <div class="progress-bar bg-black bg-opacity-20">
-                <div class="progress-fill bg-black" style="width: 70%"></div>
+    <div class="carousel-wrapper relative">
+      <div #carouselContainer class="carousel-container mt-2 sm:mt-4 overflow-x-auto touch-pan-x snap-x snap-mandatory hide-scrollbar">
+        <div
+          class="carousel-track flex gap-3 min-w-max"
+        >
+          <!-- Acessos Card -->
+          <div class="carousel-item flex-shrink-0 w-[280px] snap-start" [ngStyle]="{ minWidth: '280px' }">
+            <div
+              class="bg-amber-400 h-48 text-black p-4 sm:p-6 flex flex-col justify-between rounded-2xl sm:rounded-3xl shadow-lg"
+            >
+              <div>
+                <p class="font-bold text-lg sm:text-xl">Acessos</p>
+                <small class="font-light text-sm">App</small>
               </div>
-              <small class="text-xs">+12% em relação ao mês passado</small>
+              <span class="font-bold text-4xl sm:text-5xl">28</span>
+              <div class="mt-2">
+                <div class="progress-bar bg-black bg-opacity-20">
+                  <div class="progress-fill bg-black" style="width: 70%"></div>
+                </div>
+                <small class="text-xs whitespace-normal">+12% em relação ao mês passado</small>
+              </div>
             </div>
           </div>
-        </div>
-        <!-- Giro Card -->
-        <div class="carousel-item flex-shrink-0 w-64 md:w-72">
-          <div
-            class="h-52 p-6 flex flex-col justify-between text-white card-gradient rounded-3xl shadow-lg border border-gray-800"
-          >
-            <div>
-              <p class="font-bold text-xl">Giro</p>
-              <small class="font-light text-gray-400">Mês</small>
-            </div>
-            <div class="flex items-end justify-between">
-              <span class="font-bold text-5xl">8</span>
-              <ng-icon
-                name="matArrowDownward"
-                class="text-red-500"
-                style="font-size: 34px"
-              ></ng-icon>
-            </div>
-            <div class="mt-2">
-              <div class="progress-bar bg-gray-700">
-                <div class="progress-fill bg-red-500" style="width: 40%"></div>
+          <!-- Giro Card -->
+          <div class="carousel-item flex-shrink-0 w-[280px] snap-start" [ngStyle]="{ minWidth: '280px' }">
+            <div
+              class="h-48 p-4 sm:p-6 flex flex-col justify-between text-white card-gradient rounded-2xl sm:rounded-3xl shadow-lg border border-gray-800"
+            >
+              <div>
+                <p class="font-bold text-lg sm:text-xl">Giro</p>
+                <small class="font-light text-sm text-gray-400">Mês</small>
               </div>
-              <small class="text-xs text-gray-400"
-                >-20% em relação ao mês passado</small
-              >
+              <div class="flex items-end justify-between">
+                <span class="font-bold text-4xl sm:text-5xl">8</span>
+                <ng-icon
+                  name="matArrowDownward"
+                  class="text-red-500"
+                  style="font-size: 34px"
+                ></ng-icon>
+              </div>
+              <div class="mt-2">
+                <div class="progress-bar bg-gray-700">
+                  <div class="progress-fill bg-red-500" style="width: 40%"></div>
+                </div>
+                <small class="text-xs text-gray-400 whitespace-normal">-20% em relação ao mês passado</small>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Freio Card -->
-        <div class="carousel-item flex-shrink-0 w-64 md:w-72">
-          <div
-            class="h-52 p-6 flex flex-col justify-between text-white card-gradient rounded-3xl shadow-lg border border-gray-800"
-          >
-            <div>
-              <p class="font-bold text-xl">Freio</p>
-              <small class="font-light text-gray-400">Mês</small>
-            </div>
-            <div class="flex items-end justify-between">
-              <span class="font-bold text-5xl">5</span>
-              <ng-icon
-                name="matArrowUpward"
-                class="text-green-500"
-                style="font-size: 34px"
-              ></ng-icon>
-            </div>
-            <div class="mt-2">
-              <div class="progress-bar bg-gray-700">
-                <div
-                  class="progress-fill bg-green-500"
-                  style="width: 25%"
-                ></div>
+          <!-- Freio Card -->
+          <div class="carousel-item flex-shrink-0 w-[280px] snap-start" [ngStyle]="{ minWidth: '280px' }">
+            <div
+              class="h-48 p-4 sm:p-6 flex flex-col justify-between text-white card-gradient rounded-2xl sm:rounded-3xl shadow-lg border border-gray-800"
+            >
+              <div>
+                <p class="font-bold text-lg sm:text-xl">Freio</p>
+                <small class="font-light text-sm text-gray-400">Mês</small>
               </div>
-              <small class="text-xs text-gray-400"
-                >+15% em relação ao mês passado</small
-              >
+              <div class="flex items-end justify-between">
+                <span class="font-bold text-4xl sm:text-5xl">5</span>
+                <ng-icon
+                  name="matArrowUpward"
+                  class="text-green-500"
+                  style="font-size: 34px"
+                ></ng-icon>
+              </div>
+              <div class="mt-2">
+                <div class="progress-bar bg-gray-700">
+                  <div
+                    class="progress-fill bg-green-500"
+                    style="width: 25%"
+                  ></div>
+                </div>
+                <small class="text-xs text-gray-400 whitespace-normal">+15% em relação ao mês passado</small>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Pedal Card -->
-        <div class="carousel-item flex-shrink-0 w-64 md:w-72">
-          <div
-            class="h-52 p-6 flex flex-col justify-between text-white card-gradient rounded-3xl shadow-lg border border-gray-800"
-          >
-            <div>
-              <p class="font-bold text-xl">Pedal</p>
-              <small class="font-light text-gray-400">Mês</small>
-            </div>
-            <div class="flex items-end justify-between">
-              <span class="font-bold text-5xl">8</span>
-              <ng-icon
-                name="matArrowDownward"
-                class="text-red-500"
-                style="font-size: 34px"
-              ></ng-icon>
-            </div>
-            <div class="mt-2">
-              <div class="progress-bar bg-gray-700">
-                <div class="progress-fill bg-red-500" style="width: 40%"></div>
+          <!-- Pedal Card -->
+          <div class="carousel-item flex-shrink-0 w-[280px] snap-start" [ngStyle]="{ minWidth: '280px' }">
+            <div
+              class="h-48 p-4 sm:p-6 flex flex-col justify-between text-white card-gradient rounded-2xl sm:rounded-3xl shadow-lg border border-gray-800"
+            >
+              <div>
+                <p class="font-bold text-lg sm:text-xl">Pedal</p>
+                <small class="font-light text-sm text-gray-400">Mês</small>
               </div>
-              <small class="text-xs text-gray-400"
-                >-12% em relação ao mês passado</small
-              >
+              <div class="flex items-end justify-between">
+                <span class="font-bold text-4xl sm:text-5xl">8</span>
+                <ng-icon
+                  name="matArrowDownward"
+                  class="text-red-500"
+                  style="font-size: 34px"
+                ></ng-icon>
+              </div>
+              <div class="mt-2">
+                <div class="progress-bar bg-gray-700">
+                  <div class="progress-fill bg-red-500" style="width: 40%"></div>
+                </div>
+                <small class="text-xs text-gray-400 whitespace-normal">-12% em relação ao mês passado</small>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Eficiência Card -->
-        <div class="carousel-item flex-shrink-0 w-64 md:w-72">
-          <div
-            class="h-52 p-6 flex flex-col justify-between text-white card-gradient rounded-3xl shadow-lg border border-gray-800"
-          >
-            <div>
-              <p class="font-bold text-xl">Eficiência</p>
-              <small class="font-light text-gray-400">Mês</small>
-            </div>
-            <div class="flex items-end justify-between">
-              <span class="font-bold text-5xl">78%</span>
-              <div class="text-green-500">
-                <i class="fas fa-arrow-up text-3xl"></i>
+          <!-- Eficiência Card -->
+          <div class="carousel-item flex-shrink-0 w-[280px] snap-start" [ngStyle]="{ minWidth: '280px' }">
+            <div
+              class="h-48 p-4 sm:p-6 flex flex-col justify-between text-white card-gradient rounded-2xl sm:rounded-3xl shadow-lg border border-gray-800"
+            >
+              <div>
+                <p class="font-bold text-lg sm:text-xl">Eficiência</p>
+                <small class="font-light text-sm text-gray-400">Mês</small>
               </div>
-            </div>
-            <div class="mt-2">
-              <div class="progress-bar bg-gray-700">
-                <div
-                  class="progress-fill bg-amber-400"
-                  style="width: 78%"
-                ></div>
+              <div class="flex items-end justify-between">
+                <span class="font-bold text-4xl sm:text-5xl">78%</span>
+                <div class="text-green-500">
+                  <i class="fas fa-arrow-up text-3xl"></i>
+                </div>
               </div>
-              <small class="text-xs text-gray-400"
-                >+8% em relação ao mês passado</small
-              >
+              <div class="mt-2">
+                <div class="progress-bar bg-gray-700">
+                  <div
+                    class="progress-fill bg-amber-400"
+                    style="width: 78%"
+                  ></div>
+                </div>
+                <small class="text-xs text-gray-400 whitespace-normal">+8% em relação ao mês passado</small>
+              </div>
             </div>
           </div>
         </div>
@@ -171,75 +167,66 @@
     <div class="flex justify-between items-center">
       <h2 class="font-bold text-2xl md:text-3xl">Últimos Turnos</h2>
       <div class="flex gap-2">
-        <div
-          class="rounded-full font-semibold shadow-md px-4 py-2 text-sm text-white bg-[#313135] flex items-center"
-        >
-          <ng-icon name="matCalendarMonth" class="mr-2 text-amber-400" style="font-size: 12px"></ng-icon>
-          <span>08/04</span>
-        </div>
         <button
           class="rounded-full w-8 h-8 border-2 border-yellow-400 flex items-center justify-center"
+          (click)="nextDate()"
+        >
+          <ng-icon name="matArrowBackIos" class="ml-1.5" style="font-size: 12px"></ng-icon>
+        </button>
+        <div class="relative">
+          <button
+            class="rounded-full font-semibold shadow-md px-4 py-2 text-sm text-white bg-[#313135] flex items-center"
+            (click)="dateInput.click()"
+          >
+            <ng-icon name="matCalendarMonth" class="mr-2 text-amber-400" style="font-size: 16px"></ng-icon>
+            <span>{{ currentDate }}</span>
+          </button>
+          <input
+            #dateInput
+            type="date"
+            [max]="maxDate"
+            [value]="selectedDate"
+            (change)="onDateSelected($event)"
+            class="absolute opacity-100 w-0 h-0 top-0 left-0 cursor-pointer"
+            style="color-scheme: dark;"
+          >
+        </div>
+        <button
+          class="rounded-full w-8 h-8 border-2 border-yellow-400 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+          (click)="previousDate()"
+          [disabled]="!canNavigateForward()"
         >
           <ng-icon name="matArrowForwardIos" style="font-size: 12px"></ng-icon>
         </button>
       </div>
     </div>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 mt-4 flex-wrap">
-      <app-card-turno
-        [kmlAnterior]="2.51"
-        [kmlAtual]="2.08"
-        [giro]="3"
-        [freio]="7"
-        [pedal]="10"
-        [placa]="'51540'"
-        [linha]="'624'"
-        [turno]="'Intervalo'"
-        [data]="'08/04'"
-      ></app-card-turno>
-      <app-card-turno
-        [kmlAnterior]="2.51"
-        [kmlAtual]="2.4"
-        [giro]="2"
-        [freio]="7"
-        [pedal]="4"
-        [placa]="'51540'"
-        [linha]="'624'"
-        [turno]="'Manhã'"
-        [data]="'08/04'"
-      ></app-card-turno>
-      <app-card-turno
-        [kmlAnterior]="2.51"
-        [kmlAtual]="3.01"
-        [giro]="2"
-        [freio]="10"
-        [pedal]="4"
-        [placa]="'51540'"
-        [linha]="'624'"
-        [turno]="'Madrugada'"
-        [data]="'08/04'"
-      ></app-card-turno>
-      <app-card-turno
-        [kmlAnterior]="2.51"
-        [kmlAtual]="2.96"
-        [giro]="0"
-        [freio]="2"
-        [pedal]="4"
-        [placa]="'51540'"
-        [linha]="'624'"
-        [turno]="'Intervalo'"
-        [data]="'07/04'"
-      ></app-card-turno>
-      <app-card-turno
-        [kmlAnterior]="2.51"
-        [kmlAtual]="2.51"
-        [giro]="2"
-        [freio]="8"
-        [pedal]="3"
-        [placa]="'51540'"
-        [linha]="'624'"
-        [turno]="'Manhã'"
-        [data]="'07/04'"
-      ></app-card-turno>
+      <ng-container *ngIf="filteredTurnos.length > 0; else noTurnos">
+        <app-card-turno
+          *ngFor="let turno of filteredTurnos"
+          [kmlAnterior]="turno.kmlAnterior"
+          [kmlAtual]="turno.kmlAtual"
+          [giro]="turno.giro"
+          [freio]="turno.freio"
+          [pedal]="turno.pedal"
+          [placa]="turno.placa"
+          [linha]="turno.linha"
+          [turno]="turno.turno"
+          [data]="turno.data"
+        ></app-card-turno>
+      </ng-container>
+      <ng-template #noTurnos>
+        <div class="col-span-full flex flex-col items-center justify-center py-16 text-gray-500 dark:text-gray-400">
+          <ng-icon 
+            name="matWorkHistory" 
+            class="text-5xl mb-4"
+            [class.text-amber-400]="isDarkMode"
+            [class.text-amber-500]="!isDarkMode"
+          ></ng-icon>
+          <p class="text-lg font-medium">Nenhum turno encontrado para {{ currentDate }}</p>
+          <p class="text-sm mt-2">Tente selecionar outra data</p>
+        </div>
+      </ng-template>
     </div>
   </section>
 </div>

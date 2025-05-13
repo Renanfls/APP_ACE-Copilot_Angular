@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import '@angular/material/prebuilt-themes/pink-bluegrey.css';
 
 @layer base {
   :root {
@@ -87,4 +88,27 @@ body {
 /* Apply transitions to all elements that change with the theme */
 *, *::before, *::after {
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Customização do datepicker para tema escuro */
+.mat-calendar {
+  background-color: #1a1a1a !important;
+  color: white !important;
+}
+
+.mat-calendar-body-selected {
+  background-color: #fbbf24 !important;
+  color: black !important;
+}
+
+.mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+  background-color: rgba(251, 191, 36, 0.3) !important;
+}
+
+.mat-calendar-body-today:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+  border-color: #fbbf24 !important;
+}
+
+.mat-datepicker-toggle {
+  color: #fbbf24 !important;
 }
