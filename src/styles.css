@@ -85,11 +85,6 @@ body {
   background-color: var(--sidebar-bg);
 }
 
-/* Apply transitions to all elements that change with the theme */
-*, *::before, *::after {
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-}
-
 /* Customização do datepicker para tema escuro */
 .mat-calendar {
   background-color: #1a1a1a !important;

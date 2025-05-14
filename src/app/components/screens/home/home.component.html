@@ -4,41 +4,161 @@
   <app-statistic />
 
   <section class="container mt-12 grid xs:grid-cols-2 gap-3 md:gap-4 xl:px-52 pb-6 md:pb-10 dark:border-b-4" style="border-color: #1d1d1d;">
-    <button hlmBtn variant="ghost" routerLink="/pontuacao-ace" class="bg-[#D7B318] hover:bg-white flex justify-between md:p-5 gap-4 h-20 md:h-24 rounded-2xl md:rounded-3xl">
-      <img src="assets/cards_star.svg" class="w-10 md:w-auto" alt="Icone Pontuação">
-      <div class="flex items-center">
-        <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg mt-4 md:mt-8">Pontuação ACE</p>
+    <!-- Pontuação ACE -->
+    <button hlmBtn variant="ghost" routerLink="/pontuacao-ace" 
+      class="group bg-amber-400 hover:bg-white flex justify-between md:p-5 gap-4 h-20 md:h-24 rounded-2xl md:rounded-3xl relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+      <div class="absolute inset-0 bg-gradient-to-r from-amber-300 to-amber-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+      <div class="flex items-center gap-4 z-10">
+        <div class="w-10 md:w-12 h-10 md:h-12 bg-black bg-opacity-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+          <img src="assets/cards_star.svg" class="w-6 md:w-8" alt="Icone Pontuação">
+        </div>
+        <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg">Pontuação ACE</p>
       </div>
     </button>
-    <button hlmBtn variant="ghost" routerLink="/" class="bg-[#D7B318] hover:bg-white flex justify-between items-center md:p-5 gap-4 md:gap-8 h-20 md:h-24 rounded-2xl md:rounded-3xl">
-      <img src="assets/animated_images.svg" class="w-10 md:w-auto" alt="Icone Treinamento">
-      <div class="flex flex-col justify-between relative">
-        <span class="font-bold text-xs text-white bg-red-500 px-2 md:px-3 md:py-1 rounded-full absolute right-0">1</span>
-        <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg mt-8 xs:mt-7">Treinamento Online</p>
+
+    <!-- Treinamento Online -->
+    <button hlmBtn variant="ghost" routerLink="/" 
+      class="group bg-amber-400 hover:bg-white flex justify-between md:p-5 gap-4 h-20 md:h-24 rounded-2xl md:rounded-3xl relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+      <div class="absolute inset-0 bg-gradient-to-r from-amber-300 to-amber-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+      <div class="flex items-center gap-4 z-10">
+        <div class="relative">
+          <span class="absolute -top-1 -left-1 font-bold text-xs text-white bg-red-500 px-2 py-0.5 rounded-full z-20">1</span>
+          <div class="w-10 md:w-12 h-10 md:h-12 bg-black bg-opacity-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <img src="assets/animated_images.svg" class="w-6 md:w-8" alt="Icone Treinamento">
+          </div>
+        </div>
+        <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg">Treinamento Online</p>
       </div>
     </button>
-    <button hlmBtn variant="ghost" routerLink="/as-no-ace" class="bg-[#D7B318] hover:bg-white flex justify-between items-center md:p-5 gap-4 md:gap-8 h-20 md:h-24 rounded-2xl md:rounded-3xl">
-      <img src="assets/Vector.svg" class="w-10 md:w-auto" alt="Icone Ás no ACE">
-      <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg mt-4 md:mt-8">Ás no ACE</p>
+
+    <!-- Ás no ACE -->
+    <button hlmBtn variant="ghost" routerLink="/as-no-ace" 
+      class="group bg-amber-400 hover:bg-white flex justify-between md:p-5 gap-4 h-20 md:h-24 rounded-2xl md:rounded-3xl relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+      <div class="absolute inset-0 bg-gradient-to-r from-amber-300 to-amber-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+      <div class="flex items-center gap-4 z-10">
+        <div class="w-10 md:w-12 h-10 md:h-12 bg-black bg-opacity-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+          <img src="assets/Vector.svg" class="w-6 md:w-8" alt="Icone Ás no ACE">
+        </div>
+        <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg">Ás no ACE</p>
+      </div>
     </button>
-    <button hlmBtn variant="ghost" routerLink="/" class="bg-[#D7B318] hover:bg-white flex justify-between items-center md:p-5 gap-4 md:gap-8 h-20 md:h-24 rounded-2xl md:rounded-3xl">
-      <img src="assets/cognition_2.svg" class="w-10 md:w-auto" alt="Icone Quiz">
-      <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg mt-4 md:mt-8">Quiz</p>
+
+    <!-- Quiz -->
+    <button hlmBtn variant="ghost" routerLink="/" 
+      class="group bg-amber-400 hover:bg-white flex justify-between md:p-5 gap-4 h-20 md:h-24 rounded-2xl md:rounded-3xl relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+      <div class="absolute inset-0 bg-gradient-to-r from-amber-300 to-amber-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+      <div class="flex items-center gap-4 z-10">
+        <div class="w-10 md:w-12 h-10 md:h-12 bg-black bg-opacity-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+          <img src="assets/cognition_2.svg" class="w-6 md:w-8" alt="Icone Quiz">
+        </div>
+        <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg">Quiz</p>
+      </div>
     </button>
-    <button hlmBtn variant="ghost" routerLink="/" class="bg-[#D7B318] hover:bg-white flex justify-between md:p-5 gap-16 xs:gap-3 md:gap-8 h-20 md:h-24 rounded-2xl md:rounded-3xl">
-      <img src="assets/PES.svg" alt="Icone PES" class="w-10 md:w-auto">
-      <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg ps-1.5 min-sm:ps-5">Programa de Emissão Sustentável</p>
-      </button>
-    <button hlmBtn variant="ghost" routerLink="/" class="bg-[#D7B318] hover:bg-white flex justify-between items-center md:p-5 gap-4 md:gap-8 h-20 md:h-24 rounded-2xl md:rounded-3xl">
-      <img src="assets/auto_stories.svg" class="w-10 md:w-auto" alt="Icone Dica">
-      <div class="flex flex-col justify-between relative">
-        <span class="font-bold text-xs text-white bg-red-500 px-2 md:px-3 md:py-1 rounded-full absolute right-0">1</span>
-        <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg mt-8 xs:mt-7">Dica</p>
+
+    <!-- PES -->
+    <button hlmBtn variant="ghost" routerLink="/" 
+      class="group bg-amber-400 hover:bg-white flex justify-between md:p-5 gap-4 h-20 md:h-24 rounded-2xl md:rounded-3xl relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+      <div class="absolute inset-0 bg-gradient-to-r from-amber-300 to-amber-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+      <div class="flex items-center gap-4 z-10">
+        <div class="w-10 md:w-12 h-10 md:h-12 bg-black bg-opacity-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+          <img src="assets/PES.svg" class="w-6 md:w-8" alt="Icone PES">
+        </div>
+        <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg">Programa de Emissão Sustentável</p>
+      </div>
+    </button>
+
+    <!-- Dica -->
+    <button hlmBtn variant="ghost" routerLink="/" 
+      class="group bg-amber-400 hover:bg-white flex justify-between md:p-5 gap-4 h-20 md:h-24 rounded-2xl md:rounded-3xl relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+      <div class="absolute inset-0 bg-gradient-to-r from-amber-300 to-amber-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+      <div class="flex items-center gap-4 z-10">
+        <div class="relative">
+          <span class="absolute -top-1 -left-1 font-bold text-xs text-white bg-red-500 px-2 py-0.5 rounded-full z-20">1</span>
+          <div class="w-10 md:w-12 h-10 md:h-12 bg-black bg-opacity-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <img src="assets/auto_stories.svg" class="w-6 md:w-8" alt="Icone Dica">
+          </div>
+        </div>
+        <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg">Dica</p>
       </div>
     </button>
   </section>
-  
+
   <section class="container xl:px-52 pt-6 md:pt-10 pb-6 md:pb-10 dark:border-b-4" style="border-color: #1d1d1d;">
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <h2 class="font-bold text-2xl md:text-3xl">Meus Cupons</h2>
+        <p class="text-gray-500 dark:text-gray-400 mt-2">Gerencie e utilize seus cupons de desconto</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-4">
+      <!-- Total Cupons -->
+      <div class="bg-[#1e1e1e] rounded-2xl p-6 flex flex-col items-center relative overflow-hidden hover:-translate-y-1 transition-transform duration-300">
+        <div class="absolute top-0 right-0 bg-amber-400 text-black text-xs font-bold px-3 py-1 rounded-bl-lg">
+          TOTAL
+        </div>
+        <div class="w-16 h-16 bg-amber-400 rounded-full flex items-center justify-center my-4">
+          <ng-icon name="matConfirmationNumberRound" class="text-2xl text-black"></ng-icon>
+        </div>
+        <span class="text-4xl font-bold text-amber-400">{{ coupons.total }}</span>
+        <p class="text-gray-400 mt-2">Cupons adquiridos</p>
+        <div class="w-full bg-[#2a2a2a] h-2 rounded-full mt-4">
+          <div class="bg-amber-400 h-2 rounded-full" [style.width]="'100%'"></div>
+        </div>
+      </div>
+
+      <!-- Cupons Disponíveis -->
+      <div class="bg-[#1e1e1e] rounded-2xl p-6 flex flex-col items-center relative overflow-hidden hover:-translate-y-1 transition-transform duration-300">
+        <div class="absolute top-0 right-0 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+          DISPONÍVEL
+        </div>
+        <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center my-4">
+          <ng-icon name="matLocalOfferRound" class="text-2xl text-black"></ng-icon>
+        </div>
+        <span class="text-4xl font-bold text-green-500">{{ coupons.available }}</span>
+        <p class="text-gray-400 mt-2">Cupons para usar</p>
+        <div class="w-full bg-[#2a2a2a] h-2 rounded-full mt-4">
+          <div class="bg-green-500 h-2 rounded-full" [style.width]="(coupons.available / coupons.total * 100) + '%'"></div>
+        </div>
+      </div>
+
+      <!-- Cupons Utilizados -->
+      <div class="bg-[#1e1e1e] rounded-2xl p-6 flex flex-col items-center justify-end relative overflow-hidden hover:-translate-y-1 transition-transform duration-300">
+        <div class="absolute top-0 right-0 bg-gray-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+          UTILIZADOS
+        </div>
+        <div class="w-16 h-16 bg-gray-500 rounded-full flex items-center justify-center my-4">
+          <ng-icon name="matLocalOfferRound" class="text-2xl text-black"></ng-icon>
+        </div>
+        <span class="text-4xl font-bold text-gray-500">{{ coupons.used }}</span>
+        <p class="text-gray-400 mt-2">Cupons usados</p>
+        <div class="w-full bg-[#2a2a2a] h-2 rounded-full mt-4">
+          <div class="bg-gray-500 h-2 rounded-full" [style.width]="(coupons.used / coupons.total * 100) + '%'"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cupom Bônus por Missão -->
+    <div *ngIf="!hasCompletedDailyTasks" class="mt-10 bg-gradient-to-r from-amber-500 to-amber-600 rounded-xl p-6 text-white relative overflow-hidden">
+      <div class="absolute -right-10 -top-10 w-32 h-32 bg-amber-400 rounded-full opacity-20"></div>
+      <div class="absolute -right-20 top-20 w-40 h-40 bg-amber-300 rounded-full opacity-10"></div>
+      
+      <div class="relative z-10 flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-4 md:mb-0">
+          <h3 class="text-xl md:text-2xl font-bold">Cupom bônus disponível!</h3>
+          <p class="mt-2 opacity-90">Complete todas as tarefas diárias e troque seus cupons por prêmios incríveis</p>
+        </div>
+        <button hlmBtn variant="ghost" 
+                class="flex items-center gap-2 px-6 py-3 bg-black bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-colors duration-300 border border-white border-opacity-30"
+                (click)="goToDailyTasks()">
+          <span>Ver prêmios</span>
+          <ng-icon name="matArrowForwardIosRound" class="text-xs"></ng-icon>
+        </button>
+      </div>
+    </div>
+  </section>
+  
+  <section id="daily-tasks" class="container xl:px-52 pt-6 md:pt-10 pb-6 md:pb-10 dark:border-b-4" style="border-color: #1d1d1d;">
     <h2 class="font-bold text-2xl md:text-3xl">Tarefas Diárias</h2>
     <app-task
     [label]="'Abrir o Aplicativo'"

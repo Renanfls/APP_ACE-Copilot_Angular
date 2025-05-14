@@ -1,4 +1,6 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { FooterComponent } from '../../footer/footer.component';
 import { HeaderComponent } from '../../header/header.component';
@@ -7,11 +9,14 @@ import { TaskComponent } from '../../task/task.component';
 
 @Component({
   selector: 'app-game',
+  standalone: true,
   imports: [
-    StatisticComponent,
+    CommonModule,
+    RouterModule,
+    HlmButtonDirective,
     FooterComponent,
     HeaderComponent,
-    HlmButtonDirective,
+    StatisticComponent,
     TaskComponent,
   ],
   templateUrl: './game.component.html',

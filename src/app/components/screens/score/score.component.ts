@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
     matArrowBackIos,
@@ -34,6 +35,7 @@ interface Turno {
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     NgIconComponent,
     CardTurnoComponent,
     StatisticComponent,
@@ -60,14 +62,14 @@ export class ScoreComponent implements OnInit, AfterViewInit {
   @ViewChild('carouselContainer') carouselContainer!: ElementRef;
   
   currentIndex = 0;
-  itemWidth = 280;
-  gapWidth = 12;
+  itemWidth = 300;
+  gapWidth = 16;
   totalItems = 5;
   private scrollTimeout: any;
   private isScrolling = false;
   currentDate = this.formatDate(new Date());
-  selectedDate = new Date().toISOString().split('T')[0];
-  maxDate = new Date().toISOString().split('T')[0];
+  selectedDate: Date = new Date();
+  maxDate = new Date();
   isDarkMode = document.documentElement.classList.contains('dark');
   
   // Array com todos os turnos
@@ -253,28 +255,12 @@ export class ScoreComponent implements OnInit, AfterViewInit {
     this.cdr.detectChanges();
   }
 
-  // Verifica se pode navegar para o dia anterior (limite de 5 dias)
+  // Verifica se pode navegar para o dia anterior
   canNavigatePrevious(): boolean {
-    const [currentDay, currentMonth] = this.currentDate.split('/').map(Number);
-    const today = new Date();
-    const currentDate = new Date(2024, currentMonth - 1, currentDay);
-    const fiveDaysAgo = new Date();
-    fiveDaysAgo.setDate(today.getDate() - 5);
-
-    return currentDate > fiveDaysAgo;
+    return true;
   }
 
-  // Verifica se pode navegar para o próximo dia (até hoje)
-  canNavigateNext(): boolean {
-    const [currentDay, currentMonth] = this.currentDate.split('/').map(Number);
-    const currentDate = new Date(2024, currentMonth - 1, currentDay);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Remove o horário para comparar apenas as datas
-
-    return currentDate < today;
-  }
-
-  // Verifica se pode navegar para o dia seguinte (não permite datas futuras)
+  // Verifica se pode navegar para o próximo dia
   canNavigateForward(): boolean {
     const [currentDay, currentMonth] = this.currentDate.split('/').map(Number);
     const today = new Date();
@@ -302,17 +288,17 @@ export class ScoreComponent implements OnInit, AfterViewInit {
   // Navega para o dia anterior
   nextDate() {
     const [day, month] = this.currentDate.split('/').map(Number);
-    const currentDateObj = new Date(2024, month - 1, day);
+    const currentDateObj = new Date(new Date().getFullYear(), month - 1, day);
     currentDateObj.setDate(currentDateObj.getDate() - 1);
     const newDate = this.formatDate(currentDateObj);
     this.filterTurnosByDate(newDate);
   }
 
-  // Navega para o dia seguinte (se não for data futura)
+  // Navega para o dia seguinte
   previousDate() {
     if (this.canNavigateForward()) {
       const [day, month] = this.currentDate.split('/').map(Number);
-      const currentDateObj = new Date(2024, month - 1, day);
+      const currentDateObj = new Date(new Date().getFullYear(), month - 1, day);
       currentDateObj.setDate(currentDateObj.getDate() + 1);
       const newDate = this.formatDate(currentDateObj);
       this.filterTurnosByDate(newDate);
@@ -320,11 +306,16 @@ export class ScoreComponent implements OnInit, AfterViewInit {
   }
 
   onDateSelected(event: any) {
-    const date = new Date(event.target.value);
-    // Ajusta para o fuso horário local
-    date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-    this.selectedDate = event.target.value;
+    const date = event.value || new Date(event.target.value);
+    this.selectedDate = date;
     this.currentDate = this.formatDate(date);
     this.filterTurnosByDate(this.currentDate);
+  }
+
+  get datesWithShifts(): string[] {
+    // Retorna apenas as datas que realmente têm turnos
+    return this.allTurnos
+      .filter(turno => turno.kmlAtual > 0 || turno.giro > 0 || turno.freio > 0 || turno.pedal > 0)
+      .map(turno => turno.data);
   }
 }

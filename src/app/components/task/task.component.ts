@@ -29,7 +29,7 @@ export class TaskComponent {
   get visibleIcon(): Icon {
     return {
       status: this.status,
-      color: this.status === 'active' ? '#D7B318' : '#4F4F50',
+      color: this.status === 'active' ? '#fbbf24' : '#242427',
       icon: this.icon,
     };
   }

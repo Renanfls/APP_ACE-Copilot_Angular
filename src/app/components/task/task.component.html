@@ -8,12 +8,12 @@
         class="h-full rounded-full transition-all duration-300 flex items-center justify-center"
         [ngStyle]="{
           width: progressPercentage + '%',
-          backgroundColor: '#D7B318'
+          backgroundColor: '#fbbf24'
         }"
       ></div>
       <span
         class="absolute w-full text-center text-sm font-bold"
-        [ngStyle]="{ color: status === 'active' ? '#1C1C1E' : '#626262' }"
+        [ngStyle]="{ color: status === 'active' ? '#1C1C1E' : '#fbbf24' }"
       >
         {{ progressLabel }}
       </span>

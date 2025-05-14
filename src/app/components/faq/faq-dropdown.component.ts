@@ -2,7 +2,16 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { lucideArrowUp, lucideArrowDown } from '@ng-icons/lucide';
+import {
+  heroAcademicCap,
+  heroChevronDown,
+  heroCommandLine,
+  heroExclamationTriangle,
+  heroLifebuoy,
+  heroLightBulb,
+  heroQuestionMarkCircle,
+  heroTrophy
+} from '@ng-icons/heroicons/outline';
 
 interface FaqQuestion {
   id: string;
@@ -21,9 +30,20 @@ interface FaqCategory {
   selector: 'app-faq-dropdown',
   standalone: true,
   imports: [CommonModule, NgIconComponent],
-  viewProviders: [provideIcons({ lucideArrowUp, lucideArrowDown })],
+  viewProviders: [
+    provideIcons({ 
+      heroQuestionMarkCircleOutline: heroQuestionMarkCircle,
+      heroChevronDownOutline: heroChevronDown,
+      heroLightBulbOutline: heroLightBulb,
+      heroAcademicCapOutline: heroAcademicCap,
+      heroTrophyOutline: heroTrophy,
+      heroCommandLineOutline: heroCommandLine,
+      heroExclamationTriangleOutline: heroExclamationTriangle,
+      heroLifebuoyOutline: heroLifebuoy
+    })
+  ],
   templateUrl: './faq-dropdown.component.html',
-  styleUrls: ['./faq-dropdown.component.css'] // Alterado de scss para css
+  styleUrls: ['./faq-dropdown.component.css']
 })
 export class FaqDropdownComponent {
   openCategory: number | null = null;
@@ -151,5 +171,23 @@ export class FaqDropdownComponent {
   // Função para alternar a pergunta aberta
   toggleQuestion(questionId: string): void {
     this.openQuestion = this.openQuestion === questionId ? null : questionId;
+  }
+
+  // Função para retornar o ícone apropriado para cada categoria
+  getCategoryIcon(categoryId: number): string {
+    switch (categoryId) {
+      case 1:
+        return 'heroTrophyOutline'; // Certificações e Metas
+      case 2:
+        return 'heroAcademicCapOutline'; // Técnicas de Direção
+      case 3:
+        return 'heroCommandLineOutline'; // Aplicativo e Treinamentos
+      case 4:
+        return 'heroTrophyOutline'; // Ace Game e Recompensas
+      case 5:
+        return 'heroLifebuoyOutline'; // Problemas Frequentes
+      default:
+        return 'heroQuestionMarkCircleOutline';
+    }
   }
 }

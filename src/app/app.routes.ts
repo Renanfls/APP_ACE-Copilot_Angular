@@ -9,6 +9,7 @@ import { DashVeiculosComponent } from './components/screens/dash-veiculos/dash-v
 import { DashDriveComponent } from './components/screens/dashDrive/dash-drive.component';
 import { GameComponent } from './components/screens/game/game.component';
 import { HomeComponent } from './components/screens/home/home.component';
+import { PremiacoesComponent } from './components/screens/premiacoes/premiacoes.component';
 import { ProfileComponent } from './components/screens/profile/profile.component';
 import { ScoreComponent } from './components/screens/score/score.component';
 import { CanDeactivateGuard } from './guards/can-deactivate.guard';
@@ -68,4 +69,24 @@ export const appRoutes: Route[] = [
     component: ProfileComponent,
     canDeactivate: [CanDeactivateGuard]
   },
+  {
+    path: 'premiacoes',
+    component: PremiacoesComponent,
+  },
+  {
+    path: 'ranking-empresa',
+    component: GameComponent,
+  },
+  {
+    path: 'ranking-geral',
+    component: GameComponent,
+  },
+  {
+    path: 'game-dia',
+    component: GameComponent,
+  },
+  {
+    path: 'quiz',
+    component: GameComponent,
+  }
 ];
