@@ -1,101 +1,260 @@
-# AppAceCopilot
+# Ace Copilot - Documentação da Estrutura do Aplicativo
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+## 📋 Visão Geral
+O Ace Copilot é uma aplicação Angular moderna focada em gerenciamento de frotas e motoristas, com gamificação e monitoramento de desempenho.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+## 🏗️ Estrutura do Aplicativo
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/angular-standalone-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+### 📱 Componentes Principais
 
-## Run tasks
+#### 1. FAQ (Perguntas Frequentes)
+- Localização: `src/app/components/faq`
+- Componente de acordeão para exibir perguntas e respostas frequentes
+- Interface intuitiva com expansão/contração de seções
+- Integração com ícones para melhor experiência visual
 
-To run the dev server for your app, use:
+#### 2. Footer (Rodapé)
+- Localização: `src/app/components/footer`
+- Rodapé consistente em todas as páginas
+- Links importantes e informações de copyright
+- Responsivo para diferentes tamanhos de tela
 
-```sh
-npx nx serve app-ace-copilot
+#### 3. Header (Cabeçalho)
+- Localização: `src/app/components/header`
+- Barra de navegação principal
+- Menu de usuário e configurações
+- Alternador de tema claro/escuro
+- Sistema de notificações integrado
+
+#### 4. Gauge (Medidor)
+- Localização: `src/app/components/gauge`
+- Componente visual para exibição de métricas
+- Medidores circulares animados
+- Utilizado para mostrar progresso e estatísticas
+
+#### 5. Game (Gamificação)
+- Localização: `src/app/components/game`
+- Sistema de gamificação para motoristas
+- Ranking e sistema de pontuação
+- Desafios e conquistas
+- Recompensas e níveis
+
+#### 6. Home (Página Inicial)
+- Localização: `src/app/components/home`
+- Dashboard principal
+- Visão geral das principais métricas
+- Acesso rápido às funcionalidades mais usadas
+
+#### 7. Premiações
+- Localização: `src/app/components/premiacoes`
+- Sistema de recompensas
+- Catálogo de prêmios
+- Histórico de premiações
+- Regras e critérios
+
+#### 8. Profile (Perfil)
+- Localização: `src/app/components/profile`
+- Gerenciamento de perfil do usuário
+- Upload de avatar
+- Configurações pessoais
+- Preferências de notificações e tema
+
+#### 9. Score (Pontuação)
+- Localização: `src/app/components/score`
+- Sistema de pontuação detalhado
+- Histórico de pontos
+- Métricas de desempenho
+- Gráficos e análises
+
+#### 10. Statistics (Estatísticas)
+- Localização: `src/app/components/statistics`
+- Análises detalhadas
+- Gráficos de desempenho
+- Métricas comparativas
+- Relatórios exportáveis
+
+#### 11. Task (Tarefas)
+- Localização: `src/app/components/task`
+- Gerenciamento de tarefas
+- Lista de atividades pendentes
+- Histórico de conclusões
+- Priorização de tarefas
+
+#### 12. Turno
+- Localização: `src/app/components/turno`
+- Controle de turnos de trabalho
+- Registro de início/fim
+- Pausas e intervalos
+- Relatórios de jornada
+
+### 📊 Dashboards Especializados
+
+#### DashVeículos
+- Localização: `src/app/components/dash-veiculos`
+- Monitoramento da frota
+- Status dos veículos
+- Manutenções programadas
+- Consumo de combustível
+- Quilometragem
+
+#### DashDrive
+- Localização: `src/app/components/dash-drive`
+- Dashboard do motorista
+- Desempenho individual
+- Rotas realizadas
+- Economia de combustível
+- Pontuação de direção
+
+## 🛠️ Tecnologias Utilizadas
+
+### Core Dependencies
+```bash
+# Angular Core (v16.2.0)
+@angular/animations
+@angular/common
+@angular/compiler
+@angular/core
+@angular/forms
+@angular/platform-browser
+@angular/platform-browser-dynamic
+@angular/router
+
+# Angular Material UI (v16.2.0)
+@angular/material
+@angular/cdk
+
+# Icons and UI Components
+@ng-icons/core@25.2.0
+@ng-icons/material-icons@25.2.0
+@ng-icons/heroicons@25.2.0
+@spartan-ng/ui-button-helm@2.2.1
+
+# State Management
+rxjs@7.8.1
+zone.js@0.13.0
 ```
 
-To create a production bundle:
+### Development Dependencies
+```bash
+# Angular Development Tools
+@angular-devkit/build-angular@16.2.0
+@angular/cli@16.2.0
+@angular/compiler-cli@16.2.0
+@types/node@18.16.0
+typescript@5.1.6
 
-```sh
-npx nx build app-ace-copilot
+# Styling and UI
+tailwindcss@3.3.3
+postcss@8.4.27
+autoprefixer@10.4.14
+
+# Testing Framework
+jasmine-core@4.6.0
+karma@6.4.0
+karma-chrome-launcher@3.2.0
+karma-coverage@2.2.0
+karma-jasmine@5.1.0
+karma-jasmine-html-reporter@2.1.0
+
+# Build Tools
+nx@16.7.4
+tslib@2.6.0
 ```
 
-To see all available targets to run for a project, run:
+## 🔧 Configuração e Instalação
 
-```sh
-npx nx show project app-ace-copilot
+### Pré-requisitos
+- Node.js (versão 14.x ou superior)
+- npm (versão 6.x ou superior)
+
+### Passos para Instalação
+
+1. Clone o repositório
+```bash
+git clone [url-do-repositorio]
+cd app-ace-copilot
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
-
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
-
-```sh
-npx nx g @nx/angular:app demo
+2. Instale as dependências
+```bash
+npm install
 ```
 
-To generate a new library, use:
+3. Inicie o servidor de desenvolvimento
+```bash
+npm start
+```
+O aplicativo estará disponível em `http://localhost:4200`
 
-```sh
-npx nx g @nx/angular:lib mylib
+4. Para build de produção
+```bash
+npm run build
+```
+Os arquivos de build serão gerados na pasta `dist/`
+
+## 🌐 Ambiente de Desenvolvimento
+
+O aplicativo roda por padrão em:
+- URL: `http://localhost:4200`
+- API Backend: Configurável em `environment.ts`
+
+## 🎨 Temas e Estilização
+
+O aplicativo suporta:
+- Modo claro e escuro
+- Personalização via TailwindCSS
+- Design responsivo
+- Animações suaves
+
+## 📦 Estrutura de Arquivos Principal
+
+```
+src/
+├── app/
+│   ├── components/
+│   │   ├── faq/
+│   │   ├── footer/
+│   │   ├── header/
+│   │   ├── gauge/
+│   │   ├── game/
+│   │   ├── home/
+│   │   ├── premiacoes/
+│   │   ├── profile/
+│   │   ├── score/
+│   │   ├── statistics/
+│   │   ├── task/
+│   │   └── turno/
+│   ├── services/
+│   ├── interfaces/
+│   └── shared/
+├── assets/
+└── environments/
 ```
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+## 🔐 Segurança
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- Autenticação JWT
+- Proteção de rotas
+- Validação de formulários
+- Sanitização de dados
 
-## Set up CI!
+## 📱 Responsividade
 
-### Step 1
+O aplicativo é totalmente responsivo, adaptando-se a:
+- Desktops
+- Tablets
+- Smartphones
+- Diferentes orientações de tela
 
-To connect to Nx Cloud, run the following command:
+## 🤝 Contribuição
 
-```sh
-npx nx connect
-```
+Para contribuir com o projeto:
+1. Fork o repositório
+2. Crie uma branch para sua feature
+3. Commit suas mudanças
+4. Push para a branch
+5. Abra um Pull Request
 
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
+## 📄 Licença
 
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-### Step 2
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
-```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/angular-standalone-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+Este projeto está sob a licença [Inserir tipo de licença].

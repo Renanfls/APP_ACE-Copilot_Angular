@@ -14,6 +14,7 @@ import {
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
 import { ThemeService } from '../../services/theme.service';
 
@@ -236,9 +237,8 @@ interface Notification {
             Perfil
           </a>
           <a
-            routerLink="/logout"
-            (click)="scrollToTop(); closeSidebar()"
-            class="block p-3 rounded-lg transition-colors"
+            (click)="logout()"
+            class="block p-3 rounded-lg transition-colors cursor-pointer"
             [ngClass]="{
               'hover:bg-gray-800': isDarkMode(),
               'hover:bg-gray-100': !isDarkMode()
@@ -290,6 +290,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private document = inject(DOCUMENT);
   private router = inject(Router);
   private routerSubscription: Subscription | undefined;
+  private authService = inject(AuthService);
 
   isSidebarOpen = signal(false);
   isDarkMode;
@@ -416,5 +417,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (!target.closest('.notifications-dropdown') && !target.closest('button')) {
       this.closeNotifications();
     }
+  }
+
+  logout() {
+    // Close the sidebar first
+    this.closeSidebar();
+    // Clear all subscriptions
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+    // Perform logout and navigation
+    this.authService.logout();
   }
 }

@@ -1,4 +1,5 @@
 import { Route } from '@angular/router';
+import { AwaitingApprovalComponent } from './components/screens/awaiting-approval/awaiting-approval.component';
 import { CardVeiculoArComponent } from './components/screens/dash-veiculos/card-veiculo-ar-comprimido/card-veiculo.component';
 import { CardVeiculoPedalComponent } from './components/screens/dash-veiculos/card-veiculo-pedal/card-veiculo.component';
 import { CardVeiculoTemperaturaComponent } from './components/screens/dash-veiculos/card-veiculo-temperatura/card-veiculo.component';
@@ -9,6 +10,7 @@ import { DashVeiculosComponent } from './components/screens/dash-veiculos/dash-v
 import { DashDriveComponent } from './components/screens/dashDrive/dash-drive.component';
 import { GameComponent } from './components/screens/game/game.component';
 import { HomeComponent } from './components/screens/home/home.component';
+import { LoginComponent } from './components/screens/login/login.component';
 import { PremiacoesComponent } from './components/screens/premiacoes/premiacoes.component';
 import { ProfileComponent } from './components/screens/profile/profile.component';
 import { ScoreComponent } from './components/screens/score/score.component';
@@ -17,8 +19,16 @@ import { CanDeactivateGuard } from './guards/can-deactivate.guard';
 export const appRoutes: Route[] = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'login',
     pathMatch: 'full',
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
+  },
+  {
+    path: 'awaiting-approval',
+    component: AwaitingApprovalComponent,
   },
   {
     path: 'dsbcarros',

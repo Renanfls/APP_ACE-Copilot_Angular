@@ -1,21 +1,28 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
+  matAdd,
   matArrowBack,
   matBadge,
   matBusiness,
   matEmail,
+  matLocalOffer,
   matPerson,
   matPhone,
   matPhotoCamera,
+  matRefresh,
   matSettings,
   matWork
 } from '@ng-icons/material-icons/baseline';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
+import { AvatarSelectorComponent } from '../../../components/avatar-selector/avatar-selector.component';
+import { Avatar } from '../../../interfaces/avatar.interface';
 import { User } from '../../../interfaces/user.interface';
+import { AuthService } from '../../../services/auth.service';
+import { CouponService, CouponStats } from '../../../services/coupon.service';
 import { NotificationService } from '../../../services/notification.service';
 import { ThemeService } from '../../../services/theme.service';
 import { FooterComponent } from '../../footer/footer.component';
@@ -24,7 +31,16 @@ import { HeaderComponent } from '../../header/header.component';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgIconComponent, HlmButtonDirective, HeaderComponent, FooterComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    NgIconComponent,
+    HlmButtonDirective,
+    HeaderComponent,
+    FooterComponent,
+    AvatarSelectorComponent
+  ],
   viewProviders: [
     provideIcons({
       matArrowBack,
@@ -35,7 +51,10 @@ import { HeaderComponent } from '../../header/header.component';
       matPhone,
       matBusiness,
       matWork,
-      matSettings
+      matSettings,
+      matRefresh,
+      matAdd,
+      matLocalOffer
     }),
   ],
   template: `
@@ -58,14 +77,9 @@ import { HeaderComponent } from '../../header/header.component';
                 <button hlmBtn
                         variant="ghost"
                         class="absolute bottom-2 right-2 bg-amber-400 hover:bg-amber-500 text-white rounded-full p-3 shadow-md transition-colors"
-                        (click)="triggerFileInput()">
+                        (click)="openAvatarSelector()">
                   <ng-icon name="matPhotoCamera" class="text-lg"/>
                 </button>
-                <input #fileInput
-                       type="file"
-                       class="hidden"
-                       accept="image/*"
-                       (change)="onFileSelected($event)">
               </div>
 
               <!-- User Info -->
@@ -210,6 +224,73 @@ import { HeaderComponent } from '../../header/header.component';
                 </div>
               </div>
 
+              <!-- Admin Section -->
+              <div *ngIf="isAdmin()" class="border-t border-gray-700 mt-8 pt-8">
+                <h3 class="text-xl font-semibold mb-6 pb-2 border-b border-gray-700 dark:text-amber-400 flex items-center">
+                  <ng-icon name="matSettings" class="mr-3"/>
+                  Administração
+                </h3>
+
+                <div class="space-y-6">
+                  <!-- Coupon Management -->
+                  <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg">
+                    <h4 class="text-lg font-medium mb-4 flex items-center gap-2">
+                      <ng-icon name="matLocalOffer" class="text-amber-400"/>
+                      Gerenciar Cupons
+                    </h4>
+                    
+                    <div class="flex items-center gap-4 mb-4">
+                      <div class="flex-1">
+                        <label class="block text-sm font-medium dark:text-gray-300 mb-2">
+                          Quantidade de Cupons
+                        </label>
+                        <input 
+                          type="number" 
+                          min="1"
+                          [(ngModel)]="couponAmount"
+                          class="w-full px-4 py-2 rounded-lg dark:bg-[#1a1a1a] dark:text-white border border-gray-700 focus:border-amber-400 focus:ring-1 focus:ring-amber-400"
+                        >
+                      </div>
+                      <button
+                        hlmBtn
+                        class="bg-amber-400 hover:bg-amber-500 text-black font-medium py-3 px-6 rounded-lg shadow-md transition-all flex items-center gap-2 self-end"
+                        (click)="addCoupons()"
+                      >
+                        <ng-icon name="matAdd"/>
+                        Adicionar Cupons
+                      </button>
+                    </div>
+
+                    <!-- Coupon Stats -->
+                    <div class="grid grid-cols-3 gap-4 mt-6">
+                      <div class="bg-white dark:bg-[#1a1a1a] p-4 rounded-lg text-center">
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Total</p>
+                        <p class="text-2xl font-bold text-amber-400">{{ couponStats().total }}</p>
+                      </div>
+                      <div class="bg-white dark:bg-[#1a1a1a] p-4 rounded-lg text-center">
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Disponíveis</p>
+                        <p class="text-2xl font-bold text-green-500">{{ couponStats().available }}</p>
+                      </div>
+                      <div class="bg-white dark:bg-[#1a1a1a] p-4 rounded-lg text-center">
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Utilizados</p>
+                        <p class="text-2xl font-bold text-blue-500">{{ couponStats().used }}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Reset Profile Button -->
+                  <button 
+                    hlmBtn
+                    variant="destructive"
+                    class="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-8 rounded-lg shadow-md transition-all flex items-center gap-2 justify-center"
+                    (click)="resetProfile()"
+                  >
+                    <ng-icon name="matRefresh" />
+                    Resetar Perfil
+                  </button>
+                </div>
+              </div>
+
               <!-- Submit Button -->
               <div class="flex justify-end pt-6">
                 <button hlmBtn
@@ -225,6 +306,13 @@ import { HeaderComponent } from '../../header/header.component';
       </div>
       <app-footer />
     </div>
+
+    <!-- Avatar Selector Modal -->
+    <app-avatar-selector
+      [isOpen]="isAvatarSelectorOpen"
+      (closeModal)="closeAvatarSelector()"
+      (avatarSelected)="onAvatarSelected($event)"
+    />
   `,
   styles: [`
     :host {
@@ -289,13 +377,20 @@ import { HeaderComponent } from '../../header/header.component';
 export class ProfileComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   private originalThemeState: boolean = false;
+  isAvatarSelectorOpen = false;
+  couponAmount: number = 1;
+  couponStats = signal<CouponStats>({
+    total: 0,
+    available: 0,
+    used: 0
+  });
 
   user = signal<User>({
     id: '1',
     name: 'Anabelle',
     email: 'anabelle@example.com',
     phase: 'Ouro',
-    avatar: '',
+    avatar: localStorage.getItem('userAvatar') || '',
     phone: '(21) 98765-4321',
     company: 'Novacap',
     role: 'Motorista',
@@ -312,7 +407,9 @@ export class ProfileComponent implements OnInit {
     private fb: FormBuilder, 
     private router: Router,
     private themeService: ThemeService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private authService: AuthService,
+    private couponService: CouponService
   ) {
     this.originalThemeState = this.themeService.isDarkMode();
     
@@ -344,9 +441,23 @@ export class ProfileComponent implements OnInit {
         this.themeService.disableDarkMode();
       }
     });
+
+    // Subscribe to coupon stats
+    this.couponService.getCouponStats().subscribe(stats => {
+      this.couponStats.set(stats);
+    });
   }
 
   ngOnInit() {
+    // Carregar avatar salvo
+    const savedAvatar = localStorage.getItem('userAvatar');
+    if (savedAvatar) {
+      this.user.update(current => ({
+        ...current,
+        avatar: savedAvatar
+      }));
+    }
+
     this.profileForm.patchValue({
       name: this.user().name,
       registration: this.user().registration,
@@ -358,23 +469,25 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  triggerFileInput() {
-    this.fileInput.nativeElement.click();
+  openAvatarSelector(): void {
+    this.isAvatarSelectorOpen = true;
   }
 
-  onFileSelected(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.user.update(current => ({
-          ...current,
-          avatar: e.target?.result as string
-        }));
-        this.showToast('Avatar atualizado com sucesso!', 'success');
-      };
-      reader.readAsDataURL(file);
-    }
+  closeAvatarSelector(): void {
+    this.isAvatarSelectorOpen = false;
+  }
+
+  onAvatarSelected(avatar: Avatar): void {
+    // Salvar o avatar no localStorage
+    localStorage.setItem('userAvatar', avatar.image);
+    
+    // Atualizar o estado do usuário
+    this.user.update(current => ({
+      ...current,
+      avatar: avatar.image
+    }));
+    
+    this.showToast('Avatar atualizado com sucesso!', 'success');
   }
 
   onSubmit() {
@@ -447,5 +560,55 @@ export class ProfileComponent implements OnInit {
         document.body.removeChild(toast);
       }, 300);
     }, 3000);
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
+
+  resetProfile(): void {
+    if (confirm('Tem certeza que deseja resetar este perfil? Esta ação não pode ser desfeita.')) {
+      // Reset user data
+      this.user.update(current => ({
+        ...current,
+        avatar: '',
+        preferences: {
+          darkMode: false,
+          notifications: true
+        }
+      }));
+
+      // Clear avatar from localStorage
+      localStorage.removeItem('userAvatar');
+
+      // Reset form
+      this.profileForm.reset({
+        name: this.user().name,
+        registration: this.user().registration,
+        phone: this.user().phone,
+        company: this.user().company,
+        role: this.user().role,
+        darkMode: false,
+        notifications: true
+      });
+
+      // Update theme
+      this.themeService.disableDarkMode();
+      this.originalThemeState = false;
+
+      // Show success message
+      this.showToast('Perfil resetado com sucesso!', 'success');
+    }
+  }
+
+  addCoupons(): void {
+    if (this.couponAmount < 1) {
+      this.showToast('A quantidade deve ser maior que zero', 'error');
+      return;
+    }
+
+    this.couponService.addCoupons(this.couponAmount);
+    this.showToast(`${this.couponAmount} cupons adicionados com sucesso!`, 'success');
+    this.couponAmount = 1; // Reset the input
   }
 } 

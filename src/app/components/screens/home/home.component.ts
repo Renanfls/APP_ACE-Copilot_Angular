@@ -13,17 +13,12 @@ import {
     matVideoLibraryRound
 } from '@ng-icons/material-icons/round';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
+import { CouponService, CouponStats } from '../../../services/coupon.service';
 import { FaqDropdownComponent } from '../../faq/faq-dropdown.component';
 import { FooterComponent } from '../../footer/footer.component';
 import { HeaderComponent } from '../../header/header.component';
 import { StatisticComponent } from '../../statistic/statistic.component';
 import { TaskComponent } from '../../task/task.component';
-
-interface Coupons {
-  total: number;
-  available: number;
-  used: number;
-}
 
 interface DailyTask {
   label: string;
@@ -63,10 +58,10 @@ interface DailyTask {
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  coupons: Coupons = {
-    total: 15,
-    available: 10,
-    used: 5
+  coupons: CouponStats = {
+    total: 0,
+    available: 0,
+    used: 0
   };
 
   dailyTasks: DailyTask[] = [
@@ -100,10 +95,15 @@ export class HomeComponent implements OnInit {
     }
   ];
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private couponService: CouponService
+  ) {}
 
   ngOnInit() {
-    // Initialize any necessary data
+    this.couponService.getCouponStats().subscribe((stats: CouponStats) => {
+      this.coupons = stats;
+    });
   }
 
   get hasCompletedDailyTasks(): boolean {
@@ -129,11 +129,6 @@ export class HomeComponent implements OnInit {
   }
 
   private awardBonusCoupon() {
-    // Increment available and total coupons
-    this.coupons.available++;
-    this.coupons.total++;
-    
-    // Show success message (you can implement your preferred notification system)
-    console.log('Parabéns! Você ganhou um cupom bônus por completar todas as tarefas diárias!');
+    this.couponService.rewardDailyTasks();
   }
 }

@@ -285,6 +285,17 @@ export class ScoreComponent implements OnInit, AfterViewInit {
     return `${day}/${month}`;
   }
 
+  private formatDateForInput(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  get inputDateValue(): string {
+    return this.formatDateForInput(this.selectedDate);
+  }
+
   // Navega para o dia anterior
   nextDate() {
     const [day, month] = this.currentDate.split('/').map(Number);
@@ -306,10 +317,25 @@ export class ScoreComponent implements OnInit, AfterViewInit {
   }
 
   onDateSelected(event: any) {
-    const date = event.value || new Date(event.target.value);
-    this.selectedDate = date;
-    this.currentDate = this.formatDate(date);
-    this.filterTurnosByDate(this.currentDate);
+    try {
+      // Handle both direct Date objects and string inputs
+      const inputDate = event.target.value ? new Date(event.target.value + 'T00:00:00') : event.value;
+      
+      // Ensure we have a valid date
+      if (!(inputDate instanceof Date) || isNaN(inputDate.getTime())) {
+        console.error('Invalid date input:', event);
+        return;
+      }
+
+      // Update the selected date
+      this.selectedDate = inputDate;
+      
+      // Format the date for display and filtering
+      this.currentDate = this.formatDate(inputDate);
+      this.filterTurnosByDate(this.currentDate);
+    } catch (error) {
+      console.error('Error processing date selection:', error);
+    }
   }
 
   get datesWithShifts(): string[] {

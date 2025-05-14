@@ -3,14 +3,15 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
-  heroAcademicCap,
-  heroChevronDown,
-  heroCommandLine,
-  heroExclamationTriangle,
-  heroLifebuoy,
-  heroLightBulb,
-  heroQuestionMarkCircle,
-  heroTrophy
+    heroAcademicCap,
+    heroChevronDown,
+    heroChevronUp,
+    heroCommandLine,
+    heroExclamationTriangle,
+    heroLifebuoy,
+    heroLightBulb,
+    heroQuestionMarkCircle,
+    heroTrophy
 } from '@ng-icons/heroicons/outline';
 
 interface FaqQuestion {
@@ -34,6 +35,7 @@ interface FaqCategory {
     provideIcons({ 
       heroQuestionMarkCircleOutline: heroQuestionMarkCircle,
       heroChevronDownOutline: heroChevronDown,
+      heroChevronUpOutline: heroChevronUp,
       heroLightBulbOutline: heroLightBulb,
       heroAcademicCapOutline: heroAcademicCap,
       heroTrophyOutline: heroTrophy,
@@ -48,6 +50,11 @@ interface FaqCategory {
 export class FaqDropdownComponent {
   openCategory: number | null = null;
   openQuestion: string | null = null;
+
+  // Calcula o total de perguntas
+  get totalQuestions(): number {
+    return this.faqData.reduce((total, category) => total + category.questions.length, 0);
+  }
 
   // Dados organizados por categoria
   faqData: FaqCategory[] = [
