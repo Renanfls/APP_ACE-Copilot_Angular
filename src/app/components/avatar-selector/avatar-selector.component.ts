@@ -2,18 +2,21 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
-  matCategory,
-  matCheckCircle,
-  matClose,
-  matError,
-  matLocalOffer,
-  matLock,
-  matShoppingCart,
-  matStarRate,
-  matStyle
+    matAdd,
+    matCategory,
+    matCheckCircle,
+    matClose,
+    matError,
+    matLocalOffer,
+    matLock,
+    matLockOpen,
+    matSave,
+    matShoppingCart,
+    matStarRate,
+    matStyle,
 } from '@ng-icons/material-icons/baseline';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
-import { ALL_AVATARS, Avatar, AvatarType, UserAvatar } from '../../interfaces/avatar.interface';
+import { ALL_AVATARS, Avatar, AvatarType, FREE_AVATARS, UserAvatar } from '../../interfaces/avatar.interface';
 import { AvatarService } from '../../services/avatar.service';
 
 @Component({
@@ -22,14 +25,17 @@ import { AvatarService } from '../../services/avatar.service';
   imports: [CommonModule, NgIconComponent, HlmButtonDirective],
   viewProviders: [provideIcons({ 
     matClose, 
-    matLock, 
+    matLock,
+    matLockOpen,
     matShoppingCart,
     matLocalOffer,
     matCategory,
     matStyle,
     matStarRate,
     matCheckCircle,
-    matError
+    matError,
+    matAdd,
+    matSave
   })],
   template: `
     <div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" *ngIf="isOpen">
@@ -54,7 +60,7 @@ import { AvatarService } from '../../services/avatar.service';
           <div class="flex justify-between items-center">
             <div>
               <h2 class="text-3xl font-bold dark:text-white flex items-center gap-2">
-                Escolha seu Avatar
+                {{ isAdmin ? 'Gerenciar Avatares' : 'Escolha seu Avatar' }}
               </h2>
               <div class="mt-2 flex items-center gap-2">
                 <ng-icon name="matLocalOffer" class="text-amber-400" />
@@ -63,7 +69,27 @@ import { AvatarService } from '../../services/avatar.service';
                 </p>
               </div>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-4">
+              <!-- Admin Actions -->
+              <div *ngIf="isAdmin" class="flex items-center gap-2">
+                <button 
+                  hlmBtn 
+                  variant="destructive"
+                  class="px-4 py-2 rounded-lg flex items-center gap-2"
+                  (click)="resetProfile()"
+                >
+                  <ng-icon name="matRefresh" />
+                  Resetar Perfil
+                </button>
+                <button 
+                  hlmBtn 
+                  class="px-4 py-2 bg-amber-400 text-black hover:bg-amber-500 rounded-lg flex items-center gap-2"
+                  (click)="addCoupons()"
+                >
+                  <ng-icon name="matAdd" />
+                  Adicionar Cupons
+                </button>
+              </div>
               <button 
                 hlmBtn 
                 variant="ghost" 
@@ -75,8 +101,24 @@ import { AvatarService } from '../../services/avatar.service';
             </div>
           </div>
 
-          <!-- Filters -->
-          <div class="mt-6 space-y-4">
+          <!-- Admin Stats -->
+          <div *ngIf="isAdmin" class="mt-4 grid grid-cols-3 gap-4">
+            <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg text-center">
+              <p class="text-sm text-gray-500 dark:text-gray-400">Total de Avatares</p>
+              <p class="text-2xl font-bold text-amber-400">{{ filteredAvatars.length }}</p>
+            </div>
+            <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg text-center">
+              <p class="text-sm text-gray-500 dark:text-gray-400">Avatares Disponíveis</p>
+              <p class="text-2xl font-bold text-green-500">{{ getAvailableAvatarsCount() }}</p>
+            </div>
+            <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg text-center">
+              <p class="text-sm text-gray-500 dark:text-gray-400">Avatares Bloqueados</p>
+              <p class="text-2xl font-bold text-red-500">{{ getLockedAvatarsCount() }}</p>
+            </div>
+          </div>
+
+          <!-- User Filters -->
+          <div class="mt-6 space-y-4" *ngIf="!isAdmin">
             <!-- Categories -->
             <div class="space-y-2">
               <div class="flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400">
@@ -145,7 +187,7 @@ import { AvatarService } from '../../services/avatar.service';
               class="relative group cursor-pointer rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 bg-gray-100 dark:bg-gray-800 border-2"
               [class.border-amber-400]="selectedAvatar?.id === avatar.id"
               [class.border-transparent]="selectedAvatar?.id !== avatar.id"
-              [class.opacity-75]="!isAvatarAvailable(avatar.id)"
+              [class.opacity-75]="!isAdmin && !isAvatarAvailable(avatar.id)"
               (click)="onAvatarClick(avatar)"
             >
               <div class="aspect-square w-full p-4 flex items-center justify-center">
@@ -156,9 +198,9 @@ import { AvatarService } from '../../services/avatar.service';
                 >
               </div>
               
-              <!-- Overlay for unavailable avatars -->
+              <!-- Overlay for unavailable avatars (only for normal users) -->
               <div
-                *ngIf="!isAvatarAvailable(avatar.id)"
+                *ngIf="!isAdmin && !isAvatarAvailable(avatar.id)"
                 class="absolute inset-0 bg-[#1d1d1d] bg-opacity-70 flex items-center justify-center backdrop-blur-sm"
               >
                 <div class="text-center p-2">
@@ -185,6 +227,17 @@ import { AvatarService } from '../../services/avatar.service';
               <div class="absolute bottom-2 left-2 text-xs font-medium text-gray-500 dark:text-gray-400">
                 {{ getCategoryLabel(avatar.category) }}
               </div>
+
+              <!-- Admin overlay with stats -->
+              <div
+                *ngIf="isAdmin"
+                class="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2 text-xs"
+              >
+                <div class="flex justify-between">
+                  <span>ID: {{ avatar.id }}</span>
+                  <span>{{ avatar.price ? avatar.price + ' cupons' : 'Grátis' }}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -204,25 +257,40 @@ import { AvatarService } from '../../services/avatar.service';
               >
                 Cancelar
               </button>
-              <button
-                *ngIf="selectedAvatar && !isAvatarAvailable(selectedAvatar.id)"
-                hlmBtn
-                class="px-6 py-2 bg-amber-400 text-black hover:bg-amber-500 rounded-full flex items-center gap-2"
-                [disabled]="!canPurchaseSelected()"
-                (click)="purchaseSelected()"
-              >
-                <ng-icon name="matShoppingCart" />
-                Comprar ({{ selectedAvatar.price }} cupons)
-              </button>
-              <button
-                *ngIf="selectedAvatar && isAvatarAvailable(selectedAvatar.id)"
-                hlmBtn
-                class="px-6 py-2 bg-amber-400 text-black hover:bg-amber-500 rounded-full flex items-center gap-2"
-                (click)="saveChanges()"
-              >
-                <ng-icon name="matSave" />
-                Salvar Alterações
-              </button>
+              <!-- Normal user actions -->
+              <ng-container *ngIf="!isAdmin">
+                <button
+                  *ngIf="selectedAvatar && !isAvatarAvailable(selectedAvatar.id)"
+                  hlmBtn
+                  class="px-6 py-2 bg-amber-400 text-black hover:bg-amber-500 rounded-full flex items-center gap-2"
+                  [disabled]="!canPurchaseSelected()"
+                  (click)="purchaseSelected()"
+                >
+                  <ng-icon name="matShoppingCart" />
+                  Comprar ({{ selectedAvatar.price }} cupons)
+                </button>
+                <button
+                  *ngIf="selectedAvatar && isAvatarAvailable(selectedAvatar.id)"
+                  hlmBtn
+                  class="px-6 py-2 bg-amber-400 text-black hover:bg-amber-500 rounded-full flex items-center gap-2"
+                  (click)="saveChanges()"
+                >
+                  <ng-icon name="matSave" />
+                  Salvar Alterações
+                </button>
+              </ng-container>
+              <!-- Admin actions -->
+              <ng-container *ngIf="isAdmin">
+                <button
+                  *ngIf="selectedAvatar"
+                  hlmBtn
+                  class="px-6 py-2 bg-amber-400 text-black hover:bg-amber-500 rounded-full flex items-center gap-2"
+                  (click)="toggleAvatarAvailability()"
+                >
+                  <ng-icon [name]="isAvatarAvailable(selectedAvatar.id) ? 'matLock' : 'matLockOpen'" />
+                  {{ isAvatarAvailable(selectedAvatar.id) ? 'Bloquear' : 'Desbloquear' }}
+                </button>
+              </ng-container>
             </div>
           </div>
         </div>
@@ -286,6 +354,7 @@ import { AvatarService } from '../../services/avatar.service';
 })
 export class AvatarSelectorComponent implements OnInit {
   @Input() isOpen = false;
+  @Input() isAdmin = false;
   @Output() closeModal = new EventEmitter<void>();
   @Output() avatarSelected = new EventEmitter<Avatar>();
 
@@ -357,7 +426,18 @@ export class AvatarSelectorComponent implements OnInit {
   }
 
   isAvatarAvailable(avatarId: string): boolean {
-    return this.avatarService.isAvatarAvailable(avatarId);
+    // Free avatars are always available
+    if (FREE_AVATARS.some(avatar => avatar.id === avatarId)) {
+      return true;
+    }
+    
+    // For non-admin users, check if avatar is available through the service
+    if (!this.isAdmin) {
+      return this.avatarService.isAvatarAvailable(avatarId);
+    }
+    
+    // Admins can access all avatars
+    return true;
   }
 
   canPurchaseSelected(): boolean {
@@ -420,10 +500,42 @@ export class AvatarSelectorComponent implements OnInit {
   resetProfile(): void {
     if (confirm('Tem certeza que deseja resetar seu perfil? Todos os avatares premium e exclusivos serão removidos.')) {
       this.avatarService.resetUserProfile();
-      // Atualizar a lista de avatares disponíveis
-      this.avatarService.getUserAvatars().subscribe(avatars => {
-        this.selectedAvatar = null;
-      });
+      this.showNotification('success', 'Perfil resetado com sucesso!');
+      this.close();
+    }
+  }
+
+  getAvailableAvatarsCount(): number {
+    return this.filteredAvatars.filter(avatar => this.isAvatarAvailable(avatar.id)).length;
+  }
+
+  getLockedAvatarsCount(): number {
+    return this.filteredAvatars.filter(avatar => !this.isAvatarAvailable(avatar.id)).length;
+  }
+
+  addCoupons(): void {
+    const amount = prompt('Quantidade de cupons a adicionar:');
+    if (amount && !isNaN(Number(amount))) {
+      const numAmount = Number(amount);
+      if (numAmount > 0) {
+        this.avatarService.addCoupons(numAmount);
+        this.showNotification('success', `${amount} cupons adicionados com sucesso!`);
+      } else {
+        this.showNotification('error', 'A quantidade deve ser maior que zero');
+      }
+    }
+  }
+
+  toggleAvatarAvailability(): void {
+    if (!this.selectedAvatar) return;
+    
+    const isAvailable = this.isAvatarAvailable(this.selectedAvatar.id);
+    if (isAvailable) {
+      this.avatarService.lockAvatar(this.selectedAvatar.id);
+      this.showNotification('success', 'Avatar bloqueado com sucesso!');
+    } else {
+      this.avatarService.unlockAvatar(this.selectedAvatar.id);
+      this.showNotification('success', 'Avatar desbloqueado com sucesso!');
     }
   }
 } 

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { matBusiness, matLock, matPerson } from '@ng-icons/material-icons/baseline';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
@@ -10,7 +10,7 @@ import { AuthService } from '../../../services/auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgIconComponent, HlmButtonDirective],
+  imports: [CommonModule, ReactiveFormsModule, NgIconComponent, HlmButtonDirective, RouterModule],
   viewProviders: [
     provideIcons({ matPerson, matLock, matBusiness })
   ],
@@ -27,17 +27,17 @@ import { AuthService } from '../../../services/auth.service';
         <div class="absolute inset-0 bg-black/40 dark:bg-black/40"></div>
       </div>
 
-      <div class="max-w-md w-full p-8 backdrop-blur-sm z-10">
+      <div class="max-w-md w-full p-8 z-10">
         <!-- Logo e Título -->
         <div class="text-center">
-          <img class="mx-auto  w-auto" src="/assets/Logo_.png" alt="Ace Copilot Logo">
+          <img class="mx-auto w-auto" src="/assets/Logo_.png" alt="Ace Copilot Logo">
         </div>
 
         <!-- Formulário de Login -->
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mt-4 space-y-6">
           <!-- Campo de Código da Empresa -->
           <div>
-            <label for="companyCode" class="pl-4 block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label for="companyCode" class="pl-4 block text-sm font-medium text-white">
               Código da Empresa
             </label>
             <div class="mt-2 relative">
@@ -51,19 +51,15 @@ import { AuthService } from '../../../services/auth.service';
                 class="block w-full pl-11 pr-3 py-2 border border-gray-300 rounded-full dark:border-gray-600 shadow-sm dark:bg-zinc-800 dark:text-white focus:ring-amber-500 focus:border-amber-500"
                 [class.border-red-500]="loginForm.get('companyCode')?.invalid && loginForm.get('companyCode')?.touched"
                 placeholder="Digite o código da empresa"
-                (keypress)="onlyNumbers($event)"
                 min="0"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '')"
               >
-            </div>
-            <div *ngIf="loginForm.get('companyCode')?.invalid && loginForm.get('companyCode')?.touched" 
-                 class="mt-1 text-sm text-red-500">
-              Campo obrigatório
             </div>
           </div>
 
           <!-- Campo de Matrícula -->
           <div>
-            <label for="registration" class="pl-4 block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label for="registration" class="pl-4 block text-sm font-medium text-white">
               Matrícula
             </label>
             <div class="mt-2 relative">
@@ -77,19 +73,15 @@ import { AuthService } from '../../../services/auth.service';
                 class="block w-full pl-11 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-full shadow-sm dark:bg-zinc-800 dark:text-white focus:ring-amber-500 focus:border-amber-500"
                 [class.border-red-500]="loginForm.get('registration')?.invalid && loginForm.get('registration')?.touched"
                 placeholder="Digite sua matrícula"
-                (keypress)="onlyNumbers($event)"
                 min="0"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '')"
               >
-            </div>
-            <div *ngIf="loginForm.get('registration')?.invalid && loginForm.get('registration')?.touched" 
-                 class="mt-1 text-sm text-red-500">
-              Campo obrigatório
             </div>
           </div>
 
           <!-- Campo de Senha -->
           <div>
-            <label for="password" class="pl-4 block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label for="password" class="pl-4 block text-sm font-medium text-white">
               Senha
             </label>
             <div class="mt-2 relative">
@@ -105,10 +97,6 @@ import { AuthService } from '../../../services/auth.service';
                 placeholder="Digite sua senha"
               >
             </div>
-            <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" 
-                 class="mt-1 text-sm text-red-500">
-              Campo obrigatório
-            </div>
           </div>
 
           <!-- Lembrar-me e Esqueci a senha -->
@@ -120,7 +108,7 @@ import { AuthService } from '../../../services/auth.service';
                 formControlName="rememberMe"
                 class="h-4 w-4 text-amber-500 focus:ring-amber-500 border-gray-300 rounded cursor-pointer"
               >
-              <label for="remember_me" class="ml-2 block text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
+              <label for="remember_me" class="ml-2 block text-sm text-white cursor-pointer">
                 Lembrar-me
               </label>
             </div>
@@ -159,10 +147,10 @@ import { AuthService } from '../../../services/auth.service';
 
         <!-- Link para Registro -->
         <div class="text-center mt-4">
-          <p class="text-sm text-gray-600 dark:text-gray-400">
+          <p class="text-sm text-white">
             Não tem uma conta?
-            <a href="#" class="font-medium text-amber-400 hover:text-amber-300">
-              Solicite seu acesso
+            <a routerLink="/register" class="font-medium text-amber-400 hover:text-amber-300">
+              Cadastrar
             </a>
           </p>
         </div>
@@ -198,7 +186,7 @@ import { AuthService } from '../../../services/auth.service';
     }
   `]
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   isLoading = false;
   loginError: string | null = null;
@@ -209,21 +197,30 @@ export class LoginComponent {
     private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
-      companyCode: ['', [Validators.required]],
-      registration: ['', [Validators.required]],
-      password: ['', [Validators.required]],
+      companyCode: ['', [
+        Validators.required, 
+        Validators.minLength(4),
+        Validators.pattern('^[0-9]*$')
+      ]],
+      registration: ['', [
+        Validators.required, 
+        Validators.minLength(6),
+        Validators.pattern('^[0-9]*$')
+      ]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
       rememberMe: [false]
     });
   }
 
-  // Permite apenas números nos campos
-  onlyNumbers(event: KeyboardEvent): boolean {
-    const charCode = (event.which) ? event.which : event.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-      event.preventDefault();
-      return false;
+  ngOnInit() {
+    // Preencher campos para admin em desenvolvimento
+    if (location.hostname === 'localhost') {
+      this.loginForm.patchValue({
+        companyCode: '0123',
+        registration: '000000',
+        password: 'admin123'
+      });
     }
-    return true;
   }
 
   async onSubmit() {
@@ -232,20 +229,37 @@ export class LoginComponent {
       this.loginError = null;
 
       try {
-        const success = await this.authService.login({
-          registration: this.loginForm.get('registration')?.value,
-          password: this.loginForm.get('password')?.value,
-          companyCode: this.loginForm.get('companyCode')?.value
-        });
+        const formData = this.loginForm.value;
+        
+        // Formata o código da empresa para ter 4 dígitos
+        formData.companyCode = formData.companyCode.toString().padStart(4, '0');
+        
+        // Formata a matrícula para ter 6 dígitos
+        formData.registration = formData.registration.toString().padStart(6, '0');
 
-        if (!success) {
-          this.loginError = 'Credenciais inválidas';
+        await this.authService.login(formData);
+        
+        // Verifica o status do usuário após o login
+        const user = this.authService.getCurrentUser();
+        
+        if (user && user.status === 'pending') {
+          this.router.navigate(['/awaiting-approval']);
+        } else {
+          this.router.navigate(['/home']);
         }
-      } catch (error) {
-        this.loginError = 'Erro ao realizar login. Tente novamente.';
+      } catch (error: any) {
+        console.error('Erro no login:', error);
+        this.loginError = error.message;
       } finally {
         this.isLoading = false;
       }
+    } else {
+      this.showErrorMessage('Por favor, preencha todos os campos corretamente');
     }
+  }
+
+  showErrorMessage(message: string) {
+    this.loginError = message;
+    this.isLoading = false;
   }
 } 

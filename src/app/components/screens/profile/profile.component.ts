@@ -63,7 +63,7 @@ import { HeaderComponent } from '../../header/header.component';
       
       <div class="container mx-auto py-28">
         <!-- Main Profile Card -->
-        <div class="bg-white dark:bg-[#141416] rounded-xl shadow-xl overflow-hidden">
+        <div class="bg-white dark:bg-[#141416] overflow-hidden">
           <!-- Profile Header with Avatar -->
           <div class="relative p-8">
             <div class="flex flex-col md:flex-row items-center">
@@ -228,7 +228,7 @@ import { HeaderComponent } from '../../header/header.component';
               <div *ngIf="isAdmin()" class="border-t border-gray-700 mt-8 pt-8">
                 <h3 class="text-xl font-semibold mb-6 pb-2 border-b border-gray-700 dark:text-amber-400 flex items-center">
                   <ng-icon name="matSettings" class="mr-3"/>
-                  Administração
+                  Administração ({{ authService.isAdmin() ? 'Admin' : 'Não Admin' }})
                 </h3>
 
                 <div class="space-y-6">
@@ -310,6 +310,7 @@ import { HeaderComponent } from '../../header/header.component';
     <!-- Avatar Selector Modal -->
     <app-avatar-selector
       [isOpen]="isAvatarSelectorOpen"
+      [isAdmin]="authService.isAdmin()"
       (closeModal)="closeAvatarSelector()"
       (avatarSelected)="onAvatarSelected($event)"
     />
@@ -408,7 +409,7 @@ export class ProfileComponent implements OnInit {
     private router: Router,
     private themeService: ThemeService,
     private notificationService: NotificationService,
-    private authService: AuthService,
+    public authService: AuthService,
     private couponService: CouponService
   ) {
     this.originalThemeState = this.themeService.isDarkMode();
@@ -457,6 +458,10 @@ export class ProfileComponent implements OnInit {
         avatar: savedAvatar
       }));
     }
+
+    // Log user role and registration for debugging
+    console.log('User Role:', localStorage.getItem('userRole'));
+    console.log('User Registration:', localStorage.getItem('registration'));
 
     this.profileForm.patchValue({
       name: this.user().name,
@@ -563,7 +568,9 @@ export class ProfileComponent implements OnInit {
   }
 
   isAdmin(): boolean {
-    return this.authService.isAdmin();
+    const isAdmin = this.authService.isAdmin();
+    console.log('isAdmin check:', isAdmin);
+    return isAdmin;
   }
 
   resetProfile(): void {

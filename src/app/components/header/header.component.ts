@@ -3,13 +3,13 @@ import { Component, HostListener, inject, OnDestroy, OnInit, signal } from '@ang
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
-  matClose,
-  matDarkMode,
-  matLightMode,
-  matMoreVert,
-  matNotificationsActive,
-  matNotificationsNone,
-  matPerson,
+    matClose,
+    matDarkMode,
+    matLightMode,
+    matMoreVert,
+    matNotificationsActive,
+    matNotificationsNone,
+    matPerson,
 } from '@ng-icons/material-icons/baseline';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { Subscription } from 'rxjs';
@@ -236,6 +236,19 @@ interface Notification {
           >
             Perfil
           </a>
+          <!-- Admin Option -->
+          <a
+            *ngIf="isAdmin()"
+            routerLink="/user-management"
+            (click)="scrollToTop(); closeSidebar()"
+            class="block p-3 rounded-lg transition-colors"
+            [ngClass]="{
+              'hover:bg-gray-800': isDarkMode(),
+              'hover:bg-gray-100': !isDarkMode()
+            }"
+          >
+            Gerenciar Usuários
+          </a>
           <a
             (click)="logout()"
             class="block p-3 rounded-lg transition-colors cursor-pointer"
@@ -290,7 +303,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private document = inject(DOCUMENT);
   private router = inject(Router);
   private routerSubscription: Subscription | undefined;
-  private authService = inject(AuthService);
+  public authService = inject(AuthService);
 
   isSidebarOpen = signal(false);
   isDarkMode;
@@ -428,5 +441,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     // Perform logout and navigation
     this.authService.logout();
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
   }
 }

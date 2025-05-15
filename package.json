@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "nx serve --host 0.0.0.0 --port 4200",
+    "ng": "ng",
+    "start": "nx serve --host 0.0.0.0 --disable-host-check",
     "build": "nx build",
+    "watch": "ng build --watch --configuration development",
     "test": "nx test"
   },
   "private": true,

@@ -1,4 +1,4 @@
-import { Route } from '@angular/router';
+import { Routes } from '@angular/router';
 import { AwaitingApprovalComponent } from './components/screens/awaiting-approval/awaiting-approval.component';
 import { CardVeiculoArComponent } from './components/screens/dash-veiculos/card-veiculo-ar-comprimido/card-veiculo.component';
 import { CardVeiculoPedalComponent } from './components/screens/dash-veiculos/card-veiculo-pedal/card-veiculo.component';
@@ -9,26 +9,45 @@ import { CardVeiculoVelocidadeComponent } from './components/screens/dash-veicul
 import { DashVeiculosComponent } from './components/screens/dash-veiculos/dash-veiculos.component';
 import { DashDriveComponent } from './components/screens/dashDrive/dash-drive.component';
 import { GameComponent } from './components/screens/game/game.component';
-import { HomeComponent } from './components/screens/home/home.component';
-import { LoginComponent } from './components/screens/login/login.component';
 import { PremiacoesComponent } from './components/screens/premiacoes/premiacoes.component';
-import { ProfileComponent } from './components/screens/profile/profile.component';
 import { ScoreComponent } from './components/screens/score/score.component';
-import { CanDeactivateGuard } from './guards/can-deactivate.guard';
+import { UserManagementComponent } from './components/screens/user-management/user-management.component';
+import { AdminGuard } from './guards/admin.guard';
+import { AuthGuard } from './guards/auth.guard';
 
-export const appRoutes: Route[] = [
-  {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full',
-  },
+export const routes: Routes = [
   {
     path: 'login',
-    component: LoginComponent,
+    loadComponent: () => import('./components/screens/login/login.component').then(m => m.LoginComponent)
+  },
+  {
+    path: 'register',
+    loadComponent: () => import('./components/screens/register/register.component').then(m => m.RegisterComponent)
+  },
+  {
+    path: 'user-management',
+    component: UserManagementComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'home',
+    loadComponent: () => import('./components/screens/home/home.component').then(m => m.HomeComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'profile',
+    loadComponent: () => import('./components/screens/profile/profile.component').then(m => m.ProfileComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: '',
+    redirectTo: '/login',
+    pathMatch: 'full'
   },
   {
     path: 'awaiting-approval',
     component: AwaitingApprovalComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'dsbcarros',
@@ -63,21 +82,12 @@ export const appRoutes: Route[] = [
     component: CardVeiculoVelocidadeComponent,
   },
   {
-    path: 'home',
-    component: HomeComponent,
-  },
-  {
     path: 'pontuacao-ace',
     component: ScoreComponent,
   },
   {
     path: 'as-no-ace',
     component: GameComponent,
-  },
-  {
-    path: 'profile',
-    component: ProfileComponent,
-    canDeactivate: [CanDeactivateGuard]
   },
   {
     path: 'premiacoes',

@@ -26,7 +26,7 @@ import { AuthService } from '../../../services/auth.service';
         <div class="absolute inset-0 bg-black/60"></div>
       </div>
 
-      <div class="max-w-lg w-full space-y-8 p-8 rounded-xl shadow-lg text-center backdrop-blur-sm z-10">
+      <div class="max-w-lg w-full space-y-8 p-8 rounded-xl text-center  z-10">
         <!-- Imagem de Liberação -->
         <div class="flex justify-center">
           <img 
@@ -122,7 +122,7 @@ export class AwaitingApprovalComponent {
     try {
       const status = await this.authService.checkRegistrationStatus();
       
-      if (status.isApproved) {
+      if (status === 'approved') {
         // Atualiza o acesso do usuário
         await this.authService.updateUserAccess();
         // Redireciona para a home
