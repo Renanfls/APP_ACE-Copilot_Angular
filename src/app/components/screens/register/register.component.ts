@@ -138,6 +138,34 @@ import { AuthService } from '../../../services/auth.service';
             </div>
           </div>
 
+          <!-- Matrícula -->
+          <div>
+            <label for="registration" class="pl-4 block text-sm font-medium text-white">
+              Matrícula
+            </label>
+            <div class="mt-2 relative">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <ng-icon name="matWork" class="h-5 w-5 text-gray-400"/>
+              </div>
+              <input
+                id="registration"
+                type="number"
+                formControlName="registration"
+                class="block w-full pl-11 pr-3 py-2 border border-gray-300 rounded-full dark:border-gray-600 shadow-sm dark:bg-zinc-800 dark:text-white focus:ring-amber-500 focus:border-amber-500"
+                [class.border-red-500]="registerForm.get('registration')?.invalid && registerForm.get('registration')?.touched"
+                placeholder="Digite sua matrícula"
+                (keypress)="onlyNumbers($event)"
+                min="0"
+              >
+            </div>
+            <div *ngIf="registerForm.get('registration')?.invalid && registerForm.get('registration')?.touched" 
+                 class="mt-1 text-sm text-red-500 pl-4">
+              <span *ngIf="registerForm.get('registration')?.errors?.['required']">Matrícula é obrigatória</span>
+              <span *ngIf="registerForm.get('registration')?.errors?.['minlength']">Matrícula deve ter no mínimo 6 dígitos</span>
+              <span *ngIf="registerForm.get('registration')?.errors?.['pattern']">Matrícula deve conter apenas números</span>
+            </div>
+          </div>
+
           <!-- Senha -->
           <div>
             <label for="password" class="pl-4 block text-sm font-medium text-white">
@@ -244,6 +272,11 @@ export class RegisterComponent {
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required]],
       companyCode: ['', [Validators.required, Validators.minLength(4)]],
+      registration: ['', [
+        Validators.required,
+        Validators.minLength(6),
+        Validators.pattern('^[0-9]*$')
+      ]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
 
@@ -294,9 +327,9 @@ export class RegisterComponent {
         
         // Remove formatação do telefone
         formData.phone = formData.phone.replace(/\D/g, '');
-        
-        // Gera matrícula única baseada no timestamp
-        formData.registration = Date.now().toString().slice(-6);
+
+        // Formata a matrícula para garantir que seja uma string com pelo menos 6 dígitos
+        formData.registration = formData.registration.toString().padStart(6, '0');
 
         console.log('Enviando dados de registro:', {
           ...formData,
@@ -338,6 +371,9 @@ export class RegisterComponent {
       else if (controls['phone'].errors?.['required']) errorMessage = 'Telefone é obrigatório';
       else if (controls['companyCode'].errors?.['required']) errorMessage = 'Código da empresa é obrigatório';
       else if (controls['companyCode'].errors?.['minlength']) errorMessage = 'Código da empresa deve ter no mínimo 4 dígitos';
+      else if (controls['registration'].errors?.['required']) errorMessage = 'Matrícula é obrigatória';
+      else if (controls['registration'].errors?.['minlength']) errorMessage = 'Matrícula deve ter no mínimo 6 dígitos';
+      else if (controls['registration'].errors?.['pattern']) errorMessage = 'Matrícula deve conter apenas números';
       else if (controls['password'].errors?.['required']) errorMessage = 'Senha é obrigatória';
       else if (controls['password'].errors?.['minlength']) errorMessage = 'Senha deve ter no mínimo 6 caracteres';
       

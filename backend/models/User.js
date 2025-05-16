@@ -20,7 +20,13 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     trim: true,
-    minlength: 6
+    minlength: 6,
+    validate: {
+      validator: function(v) {
+        return /^\d{6,}$/.test(v);
+      },
+      message: props => `${props.value} não é uma matrícula válida. Deve ter no mínimo 6 dígitos e conter apenas números.`
+    }
   },
   phone: {
     type: String,
@@ -51,33 +57,15 @@ const userSchema = new mongoose.Schema({
 
 // Hash password before saving
 userSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) {
+    return next();
+  }
+  
   try {
-    if (!this.isModified('password')) return next();
-    
-    console.log('Hashando senha antes de salvar...');
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
-    console.log('Senha hasheada com sucesso');
     next();
   } catch (error) {
-    console.error('Erro ao hashar senha:', error);
-    next(error);
-  }
-});
-
-// Hash password before updating
-userSchema.pre('findOneAndUpdate', async function(next) {
-  try {
-    const update = this.getUpdate();
-    if (update.password) {
-      console.log('Hashando senha antes de atualizar...');
-      const salt = await bcrypt.genSalt(10);
-      update.password = await bcrypt.hash(update.password, salt);
-      console.log('Senha hasheada com sucesso');
-    }
-    next();
-  } catch (error) {
-    console.error('Erro ao hashar senha:', error);
     next(error);
   }
 });
@@ -85,17 +73,8 @@ userSchema.pre('findOneAndUpdate', async function(next) {
 // Method to compare password
 userSchema.methods.comparePassword = async function(candidatePassword) {
   try {
-    console.log('\n=== Comparando Senhas ===');
-    console.log('Senha fornecida (raw):', `"${candidatePassword}"`);
-    console.log('Senha fornecida (comprimento):', candidatePassword.length);
-    console.log('Hash armazenado:', this.password);
-    console.log('Hash armazenado (comprimento):', this.password.length);
-    
-    const isMatch = await bcrypt.compare(candidatePassword, this.password);
-    console.log('Resultado da comparação:', isMatch);
-    return isMatch;
+    return await bcrypt.compare(candidatePassword, this.password);
   } catch (error) {
-    console.error('Erro ao comparar senhas:', error);
     throw error;
   }
 };

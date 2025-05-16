@@ -174,6 +174,16 @@ interface PendingUser {
                   <ng-icon name="matBlock"/>
                   Bloquear
                 </button>
+                <button
+                  *ngIf="currentTab === 'blocked'"
+                  hlmBtn
+                  variant="default"
+                  class="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg"
+                  (click)="unblockUser(user)"
+                >
+                  <ng-icon name="matCheckCircle"/>
+                  Desbloquear
+                </button>
               </div>
             </div>
 
@@ -210,9 +220,10 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   tabs = [
     { label: 'Pendentes', value: 'pending' as const },
     { label: 'Aprovados', value: 'approved' as const },
-    { label: 'Rejeitados', value: 'rejected' as const }
+    { label: 'Rejeitados', value: 'rejected' as const },
+    { label: 'Bloqueados', value: 'blocked' as const }
   ];
-  currentTab: 'pending' | 'approved' | 'rejected' = 'pending';
+  currentTab: 'pending' | 'approved' | 'rejected' | 'blocked' = 'pending';
   users: PendingUser[] = [];
   isLoading = false;
   error: string | null = null;
@@ -252,7 +263,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     });
   }
 
-  getUsersByStatus(status: 'pending' | 'approved' | 'rejected'): PendingUser[] {
+  getUsersByStatus(status: 'pending' | 'approved' | 'rejected' | 'blocked'): PendingUser[] {
     return this.users.filter(user => user.status === status);
   }
 
@@ -264,6 +275,8 @@ export class UserManagementComponent implements OnInit, OnDestroy {
         return 'aprovado';
       case 'rejected':
         return 'rejeitado';
+      case 'blocked':
+        return 'bloqueado';
       default:
         return '';
     }
@@ -296,6 +309,16 @@ export class UserManagementComponent implements OnInit, OnDestroy {
       this.showNotification('success', 'Usuário bloqueado com sucesso!');
     } catch (error) {
       this.showNotification('error', 'Erro ao bloquear usuário');
+    }
+  }
+
+  async unblockUser(user: PendingUser) {
+    try {
+      await this.authService.unblockUser(user.id).toPromise();
+      this.loadUsers();
+      this.showNotification('success', 'Usuário desbloqueado com sucesso!');
+    } catch (error) {
+      this.showNotification('error', 'Erro ao desbloquear usuário');
     }
   }
 

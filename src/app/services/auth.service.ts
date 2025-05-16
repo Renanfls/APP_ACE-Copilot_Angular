@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
@@ -26,10 +26,11 @@ interface LoginResponse {
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
   private isAuthenticated = new BehaviorSubject<boolean>(false);
   private token: string | null = null;
   private currentUser: User | null = null;
+  private statusCheckInterval: Subscription | null = null;
 
   constructor(
     private http: HttpClient,
@@ -40,6 +41,37 @@ export class AuthService {
     if (this.token && user) {
       this.isAuthenticated.next(true);
       this.currentUser = JSON.parse(user);
+      this.startStatusCheck();
+    }
+  }
+
+  ngOnDestroy() {
+    this.stopStatusCheck();
+  }
+
+  private startStatusCheck() {
+    // Verifica o status a cada 30 segundos
+    this.statusCheckInterval = interval(30000).subscribe(() => {
+      if (this.isAuthenticated.value && !this.isAdmin()) {
+        this.checkRegistrationStatus().then(status => {
+          const currentStatus = this.currentUser?.status;
+          
+          // Se o status mudou e não é mais aprovado, faz logout
+          if (status !== currentStatus && status !== 'approved') {
+            console.log('Status do usuário alterado:', status);
+            this.logout();
+          }
+        }).catch(error => {
+          console.error('Erro ao verificar status:', error);
+        });
+      }
+    });
+  }
+
+  private stopStatusCheck() {
+    if (this.statusCheckInterval) {
+      this.statusCheckInterval.unsubscribe();
+      this.statusCheckInterval = null;
     }
   }
 
@@ -129,6 +161,7 @@ export class AuthService {
         localStorage.setItem('token', response.token);
         localStorage.setItem('user', JSON.stringify(response.user));
         this.isAuthenticated.next(true);
+        this.startStatusCheck(); // Inicia a verificação de status
         console.log('Login concluído com sucesso para:', response.user.name);
       } else {
         console.error('Resposta do servidor não contém token');
@@ -145,6 +178,7 @@ export class AuthService {
 
   logout(): void {
     console.log('Realizando logout...');
+    this.stopStatusCheck(); // Para a verificação de status
     this.token = null;
     this.currentUser = null;
     localStorage.removeItem('token');
@@ -198,8 +232,29 @@ export class AuthService {
     });
   }
 
+  unblockUser(userId: string): Observable<User> {
+    return this.http.patch<User>(`${API_URL}/users/${userId}/status`, { status: 'approved' }, {
+      headers: { Authorization: `Bearer ${this.token}` }
+    });
+  }
+
   async checkRegistrationStatus(): Promise<'pending' | 'approved' | 'rejected' | 'blocked'> {
-    return this.currentUser?.status || 'pending';
+    try {
+      const response = await this.http.get<User>(`${API_URL}/me`, {
+        headers: { Authorization: `Bearer ${this.token}` }
+      }).toPromise();
+      
+      if (response) {
+        // Update the cached user data
+        this.currentUser = response;
+        localStorage.setItem('user', JSON.stringify(response));
+        return response.status;
+      }
+      return 'pending';
+    } catch (error) {
+      console.error('Error checking registration status:', error);
+      throw new Error('Erro ao verificar status do registro');
+    }
   }
 
   async updateUserAccess(): Promise<void> {

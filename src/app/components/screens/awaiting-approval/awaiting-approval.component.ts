@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { matLogout, matRefresh } from '@ng-icons/material-icons/baseline';
@@ -26,7 +26,7 @@ import { AuthService } from '../../../services/auth.service';
         <div class="absolute inset-0 bg-black/60"></div>
       </div>
 
-      <div class="max-w-lg w-full space-y-8 p-8 rounded-xl text-center  z-10">
+      <div class="max-w-lg w-full space-y-8 p-8 rounded-xl text-center z-10">
         <!-- Imagem de Liberação -->
         <div class="flex justify-center">
           <img 
@@ -39,10 +39,10 @@ import { AuthService } from '../../../services/auth.service';
         <!-- Mensagem Principal -->
         <div>
           <h2 class="text-2xl font-bold text-white">
-            Aguardando Liberação
+            {{ message }}
           </h2>
           <p class="mt-4 text-gray-400 text-lg">
-            O acesso ao aplicativo será liberado por nossa equipe após seu treinamento.
+            {{ subMessage }}
           </p>
         </div>
 
@@ -103,35 +103,92 @@ import { AuthService } from '../../../services/auth.service';
     }
   `]
 })
-export class AwaitingApprovalComponent {
+export class AwaitingApprovalComponent implements OnInit {
   isChecking = false;
+  message = 'Aguardando Liberação';
+  subMessage = 'O acesso ao aplicativo será liberado por nossa equipe após seu treinamento.';
 
   constructor(
     private router: Router,
     private authService: AuthService
-  ) {
+  ) {}
+
+  async ngOnInit() {
+    // Verificar status inicial
+    await this.checkInitialStatus();
+  }
+
+  private async checkInitialStatus() {
     // Redirecionar para home se for admin
     if (this.authService.isAdmin()) {
       this.router.navigate(['/home']);
+      return;
+    }
+
+    // Verificar status atual
+    const status = await this.authService.checkRegistrationStatus();
+    this.updateMessageBasedOnStatus(status);
+
+    // Redirecionar se necessário
+    if (status === 'approved') {
+      this.router.navigate(['/home']);
+    } else if (status === 'rejected' || status === 'blocked') {
+      this.authService.logout();
+    }
+  }
+
+  private updateMessageBasedOnStatus(status: 'pending' | 'approved' | 'rejected' | 'blocked') {
+    switch (status) {
+      case 'pending':
+        this.message = 'Aguardando Liberação';
+        this.subMessage = 'O acesso ao aplicativo será liberado por nossa equipe após seu treinamento.';
+        break;
+      case 'rejected':
+        this.message = 'Acesso Negado';
+        this.subMessage = 'Sua solicitação de acesso foi negada.';
+        break;
+      case 'blocked':
+        this.message = 'Acesso Bloqueado';
+        this.subMessage = 'Sua conta está bloqueada. Entre em contato com o administrador.';
+        break;
+      case 'approved':
+        this.message = 'Acesso Liberado';
+        this.subMessage = 'Redirecionando para a página inicial...';
+        break;
     }
   }
 
   async checkAccess() {
+    if (this.isChecking) return;
+    
     this.isChecking = true;
+    this.message = 'Verificando Status';
+    this.subMessage = 'Aguarde enquanto verificamos seu status...';
     
     try {
       const status = await this.authService.checkRegistrationStatus();
+      console.log('Status atual:', status);
+      
+      this.updateMessageBasedOnStatus(status);
       
       if (status === 'approved') {
         // Atualiza o acesso do usuário
         await this.authService.updateUserAccess();
         // Redireciona para a home
         this.router.navigate(['/home']);
+      } else if (status === 'rejected' || status === 'blocked') {
+        // Aguarda 2 segundos para mostrar a mensagem antes de fazer logout
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        this.authService.logout();
       }
     } catch (error) {
       console.error('Erro ao verificar status:', error);
+      this.message = 'Erro ao Verificar Status';
+      this.subMessage = 'Ocorreu um erro ao verificar seu status. Tente novamente.';
     } finally {
-      this.isChecking = false;
+      setTimeout(() => {
+        this.isChecking = false;
+      }, 500); // Mantém o spinner por meio segundo após a resposta para melhor feedback visual
     }
   }
 

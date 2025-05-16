@@ -41,11 +41,20 @@ router.post('/register', async (req, res) => {
   try {
     const { name, email, registration, phone, companyCode, password } = req.body;
 
+    console.log('Recebendo requisição de registro:', {
+      name,
+      email,
+      registration: registration?.toString(),
+      phone,
+      companyCode,
+      password: '***'
+    });
+
     // Check if user already exists
     const existingUser = await User.findOne({ 
       $or: [
         { email },
-        { registration }
+        { registration: registration?.toString() }
       ]
     });
     
@@ -53,22 +62,43 @@ router.post('/register', async (req, res) => {
       if (existingUser.email === email) {
         return res.status(400).json({ message: 'Email já cadastrado' });
       }
-      if (existingUser.registration === registration) {
+      if (existingUser.registration === registration?.toString()) {
         return res.status(400).json({ message: 'Matrícula já cadastrada' });
       }
+    }
+
+    // Validate registration format
+    const registrationStr = registration?.toString() || '';
+    if (!registrationStr.match(/^\d{6,}$/)) {
+      return res.status(400).json({ 
+        message: 'Matrícula deve ter no mínimo 6 dígitos e conter apenas números',
+        details: {
+          received: registrationStr,
+          length: registrationStr.length,
+          isNumeric: /^\d+$/.test(registrationStr)
+        }
+      });
     }
 
     // Create new user
     const user = new User({
       name,
       email,
-      registration,
+      registration: registrationStr,
       phone,
       companyCode,
       password
     });
 
     await user.save();
+
+    console.log('Usuário registrado com sucesso:', {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      registration: user.registration,
+      status: user.status
+    });
 
     res.status(201).json({ 
       message: 'Solicitação enviada com sucesso! Aguarde a aprovação do administrador.',
@@ -81,7 +111,19 @@ router.post('/register', async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao registrar usuário', error: error.message });
+    console.error('Erro ao registrar usuário:', error);
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ 
+        message: 'Erro de validação', 
+        error: error.message,
+        details: error.errors
+      });
+    }
+    res.status(500).json({ 
+      message: 'Erro ao registrar usuário', 
+      error: error.message,
+      details: error.stack
+    });
   }
 });
 
@@ -234,13 +276,16 @@ router.patch('/users/:userId/status', adminAuth, async (req, res) => {
     const { userId } = req.params;
     const { status } = req.body;
 
-    if (!['approved', 'rejected', 'blocked'].includes(status)) {
+    if (!['approved', 'rejected', 'blocked', 'unblocked'].includes(status)) {
       return res.status(400).json({ message: 'Status inválido' });
     }
 
+    // If status is 'unblocked', set it to 'approved'
+    const newStatus = status === 'unblocked' ? 'approved' : status;
+
     const user = await User.findByIdAndUpdate(
       userId,
-      { status },
+      { status: newStatus },
       { new: true }
     ).select('-password');
 
