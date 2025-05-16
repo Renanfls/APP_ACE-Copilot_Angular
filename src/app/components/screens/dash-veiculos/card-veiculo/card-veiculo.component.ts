@@ -1,10 +1,13 @@
-import { Component, OnInit, Renderer2, HostListener, ChangeDetectorRef } from '@angular/core';
+import { animate, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ModalComponent } from '../modal/modal.component';
-import { HeaderDashVeiculosComponent } from '../header/header.component';
+import { CarouselStateService } from 'src/app/services/carousel-state.service';
+import { ComponentRegistryService } from 'src/app/services/component-registry.service';
 import { FooterDashVeiculosComponent } from '../footer/footer.component';
+import { HeaderDashVeiculosComponent } from '../header/header.component';
+import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-card-veiculo',
@@ -12,8 +15,20 @@ import { FooterDashVeiculosComponent } from '../footer/footer.component';
   imports: [CommonModule, FormsModule, ModalComponent, HeaderDashVeiculosComponent, FooterDashVeiculosComponent],
   templateUrl: './card-veiculo.component.html',
   styleUrls: ['./card-veiculo.component.css'],
+  animations: [
+    trigger('slideUpDown', [
+      transition(':enter', [
+        style({ height: 0, opacity: 0 }),
+        animate('300ms ease-out', style({ height: '*', opacity: 1 }))
+      ]),
+      transition(':leave', [
+        style({ height: '*', opacity: 1 }),
+        animate('300ms ease-in', style({ height: 0, opacity: 0 }))
+      ])
+    ])
+  ]
 })
-export class CardVeiculoComponent implements OnInit {
+export class CardVeiculoComponent implements OnInit, OnDestroy {
   veiculos: any[] = [];
   selectedVehicle: any = null;
   isHelpDialogOpen = false;
@@ -31,6 +46,14 @@ export class CardVeiculoComponent implements OnInit {
   // Variáveis para o acordeão de registros de troca de óleo
   showOilChangeRecords = false;
 
+  // Carousel properties
+  currentSlide = 0;
+  vehicleGroups: any[][] = [];
+  itemsPerSlide = 63; // 7 rows x 9 columns
+  autoSlideInterval: any;
+  slideTimeoutDuration = 10000; // 10 seconds per slide
+  private lastSlideShown = false;
+
   private readonly icones = [
     'assets/device_thermostat.svg',
     'assets/shutter_speed_minus.svg',
@@ -43,12 +66,21 @@ export class CardVeiculoComponent implements OnInit {
   constructor(
     private http: HttpClient, 
     private renderer: Renderer2,
-    private cdRef: ChangeDetectorRef // Adicionar ChangeDetectorRef para forçar atualização da view
+    private cdRef: ChangeDetectorRef,
+    private carouselStateService: CarouselStateService,
+    private componentRegistry: ComponentRegistryService
   ) {}
 
   ngOnInit() {
-    console.log('CardVeiculoComponent initialized');
+    console.log('🔄 Initializing home component');
+    this.componentRegistry.registerComponent(this);
     this.loadVehicleData();
+  }
+
+  ngOnDestroy() {
+    console.log('🔄 Destroying home component');
+    this.componentRegistry.unregisterComponent(this);
+    this.stopAutoSlide();
   }
 
   loadVehicleData() {
@@ -85,11 +117,94 @@ export class CardVeiculoComponent implements OnInit {
           // Calcular odo desde a última troca de óleo
           this.calcularodoDesdeUltimaTroca(veiculo);
         });
+
+        console.log('Processed vehicles:', this.veiculos.length);
+        this.initializeCarousel();
+        this.startAutoSlide();
       },
       error: (err) => {
         console.error('Erro ao carregar o JSON:', err);
       }
     });
+  }
+
+  private initializeCarousel() {
+    console.log('Initializing carousel with vehicles:', this.veiculos.length);
+    this.vehicleGroups = [];
+    for (let i = 0; i < this.veiculos.length; i += this.itemsPerSlide) {
+      const group = this.veiculos.slice(i, Math.min(i + this.itemsPerSlide, this.veiculos.length));
+      this.vehicleGroups.push(group);
+    }
+    console.log('Created vehicle groups:', this.vehicleGroups.length);
+
+    this.adjustItemsPerSlide();
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.adjustItemsPerSlide();
+    this.initializeCarousel();
+  }
+
+  private adjustItemsPerSlide() {
+    const screenWidth = window.innerWidth;
+    if (screenWidth < 640) { // Mobile
+      this.itemsPerSlide = 14; // 7 rows x 2 columns
+    } else if (screenWidth < 768) { // Small tablets
+      this.itemsPerSlide = 28; // 7 rows x 4 columns
+    } else if (screenWidth < 1024) { // Tablets
+      this.itemsPerSlide = 42; // 7 rows x 6 columns
+    } else if (screenWidth < 1280) { // Small desktop
+      this.itemsPerSlide = 56; // 7 rows x 8 columns
+    } else { // Large desktop
+      this.itemsPerSlide = 63; // 7 rows x 9 columns
+    }
+  }
+
+  private startAutoSlide() {
+    console.log('🎠 Starting auto slide for home component');
+    this.lastSlideShown = false;
+    this.autoSlideInterval = setInterval(() => {
+      if (this.currentSlide === this.vehicleGroups.length - 1) {
+        console.log('🎠 Last slide reached in home component');
+        this.lastSlideShown = true;
+        this.stopAutoSlide();
+        this.carouselStateService.notifyCarouselComplete();
+      } else {
+        this.nextSlide();
+      }
+    }, this.slideTimeoutDuration);
+  }
+
+  private stopAutoSlide() {
+    if (this.autoSlideInterval) {
+      clearInterval(this.autoSlideInterval);
+      this.autoSlideInterval = null;
+    }
+  }
+
+  private resetAutoSlideTimer() {
+    if (!this.lastSlideShown) {
+      this.stopAutoSlide();
+      this.startAutoSlide();
+    }
+  }
+
+  nextSlide() {
+    if (this.currentSlide < this.vehicleGroups.length - 1) {
+      this.currentSlide++;
+      this.resetAutoSlideTimer();
+    }
+  }
+
+  previousSlide() {
+    if (this.currentSlide > 0) {
+      this.currentSlide--;
+    }
+  }
+
+  goToSlide(index: number) {
+    this.currentSlide = index;
   }
 
   // Calcular quilometragem desde a última troca de óleo

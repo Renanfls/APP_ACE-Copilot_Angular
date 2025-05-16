@@ -4,18 +4,18 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Router } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
-  matAdd,
-  matArrowBack,
-  matBadge,
-  matBusiness,
-  matEmail,
-  matLocalOffer,
-  matPerson,
-  matPhone,
-  matPhotoCamera,
-  matRefresh,
-  matSettings,
-  matWork
+    matAdd,
+    matArrowBack,
+    matBadge,
+    matBusiness,
+    matEmail,
+    matLocalOffer,
+    matPerson,
+    matPhone,
+    matPhotoCamera,
+    matRefresh,
+    matSettings,
+    matWork
 } from '@ng-icons/material-icons/baseline';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { AvatarSelectorComponent } from '../../../components/avatar-selector/avatar-selector.component';
@@ -387,19 +387,20 @@ export class ProfileComponent implements OnInit {
   });
 
   user = signal<User>({
-    id: '1',
-    name: 'Anabelle',
-    email: 'anabelle@example.com',
-    phase: 'Ouro',
-    avatar: localStorage.getItem('userAvatar') || '',
-    phone: '(21) 98765-4321',
-    company: 'Novacap',
-    role: 'Motorista',
-    registration: '123456',
+    id: '',
+    name: '',
+    email: '',
+    phase: '',
+    avatar: '',
+    phone: '',
+    company: '',
+    role: '',
+    registration: '',
     preferences: {
       darkMode: true,
-      notifications: true,
+      notifications: true
     },
+    isAdmin: false
   });
 
   profileForm: FormGroup;

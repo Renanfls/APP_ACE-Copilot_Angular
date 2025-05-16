@@ -1,10 +1,13 @@
-import { Component, OnInit, Renderer2, HostListener, ChangeDetectorRef } from '@angular/core';
+import { animate, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ModalComponent } from '../modal/modal.component';
-import { HeaderDashVeiculosComponent } from '../header/header.component';
+import { CarouselStateService } from 'src/app/services/carousel-state.service';
+import { ComponentRegistryService } from 'src/app/services/component-registry.service';
 import { FooterDashVeiculosComponent } from '../footer/footer.component';
+import { HeaderDashVeiculosComponent } from '../header/header.component';
+import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-card-veiculo-ar-comprimido',
@@ -12,8 +15,20 @@ import { FooterDashVeiculosComponent } from '../footer/footer.component';
   imports: [CommonModule, FormsModule, ModalComponent, HeaderDashVeiculosComponent, FooterDashVeiculosComponent],
   templateUrl: './card-veiculo.component.html',
   styleUrls: ['./card-veiculo.component.css'],
+  animations: [
+    trigger('slideUpDown', [
+      transition(':enter', [
+        style({ height: 0, opacity: 0 }),
+        animate('300ms ease-out', style({ height: '*', opacity: 1 }))
+      ]),
+      transition(':leave', [
+        style({ height: '*', opacity: 1 }),
+        animate('300ms ease-in', style({ height: 0, opacity: 0 }))
+      ])
+    ])
+  ]
 })
-export class CardVeiculoArComponent implements OnInit {
+export class CardVeiculoArComponent implements OnInit, OnDestroy {
   veiculos: any[] = [];
   selectedVehicle: any = null;
   isHelpDialogOpen = false;
@@ -31,6 +46,14 @@ export class CardVeiculoArComponent implements OnInit {
   // Variáveis para o acordeão de registros de troca de óleo
   showOilChangeRecords = false;
 
+  // Carousel properties
+  currentSlide = 0;
+  vehicleGroups: any[][] = [];
+  itemsPerSlide = 63; // 7 rows x 9 columns
+  autoSlideInterval: any;
+  slideTimeoutDuration = 10000; // 10 seconds per slide
+  private lastSlideShown = false;
+
   private readonly icones = [
     'assets/device_thermostat.svg',
     'assets/shutter_speed_minus.svg',
@@ -43,15 +66,24 @@ export class CardVeiculoArComponent implements OnInit {
   constructor(
     private http: HttpClient, 
     private renderer: Renderer2,
-    private cdRef: ChangeDetectorRef // Adicionar ChangeDetectorRef para forçar atualização da view
+    private cdRef: ChangeDetectorRef,
+    private carouselStateService: CarouselStateService,
+    private componentRegistry: ComponentRegistryService
   ) {}
 
   ngOnInit() {
-    console.log('CardVeiculoComponent initialized');
-    this.loadVehicleData();
+    console.log('🔄 Initializing compressed air component');
+    this.componentRegistry.registerComponent(this);
+    this.loadVehicles();
   }
 
-  loadVehicleData() {
+  ngOnDestroy() {
+    console.log('🔄 Destroying compressed air component');
+    this.componentRegistry.unregisterComponent(this);
+    this.stopAutoSlide();
+  }
+
+  loadVehicles() {
     this.http.get<any>('assets/mocks/veiculos_mock.json').subscribe({
       next: (data) => {
         console.log('Data loaded:', data);
@@ -65,26 +97,25 @@ export class CardVeiculoArComponent implements OnInit {
             cor,
             icone: this.icones[index] || ''
           })),
-          // Inicializar comentários para cada veículo
           comentarios: v.comentarios || [],
-          // Inicializar propriedades de troca de óleo, se não existirem
           odoAtual: v.odoAtual || 0,
           ultimaTrocaOleo: v.ultimaTrocaOleo || null,
           odoNaUltimaTroca: v.odoNaUltimaTroca || 0,
-          // Inicializar array de registros de troca de óleo
           trocasOleo: v.trocasOleo || []
         }));
         
         // Assegurar que todas as cores estejam no formato esperado
         this.veiculos.forEach(veiculo => {
           veiculo.atributos.forEach((atributo: any, index: number) => {
-            // Garantir que as cores correspondam às opções disponíveis
             atributo.cor = this.getClosestColorMatch(atributo.cor);
           });
           
-          // Calcular odo desde a última troca de óleo
           this.calcularodoDesdeUltimaTroca(veiculo);
         });
+
+        console.log('Processed vehicles:', this.veiculos.length);
+        this.initializeCarousel();
+        this.startAutoSlide();
       },
       error: (err) => {
         console.error('Erro ao carregar o JSON:', err);
@@ -440,6 +471,92 @@ export class CardVeiculoArComponent implements OnInit {
     } else if (!event.shiftKey && document.activeElement === lastElement) {
       firstElement.focus();
       event.preventDefault();
+    }
+  }
+
+  private initializeCarousel() {
+    console.log('Initializing carousel with vehicles:', this.veiculos.length);
+    // Group vehicles into slides
+    this.vehicleGroups = [];
+    for (let i = 0; i < this.veiculos.length; i += this.itemsPerSlide) {
+      const group = this.veiculos.slice(i, Math.min(i + this.itemsPerSlide, this.veiculos.length));
+      this.vehicleGroups.push(group);
+    }
+    console.log('Created vehicle groups:', this.vehicleGroups.length);
+
+    // Adjust items per slide based on screen size
+    this.adjustItemsPerSlide();
+  }
+
+  private adjustItemsPerSlide() {
+    // Fixed at 49 items per slide (7x7 grid)
+    this.itemsPerSlide = 49;
+    this.regroupVehicles();
+  }
+
+  private regroupVehicles() {
+    this.vehicleGroups = [];
+    for (let i = 0; i < this.veiculos.length; i += this.itemsPerSlide) {
+      const group = this.veiculos.slice(i, Math.min(i + this.itemsPerSlide, this.veiculos.length));
+      // Pad the last group with null values if needed
+      while (group.length < this.itemsPerSlide) {
+        group.push(null);
+      }
+      this.vehicleGroups.push(group);
+    }
+    console.log('Regrouped vehicles into groups:', this.vehicleGroups.length);
+    
+    // Ensure current slide is valid
+    this.currentSlide = Math.min(this.currentSlide, Math.max(0, this.vehicleGroups.length - 1));
+  }
+
+  nextSlide() {
+    if (this.currentSlide < this.vehicleGroups.length - 1) {
+      this.currentSlide++;
+      this.resetAutoSlideTimer();
+    }
+  }
+
+  previousSlide() {
+    if (this.currentSlide > 0) {
+      this.currentSlide--;
+      this.resetAutoSlideTimer();
+    }
+  }
+
+  goToSlide(index: number) {
+    if (index >= 0 && index < this.vehicleGroups.length) {
+      this.currentSlide = index;
+      this.resetAutoSlideTimer();
+    }
+  }
+
+  private startAutoSlide() {
+    console.log('🎠 Starting auto slide for compressed air component');
+    this.lastSlideShown = false;
+    this.autoSlideInterval = setInterval(() => {
+      if (this.currentSlide === this.vehicleGroups.length - 1) {
+        console.log('🎠 Last slide reached in compressed air component');
+        this.lastSlideShown = true;
+        this.stopAutoSlide();
+        this.carouselStateService.notifyCarouselComplete();
+      } else {
+        this.nextSlide();
+      }
+    }, this.slideTimeoutDuration);
+  }
+
+  private stopAutoSlide() {
+    if (this.autoSlideInterval) {
+      clearInterval(this.autoSlideInterval);
+      this.autoSlideInterval = null;
+    }
+  }
+
+  private resetAutoSlideTimer() {
+    if (!this.lastSlideShown) {
+      this.stopAutoSlide();
+      this.startAutoSlide();
     }
   }
 }

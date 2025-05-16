@@ -22,7 +22,8 @@ async function checkAdmin() {
         email: admin.email,
         registration: admin.registration,
         companyCode: admin.companyCode,
-        status: admin.status
+        status: admin.status,
+        isAdmin: admin.isAdmin
       });
 
       // Test password
@@ -40,7 +41,8 @@ async function checkAdmin() {
         phone: '(00) 00000-0000',
         companyCode: '0123',
         password: hashedPassword,
-        status: 'approved'
+        status: 'approved',
+        isAdmin: true
       });
 
       await adminUser.save();

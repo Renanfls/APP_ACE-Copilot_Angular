@@ -5,12 +5,12 @@ const User = require('../models/User');
 
 async function testLogin() {
   try {
-    console.log('Conectando ao MongoDB...');
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/ace-copilot', {
+    console.log('Conectando ao MongoDB Atlas...');
+    await mongoose.connect('mongodb+srv://copilot:Copilot128@ace-copilot.qwvgn2f.mongodb.net/?retryWrites=true&w=majority&appName=ACE-COPILOT', {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
-    console.log('Conectado ao MongoDB');
+    console.log('Conectado ao MongoDB Atlas');
 
     const credentials = {
       companyCode: '0123',
@@ -45,7 +45,7 @@ async function testLogin() {
 
     // Testar senha
     console.log('\nTestando senha...');
-    const isMatch = await user.comparePassword(credentials.password);
+    const isMatch = await bcrypt.compare(credentials.password, user.password);
     console.log('Senha corresponde:', isMatch);
 
     if (isMatch) {

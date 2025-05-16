@@ -26,6 +26,7 @@ async function resetAdminPassword() {
       
       // Update admin password
       admin.password = hashedPassword;
+      admin.isAdmin = true;
       await admin.save();
 
       console.log('Admin password reset successfully!');
@@ -49,7 +50,8 @@ async function resetAdminPassword() {
         phone: '(00) 00000-0000',
         companyCode: '0123',
         password: hashedPassword,
-        status: 'approved'
+        status: 'approved',
+        isAdmin: true
       });
 
       await newAdmin.save();

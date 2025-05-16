@@ -53,3 +53,101 @@ button {
 button:active {
   transform: scale(0.98);
 }
+
+/* Carousel container */
+.carousel-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Slide transition */
+.carousel-slide {
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Navigation buttons */
+.carousel-nav-button {
+  opacity: 0.7;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.carousel-nav-button:hover {
+  opacity: 1;
+}
+
+/* Card animations */
+.vehicle-card {
+  transform-origin: center;
+  transition: all 0.3s ease-in-out;
+}
+
+.vehicle-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 20px 25px -5px rgb(251 191 36 / 0.1), 0 8px 10px -6px rgb(251 191 36 / 0.1);
+}
+
+/* Indicator dots */
+.carousel-indicator {
+  transition: all 0.3s ease-in-out;
+}
+
+.carousel-indicator:hover {
+  transform: scale(1.2);
+}
+
+/* TV optimization */
+@media (min-width: 1920px) {
+  .vehicle-card {
+    min-height: 350px;
+  }
+
+  .vehicle-icon {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .vehicle-id {
+    font-size: 2.5rem;
+  }
+}
+
+@media (min-width: 2560px) {
+  .vehicle-card {
+    min-height: 400px;
+  }
+
+  .vehicle-icon {
+    width: 5rem;
+    height: 5rem;
+  }
+
+  .vehicle-id {
+    font-size: 3rem;
+  }
+}
+
+/* Smooth animations */
+.fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Improved visibility for TV displays */
+.attribute-icon {
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.status-indicator {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode optimization for TV */
+@media (prefers-color-scheme: dark) {
+  .vehicle-card {
+    border-color: rgba(251, 191, 36, 0.2);
+  }
+  
+  .status-indicator {
+    box-shadow: 0 4px 6px rgba(251, 191, 36, 0.1);
+  }
+}

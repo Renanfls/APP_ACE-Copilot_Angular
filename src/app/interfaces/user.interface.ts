@@ -12,4 +12,5 @@ export interface User {
     darkMode: boolean;
     notifications: boolean;
   };
+  isAdmin: boolean;
 } 

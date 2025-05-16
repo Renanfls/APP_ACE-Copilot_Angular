@@ -2,12 +2,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 const API_URL = `${environment.apiUrl}/auth`;
 
-interface User {
+export interface User {
   id: string;
   name: string;
   email: string;
@@ -16,6 +15,7 @@ interface User {
   registration: string;
   status: 'pending' | 'approved' | 'rejected' | 'blocked';
   createdAt: Date;
+  isAdmin: boolean;
 }
 
 interface LoginResponse {
@@ -28,6 +28,7 @@ interface LoginResponse {
 })
 export class AuthService implements OnDestroy {
   private isAuthenticated = new BehaviorSubject<boolean>(false);
+  private isAdminSubject = new BehaviorSubject<boolean>(false);
   private token: string | null = null;
   private currentUser: User | null = null;
   private statusCheckInterval: Subscription | null = null;
@@ -36,13 +37,64 @@ export class AuthService implements OnDestroy {
     private http: HttpClient,
     private router: Router
   ) {
-    this.token = localStorage.getItem('token');
-    const user = localStorage.getItem('user');
-    if (this.token && user) {
-      this.isAuthenticated.next(true);
-      this.currentUser = JSON.parse(user);
-      this.startStatusCheck();
+    this.initializeService();
+  }
+
+  private async initializeService() {
+    console.log('=== Inicializando AuthService ===');
+    await this.restoreUserSession();
+  }
+
+  private async restoreUserSession(): Promise<void> {
+    try {
+      console.log('=== Tentando restaurar sessão ===');
+      this.token = localStorage.getItem('token');
+      const savedUser = localStorage.getItem('user');
+
+      if (!this.token || !savedUser) {
+        console.log('Nenhuma sessão encontrada');
+        return;
+      }
+
+      const user = JSON.parse(savedUser) as User;
+      this.currentUser = user;
+
+      if (this.currentUser) {
+        console.log('Dados do usuário restaurados:', {
+          companyCode: this.currentUser.companyCode,
+          registration: this.currentUser.registration
+        });
+        
+        this.isAuthenticated.next(true);
+        this.updateAdminStatus();
+        this.startStatusCheck();
+      }
+    } catch (error) {
+      console.error('Erro ao restaurar sessão:', error);
+      this.logout();
     }
+  }
+
+  private updateAdminStatus(): void {
+    if (!this.currentUser) {
+      console.log('=== Atualizando status de admin: Nenhum usuário logado ===');
+      this.isAdminSubject.next(false);
+      return;
+    }
+
+    const isAdmin = this.currentUser.isAdmin === true;
+    
+    console.log('=== Atualizando status de admin ===', {
+      isAdmin: isAdmin,
+      currentValue: this.isAdminSubject.value
+    });
+    
+    this.isAdminSubject.next(isAdmin);
+    
+    // Verificar se o estado foi atualizado corretamente
+    console.log('=== Status de admin após atualização ===', {
+      newValue: this.isAdminSubject.value
+    });
   }
 
   ngOnDestroy() {
@@ -53,7 +105,7 @@ export class AuthService implements OnDestroy {
     // Verifica o status a cada 30 segundos
     this.statusCheckInterval = interval(30000).subscribe(() => {
       if (this.isAuthenticated.value && !this.isAdmin()) {
-        this.checkRegistrationStatus().then(status => {
+        this.checkRegistrationStatus().then((status: 'pending' | 'approved' | 'rejected' | 'blocked') => {
           const currentStatus = this.currentUser?.status;
           
           // Se o status mudou e não é mais aprovado, faz logout
@@ -61,7 +113,7 @@ export class AuthService implements OnDestroy {
             console.log('Status do usuário alterado:', status);
             this.logout();
           }
-        }).catch(error => {
+        }).catch((error: Error) => {
           console.error('Erro ao verificar status:', error);
         });
       }
@@ -118,80 +170,69 @@ export class AuthService implements OnDestroy {
     registration: string; 
     password: string 
   }): Promise<void> {
-    console.log('=== Iniciando processo de login ===');
-    console.log('URL da API:', API_URL);
-    console.log('Credenciais:', {
-      companyCode: credentials.companyCode,
-      registration: credentials.registration,
-      password: '***'
-    });
-    console.log('Comprimentos:', {
-      companyCode: credentials.companyCode.length,
-      registration: credentials.registration.length,
-      password: credentials.password.length
-    });
+    console.log('=== Iniciando login ===', credentials);
 
     try {
-      const headers = new HttpHeaders().set('Content-Type', 'application/json');
-      console.log('Headers da requisição:', headers.keys());
-
-      console.log('Enviando requisição POST para:', `${API_URL}/login`);
       const response = await this.http.post<LoginResponse>(
         `${API_URL}/login`,
         credentials,
-        { headers }
-      ).pipe(
-        tap(response => {
-          console.log('=== Resposta do servidor ===');
-          console.log('Status: Sucesso');
-          console.log('Dados do usuário:', {
-            name: response.user.name,
-            registration: response.user.registration,
-            companyCode: response.user.companyCode,
-            status: response.user.status
-          });
-          console.log('Token recebido:', response.token ? 'Sim' : 'Não');
-        })
+        { headers: new HttpHeaders().set('Content-Type', 'application/json') }
       ).toPromise();
 
-      if (response && response.token) {
-        console.log('=== Atualizando estado da aplicação ===');
-        this.token = response.token;
-        this.currentUser = response.user;
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('user', JSON.stringify(response.user));
-        this.isAuthenticated.next(true);
-        this.startStatusCheck(); // Inicia a verificação de status
-        console.log('Login concluído com sucesso para:', response.user.name);
-      } else {
-        console.error('Resposta do servidor não contém token');
-        throw new Error('Erro na autenticação');
+      if (!response || !response.token || !response.user) {
+        throw new Error('Resposta inválida do servidor');
       }
-    } catch (error: any) {
-      console.error('=== Erro no processo de login ===', error);
-      if (error.error?.message) {
-        throw new Error(error.error.message);
-      }
+
+      // Limpa dados anteriores
+      this.logout(false); // false para não redirecionar
+
+      // Salva novos dados
+      this.token = response.token;
+      this.currentUser = response.user;
+      
+      localStorage.setItem('token', response.token);
+      localStorage.setItem('user', JSON.stringify(response.user));
+
+      console.log('=== Login bem-sucedido ===', {
+        companyCode: response.user.companyCode,
+        registration: response.user.registration,
+        status: response.user.status
+      });
+
+      // Atualiza estados
+      this.isAuthenticated.next(true);
+      
+      // Atualiza status de admin e verifica
+      this.updateAdminStatus();
+      console.log('=== Verificação final do status de admin após login ===', {
+        isAdmin: this.isAdmin(),
+        currentUser: this.currentUser
+      });
+      
+      this.startStatusCheck();
+    } catch (error) {
+      console.error('Erro no login:', error);
       throw error;
     }
   }
 
-  logout(): void {
-    console.log('Realizando logout...');
-    this.stopStatusCheck(); // Para a verificação de status
+  logout(redirect: boolean = true): void {
+    console.log('=== Realizando logout ===');
+    this.stopStatusCheck();
     this.token = null;
     this.currentUser = null;
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.isAuthenticated.next(false);
-    this.router.navigate(['/login']);
-    console.log('Logout concluído');
+    this.isAdminSubject.next(false);
+    
+    if (redirect) {
+      this.router.navigate(['/login']);
+    }
   }
 
   isLoggedIn(): boolean {
-    const isLogged = this.isAuthenticated.value;
-    console.log('Verificando status de login:', isLogged);
-    return isLogged;
+    return this.isAuthenticated.value;
   }
 
   getToken(): string | null {
@@ -203,9 +244,7 @@ export class AuthService implements OnDestroy {
   }
 
   isAdmin(): boolean {
-    const isAdmin = this.currentUser?.companyCode === '0123' && this.currentUser?.registration === '000000';
-    console.log('Verificando se é admin:', isAdmin);
-    return isAdmin;
+    return this.isAdminSubject.value;
   }
 
   getPendingUsers(): Observable<User[]> {
@@ -272,4 +311,13 @@ export class AuthService implements OnDestroy {
       throw new Error('Erro ao atualizar acesso do usuário');
     }
   }
-} 
+
+  // Método público para observar mudanças na autenticação
+  onAuthStateChanged(): Observable<boolean> {
+    return this.isAuthenticated.asObservable();
+  }
+
+  onAdminStateChanged(): Observable<boolean> {
+    return this.isAdminSubject.asObservable();
+  }
+}

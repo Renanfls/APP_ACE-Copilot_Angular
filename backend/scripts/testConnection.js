@@ -26,7 +26,8 @@ async function main() {
         phone: '(00) 00000-0000',
         companyCode: '0123',  // Changed to meet minlength requirement
         password: hashedPassword,
-        status: 'approved'
+        status: 'approved',
+        isAdmin: true
       });
 
       await adminUser.save();
@@ -34,10 +35,11 @@ async function main() {
     } else {
       console.log('Admin user already exists');
       // Update admin user to ensure correct company code
-      if (adminExists.companyCode !== '0123') {
+      if (adminExists.companyCode !== '0123' || !adminExists.isAdmin) {
         adminExists.companyCode = '0123';
+        adminExists.isAdmin = true;
         await adminExists.save();
-        console.log('Updated admin company code to meet minlength requirement');
+        console.log('Updated admin company code and isAdmin flag');
       }
     }
 

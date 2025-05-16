@@ -4,6 +4,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Event, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { Subscription, filter, interval } from 'rxjs';
+import { CarouselStateService } from 'src/app/services/carousel-state.service';
+import { ComponentRegistryService } from 'src/app/services/component-registry.service';
 import { LoadingScreenComponent } from '../loading-screen/loading-screen.component';
 
 @Component({
@@ -188,7 +190,13 @@ export class HeaderDashVeiculosComponent implements OnInit, OnDestroy {
 
   private routerSubscription: Subscription | undefined;
   private clockSubscription: Subscription | undefined;
-  private urlRotationSubscription: Subscription | undefined;
+  private carouselSubscription: Subscription | undefined;
+  private waitingForCarousel = true;
+  private currentRouteIndex = 0;
+  private isTransitioning = false;
+  private carouselCompleted = false;
+  private transitionTimeoutId: any = null;
+  private loadingTimeoutId: any = null;
 
   // Array de rotas disponíveis para rotação
   private routes = [
@@ -198,7 +206,7 @@ export class HeaderDashVeiculosComponent implements OnInit, OnDestroy {
     '/dsb-carros-turbina',
     '/dsb-carros-pedal',
     '/dsb-carros-ar-comprimido',
-    '/dsb-carros-velocidade',
+    '/dsb-carros-velocidade'
   ];
 
   // Mapeamento de títulos para rotas
@@ -209,12 +217,31 @@ export class HeaderDashVeiculosComponent implements OnInit, OnDestroy {
     '/dsb-carros-turbina': 'Pressão Turbina',
     '/dsb-carros-pedal': 'Pedal',
     '/dsb-carros-ar-comprimido': 'Ar Comprimido',
-    '/dsb-carros-velocidade': 'Máx. Velocidade',
+    '/dsb-carros-velocidade': 'Máx. Velocidade'
   };
 
-  private currentRouteIndex = 0;
+  // Sequência forçada de rotas
+  private readonly routeSequence = [
+    '/dsbcarros',              // home
+    '/dsb-carros-temp',        // temperatura
+    '/dsb-carros-torque',      // torque
+    '/dsb-carros-turbina',     // turbina
+    '/dsb-carros-pedal',       // pedal
+    '/dsb-carros-ar-comprimido', // ar comprimido
+    '/dsb-carros-velocidade'   // velocidade
+  ];
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private carouselStateService: CarouselStateService,
+    private componentRegistry: ComponentRegistryService
+  ) {
+    // Se a rota inicial não for a home, redireciona para home
+    const currentPath = window.location.pathname;
+    if (currentPath !== '/dsbcarros' && !currentPath.includes('dsb-carros')) {
+      this.router.navigate(['/dsbcarros']);
+    }
+  }
 
   ngOnInit() {
     // Configura a inscrição para eventos de navegação
@@ -231,9 +258,32 @@ export class HeaderDashVeiculosComponent implements OnInit, OnDestroy {
         this.updateTitle(event.urlAfterRedirects);
 
         // Atualiza o índice atual com base na URL
-        const index = this.routes.indexOf(this.currentUrl);
+        const index = this.routeSequence.indexOf(this.currentUrl);
         if (index !== -1) {
           this.currentRouteIndex = index;
+        }
+
+        // Não reseta os estados aqui, eles serão resetados após a transição completa
+        // Apenas limpa os timeouts pendentes
+        if (this.transitionTimeoutId) {
+          clearTimeout(this.transitionTimeoutId);
+        }
+        if (this.loadingTimeoutId) {
+          clearTimeout(this.loadingTimeoutId);
+        }
+
+        // Inicia o carrossel do componente atual
+        const currentComponent = this.getCurrentComponent();
+        if (currentComponent) {
+          console.log('🔄 Starting carousel for current component');
+          currentComponent.startAutoSlide();
+        }
+
+        // Se estiver na rota home, aguarda o carrossel completar
+        if (this.currentUrl === '/dsbcarros') {
+          console.log('🏠 On home route, waiting for carousel completion');
+          this.waitingForCarousel = true;
+          this.carouselCompleted = false;
         }
       });
 
@@ -246,52 +296,148 @@ export class HeaderDashVeiculosComponent implements OnInit, OnDestroy {
       this.currentTime = new Date();
     });
 
-    // Inicia o intervalo para alternar entre as URLs a cada 2 minutos
-    this.urlRotationSubscription = interval(120000).subscribe(() => {
-      this.rotateToNextRoute();
+    // Inscreve-se no serviço de estado do carrossel
+    this.carouselSubscription = this.carouselStateService.carouselComplete$.subscribe(() => {
+      console.log('🎠 Carousel completion signal received:', {
+        isTransitioning: this.isTransitioning,
+        waitingForCarousel: this.waitingForCarousel,
+        carouselCompleted: this.carouselCompleted,
+        currentUrl: this.currentUrl
+      });
+
+      if (!this.isTransitioning && this.waitingForCarousel) {
+        console.log('🎠 Carousel completed on route:', this.currentUrl);
+        this.carouselCompleted = true;
+        this.rotateToNextRoute();
+      }
     });
+
+    // Se a rota inicial não for a home, redireciona para home
+    if (this.currentUrl !== '/dsbcarros') {
+      console.log('🏠 Redirecting to home route');
+      this.router.navigate(['/dsbcarros']);
+    } else {
+      // Se já estiver na home, aguarda o carrossel completar
+      console.log('🏠 Already on home route, waiting for carousel completion');
+      this.waitingForCarousel = true;
+      this.carouselCompleted = false;
+    }
   }
 
   ngOnDestroy() {
-    // Cancela as inscrições ao destruir o componente
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
     }
-
     if (this.clockSubscription) {
       this.clockSubscription.unsubscribe();
     }
-
-    if (this.urlRotationSubscription) {
-      this.urlRotationSubscription.unsubscribe();
+    if (this.carouselSubscription) {
+      this.carouselSubscription.unsubscribe();
+    }
+    if (this.transitionTimeoutId) {
+      clearTimeout(this.transitionTimeoutId);
+    }
+    if (this.loadingTimeoutId) {
+      clearTimeout(this.loadingTimeoutId);
     }
   }
 
+  private updateTitle(url: string) {
+    this.pageTitle = this.routeTitles[url] || 'DashBus';
+  }
+
+  // Método para obter a próxima rota na sequência
+  private getNextRoute(): string {
+    const currentIndex = this.routeSequence.indexOf(this.currentUrl);
+    if (currentIndex === -1) {
+      console.log('⚠️ Current route not found in sequence, returning to home');
+      return '/dsbcarros';
+    }
+    
+    // Se estiver na última rota, volta para a primeira
+    const nextIndex = (currentIndex + 1) % this.routeSequence.length;
+    const nextRoute = this.routeSequence[nextIndex];
+    console.log(`🔄 Next route will be: ${nextRoute} (index: ${nextIndex})`);
+    return nextRoute;
+  }
+
   // Método para rotacionar para a próxima rota
-  rotateToNextRoute() {
-    // Calcula o próximo índice
-    const nextIndex = (this.currentRouteIndex + 1) % this.routes.length;
-    const nextRoute = this.routes[nextIndex];
+  private rotateToNextRoute() {
+    if (this.isTransitioning) {
+      console.log('⛔ Transition blocked: Already in transition', {
+        currentUrl: this.currentUrl,
+        isTransitioning: this.isTransitioning,
+        carouselCompleted: this.carouselCompleted
+      });
+      return;
+    }
+
+    if (!this.carouselCompleted) {
+      console.log('⛔ Transition blocked: Carousel not completed', {
+        currentUrl: this.currentUrl,
+        isTransitioning: this.isTransitioning,
+        carouselCompleted: this.carouselCompleted
+      });
+      return;
+    }
+    
+    this.isTransitioning = true;
+    this.waitingForCarousel = false;
+
+    // Obtém a próxima rota da sequência
+    const nextRoute = this.getNextRoute();
+    console.log('🔄 Initiating transition to:', nextRoute);
 
     // Mostra a tela de carregamento antes da navegação
     this.nextPageTitle = this.routeTitles[nextRoute];
     this.showLoading = true;
 
+    // Limpa qualquer timeout pendente
+    if (this.transitionTimeoutId) {
+      clearTimeout(this.transitionTimeoutId);
+    }
+    if (this.loadingTimeoutId) {
+      clearTimeout(this.loadingTimeoutId);
+    }
+
     // Navega após um timeout para dar tempo da tela de carregamento aparecer
-    setTimeout(() => {
-      this.router.navigate([nextRoute]);
+    this.transitionTimeoutId = setTimeout(() => {
+      console.log('⏳ Starting navigation to:', nextRoute);
+      
+      this.router.navigate([nextRoute])
+        .then(() => {
+          console.log('✅ Navigation successful to:', nextRoute);
+          
+          // Esconde a tela de carregamento e reseta os estados após a navegação
+          this.loadingTimeoutId = setTimeout(() => {
+            console.log('🏁 Transition complete, resetting states for next cycle');
+            this.showLoading = false;
+            this.isTransitioning = false;
+            this.waitingForCarousel = true;
+            this.carouselCompleted = false;
 
-      // Esconde a tela de carregamento após a navegação
-      setTimeout(() => {
-        this.showLoading = false;
-      }, 1000); // Mantém a tela de carregamento por 1 segundo após a navegação
-    }, 2000); // Mostra a tela de carregamento por 2 segundos antes da navegação
-
-    this.currentRouteIndex = nextIndex;
+            // Se a nova rota for a home, aguarda o carrossel completar
+            if (nextRoute === '/dsbcarros') {
+              console.log('🏠 Transitioned to home route, waiting for carousel completion');
+              this.waitingForCarousel = true;
+              this.carouselCompleted = false;
+            }
+          }, 2000);
+        })
+        .catch((error) => {
+          console.error('❌ Navigation failed:', error);
+          // Em caso de erro na navegação, reseta os estados
+          this.showLoading = false;
+          this.isTransitioning = false;
+          this.waitingForCarousel = true;
+          this.carouselCompleted = false;
+        });
+    }, 1000);
   }
 
-  updateTitle(url: string) {
-    this.pageTitle = this.routeTitles[url] || 'Home';
+  // Método auxiliar para obter o componente atual
+  private getCurrentComponent(): any {
+    return this.componentRegistry.getCurrentComponent();
   }
 
   scrollToTop() {

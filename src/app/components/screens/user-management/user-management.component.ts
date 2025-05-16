@@ -25,6 +25,7 @@ interface PendingUser {
   registration: string;
   status: 'pending' | 'approved' | 'rejected' | 'blocked';
   createdAt: Date;
+  isAdmin: boolean;
 }
 
 @Component({

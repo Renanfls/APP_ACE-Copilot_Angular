@@ -5,53 +5,44 @@ const User = require('../models/User');
 
 async function updateAdmin() {
   try {
-    console.log('Conectando ao MongoDB...');
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/ace-copilot', {
+    console.log('Conectando ao MongoDB Atlas...');
+    await mongoose.connect('mongodb+srv://copilot:Copilot128@ace-copilot.qwvgn2f.mongodb.net/?retryWrites=true&w=majority&appName=ACE-COPILOT', {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
-    console.log('Conectado ao MongoDB');
+    console.log('Conectado ao MongoDB Atlas');
 
-    // Encontrar o admin existente
-    const adminId = "68262484d5efce6f39dbb9e1";
-    const admin = await User.findById(adminId);
+    // Encontrar o usuário admin
+    const admin = await User.findOne({
+      companyCode: '0123',
+      registration: '000000'
+    });
 
     if (admin) {
-      console.log('Admin encontrado. Atualizando credenciais...');
-      
-      // Hash da nova senha
-      const hashedPassword = await bcrypt.hash('admin123', 10);
-      
-      // Atualizar admin
-      await User.findByIdAndUpdate(adminId, {
-        companyCode: '0123',
-        password: hashedPassword
-      });
+      console.log('Usuário admin encontrado. Atualizando campo isAdmin...');
+      admin.isAdmin = true;
+      await admin.save();
+      console.log('Campo isAdmin atualizado com sucesso!');
 
-      console.log('Admin atualizado com sucesso!');
-      console.log('\nNovas credenciais do admin:');
-      console.log('Código da empresa: 0123');
-      console.log('Matrícula: 000000');
-      console.log('Senha: admin123');
-
-      // Verificar se a atualização funcionou
-      const updatedAdmin = await User.findById(adminId);
-      console.log('\nDetalhes atualizados do admin:', {
+      // Verificar a atualização
+      const updatedAdmin = await User.findById(admin._id);
+      console.log('\nDetalhes do usuário admin atualizado:', {
+        id: updatedAdmin._id,
         name: updatedAdmin.name,
         email: updatedAdmin.email,
         registration: updatedAdmin.registration,
         companyCode: updatedAdmin.companyCode,
-        status: updatedAdmin.status
+        status: updatedAdmin.status,
+        isAdmin: updatedAdmin.isAdmin
       });
     } else {
-      console.log('Admin não encontrado!');
+      console.log('Usuário admin não encontrado!');
     }
-
   } catch (error) {
     console.error('Erro:', error);
   } finally {
     await mongoose.disconnect();
-    console.log('\nDesconectado do MongoDB');
+    console.log('\nDesconectado do MongoDB Atlas');
   }
 }
 

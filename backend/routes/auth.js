@@ -22,7 +22,8 @@ async function createAdminIfNotExists() {
         phone: '(00) 00000-0000',
         companyCode: '0123',
         password: hashedPassword,
-        status: 'approved'
+        status: 'approved',
+        isAdmin: true
       });
 
       await adminUser.save();
@@ -133,15 +134,10 @@ router.post('/login', async (req, res) => {
     const { companyCode, registration, password } = req.body;
     
     console.log('\n=== Nova Tentativa de Login ===');
-    console.log('Dados recebidos (raw):', {
-      companyCode: `"${companyCode}"`,
-      registration: `"${registration}"`,
-      password: '***'
-    });
-    console.log('Comprimentos:', {
-      companyCode: companyCode.length,
-      registration: registration.length,
-      password: password.length
+    console.log('Dados recebidos:', {
+      companyCode: companyCode,
+      registration: registration,
+      passwordLength: password ? password.length : 0
     });
 
     // Validação dos campos
@@ -150,40 +146,27 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
     }
 
-    if (companyCode.length < 4) {
-      console.log('Erro: Código da empresa muito curto');
-      return res.status(400).json({ message: 'Código da empresa deve ter no mínimo 4 caracteres' });
-    }
-
-    if (registration.length < 6) {
-      console.log('Erro: Matrícula muito curta');
-      return res.status(400).json({ message: 'Matrícula deve ter no mínimo 6 caracteres' });
-    }
-
     // Find user
     console.log('\nBuscando usuário...');
-    console.log('Critérios de busca (exatos):', {
-      registration: `"${registration.trim()}"`,
-      companyCode: `"${companyCode.trim()}"`,
-    });
-    
-    const user = await User.findOne({
+    const searchCriteria = {
       registration: registration.trim(),
       companyCode: companyCode.trim()
-    });
-
-    console.log('Usuário encontrado:', user ? {
-      id: user._id,
-      name: user.name,
-      registration: `"${user.registration}"`,
-      companyCode: `"${user.companyCode}"`,
-      status: user.status
-    } : 'Não');
+    };
+    console.log('Critérios de busca:', searchCriteria);
+    
+    const user = await User.findOne(searchCriteria);
 
     if (!user) {
       console.log('Erro: Usuário não encontrado');
       return res.status(401).json({ message: 'Credenciais inválidas' });
     }
+
+    console.log('Usuário encontrado:', {
+      id: user._id,
+      registration: user.registration,
+      companyCode: user.companyCode,
+      status: user.status
+    });
 
     // Check password
     console.log('\nVerificando senha...');
@@ -196,31 +179,23 @@ router.post('/login', async (req, res) => {
     }
 
     // Check status
-    console.log('\nVerificando status...');
-    console.log('Status atual:', user.status);
-    console.log('É admin?', user.companyCode === '0123' && user.registration === '000000');
-
-    // Verificar apenas status bloqueado ou rejeitado
-    if (user.status === 'rejected') {
-      console.log('Erro: Usuário rejeitado');
-      return res.status(401).json({ message: 'Sua conta foi rejeitada' });
+    if (user.status !== 'approved') {
+      console.log('Erro: Usuário não aprovado');
+      return res.status(401).json({ 
+        message: user.status === 'pending' 
+          ? 'Aguardando aprovação do administrador'
+          : 'Acesso negado'
+      });
     }
 
-    if (user.status === 'blocked') {
-      console.log('Erro: Usuário bloqueado');
-      return res.status(401).json({ message: 'Sua conta está bloqueada. Entre em contato com o administrador.' });
-    }
-
-    // Generate JWT token
-    console.log('\nGerando token JWT...');
+    // Generate token
     const token = jwt.sign(
       { userId: user._id },
-      process.env.JWT_SECRET || 'your-secret-key-here',
+      process.env.JWT_SECRET || 'your-secret-key',
       { expiresIn: '24h' }
     );
 
-    console.log('Login bem-sucedido para:', user.name);
-
+    console.log('Login bem-sucedido!');
     res.json({
       token,
       user: {
@@ -228,13 +203,12 @@ router.post('/login', async (req, res) => {
         name: user.name,
         email: user.email,
         registration: user.registration,
-        companyCode: user.companyCode,
         status: user.status
       }
     });
   } catch (error) {
-    console.error('\nErro no processo de login:', error);
-    res.status(500).json({ message: 'Erro ao fazer login', error: error.message });
+    console.error('Erro no login:', error);
+    res.status(500).json({ message: 'Erro no servidor', error: error.message });
   }
 });
 

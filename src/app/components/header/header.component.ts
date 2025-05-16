@@ -3,18 +3,18 @@ import { Component, HostListener, inject, OnDestroy, OnInit, signal } from '@ang
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
-    matClose,
-    matDarkMode,
-    matLightMode,
-    matMoreVert,
-    matNotificationsActive,
-    matNotificationsNone,
-    matPerson,
+  matClose,
+  matDarkMode,
+  matLightMode,
+  matMoreVert,
+  matNotificationsActive,
+  matNotificationsNone,
+  matPerson,
 } from '@ng-icons/material-icons/baseline';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { AuthService } from '../../services/auth.service';
+import { AuthService, User } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
 import { ThemeService } from '../../services/theme.service';
 
@@ -236,22 +236,29 @@ interface Notification {
           >
             Perfil
           </a>
-          <!-- Admin Option -->
-          <a
-            *ngIf="isAdmin()"
-            routerLink="/user-management"
-            (click)="scrollToTop(); closeSidebar()"
-            class="block p-3 rounded-lg transition-colors"
-            [ngClass]="{
-              'hover:bg-gray-800': isDarkMode(),
-              'hover:bg-gray-100': !isDarkMode()
-            }"
-          >
-            Gerenciar Usuários
-          </a>
+
+          <!-- Admin Section -->
+          <div *ngIf="shouldShowAdminSection()" class="mt-6 mb-4">
+            <div class="h-px bg-gradient-to-r from-transparent via-amber-500 to-transparent opacity-50"></div>
+            <div class="my-4">
+              <div class="px-3 py-2 text-sm font-semibold text-amber-500">
+                Área Administrativa
+              </div>
+              <a
+                routerLink="/user-management"
+                (click)="scrollToTop(); closeSidebar()"
+                class="block p-3 rounded-lg transition-colors bg-amber-500 hover:bg-amber-600 text-black font-medium"
+              >
+                Gerenciar Usuários
+              </a>
+            </div>
+            <div class="h-px bg-gradient-to-r from-transparent via-amber-500 to-transparent opacity-50"></div>
+          </div>
+
+          <!-- Logout -->
           <a
             (click)="logout()"
-            class="block p-3 rounded-lg transition-colors cursor-pointer"
+            class="block p-3 rounded-lg transition-colors cursor-pointer mt-4"
             [ngClass]="{
               'hover:bg-gray-800': isDarkMode(),
               'hover:bg-gray-100': !isDarkMode()
@@ -303,7 +310,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private document = inject(DOCUMENT);
   private router = inject(Router);
   private routerSubscription: Subscription | undefined;
+  private authSubscription: Subscription | undefined;
+  private adminSubscription: Subscription | undefined;
   public authService = inject(AuthService);
+  private currentUser: User | null = null;
+  private isUserAdmin = signal(false);
 
   isSidebarOpen = signal(false);
   isDarkMode;
@@ -345,7 +356,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // Subscribe to router events to close sidebar on navigation
+    console.log('=== Inicializando HeaderComponent ===');
+    
+    // Subscribe to router events
     this.routerSubscription = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
@@ -353,12 +366,38 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.closeNotifications();
       this.scrollToTop();
     });
+
+    // Subscribe to auth changes
+    this.authSubscription = this.authService.onAuthStateChanged().subscribe(isAuthenticated => {
+      console.log('=== Mudança no estado de autenticação ===', {
+        isAuthenticated,
+        currentUser: this.authService.getCurrentUser(),
+        isAdmin: this.authService.isAdmin()
+      });
+    });
+
+    // Subscribe to admin changes
+    this.adminSubscription = this.authService.onAdminStateChanged().subscribe(isAdmin => {
+      console.log('=== Mudança no estado de admin ===', {
+        isAdmin,
+        currentUser: this.authService.getCurrentUser()
+      });
+      this.isUserAdmin.set(isAdmin);
+    });
+
+    // Verificação inicial do estado de admin
+    const initialAdminState = this.authService.isAdmin();
+    console.log('=== Estado inicial de admin ===', {
+      isAdmin: initialAdminState,
+      currentUser: this.authService.getCurrentUser()
+    });
+    this.isUserAdmin.set(initialAdminState);
   }
 
   ngOnDestroy() {
-    if (this.routerSubscription) {
-      this.routerSubscription.unsubscribe();
-    }
+    this.routerSubscription?.unsubscribe();
+    this.authSubscription?.unsubscribe();
+    this.adminSubscription?.unsubscribe();
   }
 
   toggleNotifications() {
@@ -443,7 +482,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.authService.logout();
   }
 
-  isAdmin(): boolean {
-    return this.authService.isAdmin();
+  shouldShowAdminSection(): boolean {
+    const isAdmin = this.isUserAdmin();
+    console.log('=== Verificando visibilidade da seção admin ===', {
+      signalValue: isAdmin,
+      directCheck: this.authService.isAdmin(),
+      currentUser: this.authService.getCurrentUser()
+    });
+    return isAdmin;
   }
 }

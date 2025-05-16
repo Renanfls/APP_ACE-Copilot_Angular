@@ -24,7 +24,8 @@ async function createAdminUser() {
       await User.findByIdAndUpdate(adminExists._id, {
         password: hashedPassword,
         status: 'approved',
-        companyCode: '0123'  // Ensure correct company code
+        companyCode: '0123',  // Ensure correct company code
+        isAdmin: true
       });
       console.log('Credenciais do admin atualizadas com sucesso!');
     } else {
@@ -37,7 +38,8 @@ async function createAdminUser() {
         phone: '(00) 00000-0000',
         companyCode: '0123',
         password: hashedPassword,
-        status: 'approved'
+        status: 'approved',
+        isAdmin: true
       });
 
       await adminUser.save();
