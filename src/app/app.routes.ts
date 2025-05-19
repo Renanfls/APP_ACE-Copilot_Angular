@@ -52,12 +52,12 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'dsbcarros',
-    component: DashVeiculosComponent,
-  },
-  {
     path: 'dash-drive',
     component: DashDriveComponent,
+  },
+  {
+    path: 'dsbcarros',
+    component: DashVeiculosComponent,
   },
   {
     path: 'dsb-carros-temp',

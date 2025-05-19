@@ -48,7 +48,7 @@ export class CardVeiculoTurbinaComponent implements OnInit, OnDestroy {
   // Carousel properties
   currentSlide = 0;
   vehicleGroups: any[][] = [];
-  itemsPerSlide = 63; // 7 rows x 9 columns
+  itemsPerSlide = 90; // 9 rows x 10 columns
   autoSlideInterval: any;
   slideTimeoutDuration = 10000; // 10 seconds per slide
   private lastSlideShown = false;
@@ -140,7 +140,7 @@ export class CardVeiculoTurbinaComponent implements OnInit, OnDestroy {
   }
 
   private adjustItemsPerSlide() {
-    this.itemsPerSlide = 63;
+    this.itemsPerSlide = 90;
     this.regroupVehicles();
   }
 

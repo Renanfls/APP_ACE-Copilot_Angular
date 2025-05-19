@@ -9,6 +9,7 @@ export class CarouselStateService {
   carouselComplete$ = this.carouselCompleteSubject.asObservable();
 
   notifyCarouselComplete() {
+    console.log('🎠 Carousel complete notification sent');
     this.carouselCompleteSubject.next();
   }
 } 

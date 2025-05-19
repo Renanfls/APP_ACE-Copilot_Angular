@@ -54,9 +54,10 @@ interface Level {
     <app-header />
     
     <div class="flex-1 container py-32">
-      <div class="max-w-3xl mx-auto px-4">
+
+    <div class="max-w-3xl mx-auto px-4">
         <!-- Treasure Map -->
-        <div class="mb-8 bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900 dark:to-amber-800 rounded-2xl p-6 shadow-lg">
+        <div class="mb-6 sm:mb-8 bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900 dark:to-amber-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg">
           <!-- Map Grid -->
           <div class="grid grid-cols-3 gap-4">
             <div *ngFor="let level of levels" 
@@ -104,9 +105,9 @@ interface Level {
         </div>
 
         <!-- Game Header -->
-        <div class="mb-8 bg-gradient-to-r from-amber-500 to-amber-600 rounded-2xl p-6 shadow-lg">
+        <div class="mb-6 sm:mb-8 bg-gradient-to-r from-amber-500 to-amber-600 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg">
           <!-- Progress Bar -->
-          <div class="h-3 bg-white/20 rounded-full overflow-hidden mb-4">
+          <div class="h-2 sm:h-3 bg-white/20 rounded-full overflow-hidden mb-3 sm:mb-4">
             <div 
               class="h-full bg-white transition-all duration-300 rounded-full"
               [style.width.%]="progressPercentage"
@@ -117,54 +118,54 @@ interface Level {
           <div class="flex justify-between items-center">
             <div class="flex items-center gap-4">
               <!-- Level Indicator -->
-              <div class="bg-white/10 rounded-xl px-4 py-2">
-                <div class="text-sm text-white/80">Nível</div>
-                <div class="text-xl font-bold text-white">{{ currentQuestionIndex + 1 }}/{{ totalQuestions }}</div>
+              <div class="bg-white/10 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2">
+                <div class="text-xs sm:text-sm text-white/80">Nível</div>
+                <div class="text-lg sm:text-xl font-bold text-white">{{ currentQuestionIndex + 1 }}/{{ totalQuestions }}</div>
               </div>
 
               <!-- Score Display -->
-              <div class="bg-white/10 rounded-xl px-4 py-2">
-                <div class="text-sm text-white/80">Pontos</div>
-                <div class="text-xl font-bold text-white">{{ score }}</div>
+              <div class="bg-white/10 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2">
+                <div class="text-xs sm:text-sm text-white/80">Pontos</div>
+                <div class="text-lg sm:text-xl font-bold text-white">{{ score }}</div>
               </div>
             </div>
 
             <!-- Streak Counter -->
-            <div class="flex items-center gap-2">
-              <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-                <ng-icon name="matLocalFireDepartment" class="text-white text-xl"></ng-icon>
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-end">
+              <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/10 flex items-center justify-center">
+                <ng-icon name="matLocalFireDepartment" class="text-white text-lg sm:text-xl"></ng-icon>
               </div>
-              <div class="text-white font-bold text-xl">{{ correctAnswers }}</div>
+              <div class="text-white font-bold text-lg sm:text-xl">{{ correctAnswers }}</div>
             </div>
           </div>
         </div>
 
         <!-- Question Card -->
-        <div class="bg-white dark:bg-[#1e1e1e] rounded-2xl p-6 shadow-lg transform transition-all duration-300 hover:scale-[1.01]">
+        <div class="bg-white dark:bg-[#1e1e1e] rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg transform transition-all duration-300 hover:scale-[1.01]">
           <!-- Question Text -->
-          <div class="mb-8">
-            <div class="text-sm text-amber-500 dark:text-amber-400 mb-2">Questão {{ currentQuestionIndex + 1 }}</div>
-            <h2 class="text-xl md:text-2xl font-bold dark:text-white">
+          <div class="mb-6 sm:mb-8">
+            <div class="text-xs sm:text-sm text-amber-500 dark:text-amber-400 mb-2">Questão {{ currentQuestionIndex + 1 }}</div>
+            <h2 class="text-lg sm:text-xl md:text-2xl font-bold dark:text-white">
               {{ currentQuestion?.texto }}
             </h2>
           </div>
 
           <!-- Answer Options Grid -->
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <button
               *ngFor="let option of shuffledAnswers"
               (click)="selectAnswer(option)"
               [disabled]="hasAnswered"
               [class]="getAnswerButtonClass(option)"
-              class="p-4 rounded-xl text-left transition-all duration-300 transform hover:scale-[1.02] min-h-[80px] flex items-center relative group bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900"
+              class="p-3 sm:p-4 rounded-lg sm:rounded-xl text-left transition-all duration-300 transform hover:scale-[1.02] min-h-[60px] sm:min-h-[80px] flex items-center relative group bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900"
             >
               <!-- Handle Icon -->
               <div class="absolute left-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <ng-icon name="matDragIndicator" class="text-gray-400 dark:text-gray-500"></ng-icon>
+                <ng-icon name="matDragIndicator" class="text-gray-400 dark:text-gray-500 text-lg sm:text-xl"></ng-icon>
               </div>
               
               <!-- Answer Text -->
-              <span class="ml-8">{{ option.texto }}</span>
+              <span class="ml-6 sm:ml-8 text-sm sm:text-base">{{ option.texto }}</span>
             </button>
           </div>
 
@@ -172,15 +173,15 @@ interface Level {
           <div 
             *ngIf="hasAnswered"
             [class]="isCorrect ? 'bg-green-100 dark:bg-green-900' : 'bg-red-100 dark:bg-red-900'"
-            class="mt-6 p-4 rounded-xl flex items-center gap-3 transform transition-all duration-300"
+            class="mt-4 sm:mt-6 p-3 sm:p-4 rounded-lg sm:rounded-xl flex items-center gap-2 sm:gap-3 transform transition-all duration-300"
             [class.correct-answer]="isCorrect"
           >
             <ng-icon 
               [name]="isCorrect ? 'matCheckCircle' : 'matClose'"
               [class]="isCorrect ? 'text-green-500' : 'text-red-500'"
-              class="text-2xl"
+              class="text-xl sm:text-2xl"
             ></ng-icon>
-            <p [class]="isCorrect ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300'">
+            <p [class]="isCorrect ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300'" class="text-sm sm:text-base">
               {{ feedbackMessage }}
             </p>
           </div>
@@ -189,44 +190,44 @@ interface Level {
           <button
             *ngIf="hasAnswered"
             (click)="nextQuestion()"
-            class="mt-6 w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 transform hover:scale-[1.02]"
+            class="mt-4 sm:mt-6 w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl flex items-center justify-center gap-2 transition-all duration-300 transform hover:scale-[1.02] text-sm sm:text-base"
           >
             {{ isLastQuestion ? 'Ver Resultados' : 'Próxima' }}
-            <ng-icon name="matArrowForward" class="text-xl"></ng-icon>
+            <ng-icon name="matArrowForward" class="text-lg sm:text-xl"></ng-icon>
           </button>
         </div>
 
         <!-- Results Screen -->
-        <div *ngIf="showResults" class="bg-white dark:bg-[#1e1e1e] rounded-2xl p-8 shadow-lg mt-8">
-          <div class="text-center mb-8">
-            <h2 class="text-3xl font-bold mb-2 dark:text-white">Fim de Jogo!</h2>
-            <p class="text-gray-500 dark:text-gray-400">Veja como você se saiu</p>
+        <div *ngIf="showResults" class="bg-white dark:bg-[#1e1e1e] rounded-xl sm:rounded-2xl p-4 sm:p-8 shadow-lg mt-6 sm:mt-8">
+          <div class="text-center mb-6 sm:mb-8">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-2 dark:text-white">Fim de Jogo!</h2>
+            <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400">Veja como você se saiu</p>
           </div>
 
           <!-- Final Score -->
-          <div class="grid grid-cols-3 gap-4 mb-8">
-            <div class="bg-green-100 dark:bg-green-900 rounded-xl p-4 text-center">
-              <div class="text-2xl font-bold text-green-600 dark:text-green-400">{{ correctAnswers }}</div>
-              <div class="text-sm text-green-700 dark:text-green-300">Acertos</div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8">
+            <div class="bg-green-100 dark:bg-green-900 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center">
+              <div class="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400">{{ correctAnswers }}</div>
+              <div class="text-xs sm:text-sm text-green-700 dark:text-green-300">Acertos</div>
             </div>
-            <div class="bg-red-100 dark:bg-red-900 rounded-xl p-4 text-center">
-              <div class="text-2xl font-bold text-red-600 dark:text-red-400">{{ incorrectAnswers }}</div>
-              <div class="text-sm text-red-700 dark:text-red-300">Erros</div>
+            <div class="bg-red-100 dark:bg-red-900 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center">
+              <div class="text-xl sm:text-2xl font-bold text-red-600 dark:text-red-400">{{ incorrectAnswers }}</div>
+              <div class="text-xs sm:text-sm text-red-700 dark:text-red-300">Erros</div>
             </div>
-            <div class="bg-amber-100 dark:bg-amber-900 rounded-xl p-4 text-center">
-              <div class="text-2xl font-bold text-amber-600 dark:text-amber-400">{{ score }}</div>
-              <div class="text-sm text-amber-700 dark:text-amber-300">Pontos</div>
+            <div class="bg-amber-100 dark:bg-amber-900 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center">
+              <div class="text-xl sm:text-2xl font-bold text-amber-600 dark:text-amber-400">{{ score }}</div>
+              <div class="text-xs sm:text-sm text-amber-700 dark:text-amber-300">Pontos</div>
             </div>
           </div>
           
           <!-- Review Section -->
-          <div *ngIf="incorrectQuestions.length > 0" class="mt-8">
-            <h3 class="text-xl font-bold mb-4 dark:text-white">Questões para Revisar:</h3>
-            <div class="space-y-4">
+          <div *ngIf="incorrectQuestions.length > 0" class="mt-6 sm:mt-8">
+            <h3 class="text-lg sm:text-xl font-bold mb-3 sm:mb-4 dark:text-white">Questões para Revisar:</h3>
+            <div class="space-y-3 sm:space-y-4">
               <div *ngFor="let question of incorrectQuestions" 
-                   class="p-4 bg-gray-100 dark:bg-gray-800 rounded-xl transform transition-all duration-300 hover:scale-[1.01]">
-                <p class="font-medium dark:text-white">{{ question.texto }}</p>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                   class="p-3 sm:p-4 bg-gray-100 dark:bg-gray-800 rounded-lg sm:rounded-xl transform transition-all duration-300 hover:scale-[1.01]">
+                <p class="font-medium text-sm sm:text-base dark:text-white">{{ question.texto }}</p>
+                <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-2">
                   Resposta correta: {{ getCorrectAnswer(question) }}
                 </p>
               </div>
@@ -235,7 +236,7 @@ interface Level {
 
           <button
             (click)="restartQuiz()"
-            class="mt-8 w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-[1.02]"
+            class="mt-6 sm:mt-8 w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl transition-all duration-300 transform hover:scale-[1.02] text-sm sm:text-base"
           >
             Jogar Novamente
           </button>

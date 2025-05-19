@@ -22,8 +22,8 @@
 
     <!-- Slides -->
     <div class="flex transition-transform duration-500 ease-in-out" [style.transform]="'translateX(-' + (currentSlide * 100) + '%)'">
-      <div *ngFor="let group of vehicleGroups" class="w-full flex-shrink-0">
-        <div class="grid grid-cols-9 gap-2 grid-rows-7 h-[calc(100vh-280px)]">
+      <div *ngFor="let group of vehicleGroups" class="w-full flex-shrink-0 px-4">
+        <div class="grid grid-cols-10 gap-2 grid-rows-9 h-[calc(100vh-280px)]">
           <ng-container *ngFor="let v of group">
             <div
               *ngIf="v"
@@ -73,18 +73,6 @@
           </ng-container>
         </div>
       </div>
-    </div>
-
-    <!-- Slide indicators -->
-    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-      <button
-        *ngFor="let group of vehicleGroups; let i = index"
-        (click)="goToSlide(i)"
-        class="w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-colors duration-300"
-        [class.bg-amber-600]="currentSlide === i"
-        [class.bg-gray-400]="currentSlide !== i"
-        [attr.aria-label]="'Ir para slide ' + (i + 1)"
-      ></button>
     </div>
   </div>
 </section>

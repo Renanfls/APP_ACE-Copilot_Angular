@@ -57,7 +57,7 @@ export class CardVeiculoVelocidadeComponent implements OnInit, OnDestroy {
   // Carousel properties
   currentSlide = 0;
   vehicleGroups: any[][] = [];
-  itemsPerSlide = 63; // 7 rows x 9 columns
+  itemsPerSlide = 90; // 9 rows x 10 columns
   autoSlideInterval: any;
   slideTimeoutDuration = 10000; // 10 seconds per slide
   private lastSlideShown = false;
@@ -80,6 +80,33 @@ export class CardVeiculoVelocidadeComponent implements OnInit, OnDestroy {
     console.log('🔄 Destroying velocity component');
     this.componentRegistry.unregisterComponent(this);
     this.stopAutoSlide();
+  }
+
+  getStatusPriority(status: string): number {
+    switch (status) {
+      case 'Sem Comunicar': return 1; // Highest priority
+      case 'Oficina': return 2;
+      case 'OK': return 3;
+      case 'Inativo': return 4; // Lowest priority
+      default: return 5;
+    }
+  }
+
+  getColorPriority(color: string): number {
+    switch (color) {
+      case '#6224AE': return 1; // Roxo - Muito Alto
+      case '#AE2724': return 2; // Vermelho - Alto
+      case '#F56B15': return 3; // Laranja - Médio
+      case '#387E38': return 4; // Verde - OK
+      case '#242427': return 5; // Inativo
+      default: return 6;
+    }
+  }
+
+  getAttributePriority(veiculo: any): number {
+    if (!veiculo.atributos || veiculo.atributos.length === 0) return 6;
+    // Considera apenas o atributo de velocidade (índice 5)
+    return this.getColorPriority(veiculo.atributos[5].cor);
   }
 
   loadVehicles() {
@@ -110,6 +137,13 @@ export class CardVeiculoVelocidadeComponent implements OnInit, OnDestroy {
           });
           
           this.calcularodoDesdeUltimaTroca(veiculo);
+        });
+
+        // Ordenar veículos pela prioridade do atributo de velocidade
+        this.veiculos.sort((a, b) => {
+          const priorityA = this.getAttributePriority(a);
+          const priorityB = this.getAttributePriority(b);
+          return priorityA - priorityB;
         });
 
         console.log('Processed vehicles:', this.veiculos.length);
@@ -475,21 +509,19 @@ export class CardVeiculoVelocidadeComponent implements OnInit, OnDestroy {
 
   private initializeCarousel() {
     console.log('Initializing carousel with vehicles:', this.veiculos.length);
-    // Group vehicles into slides
     this.vehicleGroups = [];
     for (let i = 0; i < this.veiculos.length; i += this.itemsPerSlide) {
       const group = this.veiculos.slice(i, Math.min(i + this.itemsPerSlide, this.veiculos.length));
+      while (group.length < this.itemsPerSlide) {
+        group.push(null);
+      }
       this.vehicleGroups.push(group);
     }
     console.log('Created vehicle groups:', this.vehicleGroups.length);
-
-    // Adjust items per slide based on screen size
-    this.adjustItemsPerSlide();
   }
 
   private adjustItemsPerSlide() {
-    // Fixed at 49 items per slide (7x7 grid)
-    this.itemsPerSlide = 49;
+    this.itemsPerSlide = 90;
     this.regroupVehicles();
   }
 
@@ -497,7 +529,6 @@ export class CardVeiculoVelocidadeComponent implements OnInit, OnDestroy {
     this.vehicleGroups = [];
     for (let i = 0; i < this.veiculos.length; i += this.itemsPerSlide) {
       const group = this.veiculos.slice(i, Math.min(i + this.itemsPerSlide, this.veiculos.length));
-      // Pad the last group with null values if needed
       while (group.length < this.itemsPerSlide) {
         group.push(null);
       }
@@ -505,7 +536,6 @@ export class CardVeiculoVelocidadeComponent implements OnInit, OnDestroy {
     }
     console.log('Regrouped vehicles into groups:', this.vehicleGroups.length);
     
-    // Ensure current slide is valid
     this.currentSlide = Math.min(this.currentSlide, Math.max(0, this.vehicleGroups.length - 1));
   }
 

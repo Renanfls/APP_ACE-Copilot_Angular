@@ -1,0 +1,105 @@
+/* Estilos específicos para o componente de pressão da turbina */
+:host {
+  display: block;
+  height: 100%;
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Estilos do carrossel */
+.carousel-container {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Estilos dos cards de veículos */
+.vehicle-card {
+  transition: all 0.3s ease;
+}
+
+.vehicle-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Estilos dos indicadores de slide */
+.slide-indicator {
+  transition: all 0.3s ease;
+}
+
+.slide-indicator:hover {
+  transform: scale(1.2);
+}
+
+/* Estilos do modal */
+.modal-content {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Estilos dos botões de navegação */
+.nav-button {
+  transition: all 0.3s ease;
+}
+
+.nav-button:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Estilos dos atributos */
+.attribute-icon {
+  transition: transform 0.3s ease;
+}
+
+.attribute-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Estilos dos comentários */
+.comment-section {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Estilos do formulário de troca de óleo */
+.oil-change-form {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Estilos dos registros de troca de óleo */
+.oil-change-records {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Estilos dos botões de ação */
+.action-button {
+  transition: all 0.3s ease;
+}
+
+.action-button:hover {
+  transform: translateY(-1px);
+}
+
+/* Estilos para dispositivos móveis */
+@media (max-width: 768px) {
+  .grid-cols-10 {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  
+  .grid-cols-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+} 

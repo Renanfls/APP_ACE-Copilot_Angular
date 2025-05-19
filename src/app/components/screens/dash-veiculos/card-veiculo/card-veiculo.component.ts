@@ -49,7 +49,7 @@ export class CardVeiculoComponent implements OnInit, OnDestroy {
   // Carousel properties
   currentSlide = 0;
   vehicleGroups: any[][] = [];
-  itemsPerSlide = 63; // 7 rows x 9 columns
+  itemsPerSlide = 90; // 9 rows x 10 columns
   autoSlideInterval: any;
   slideTimeoutDuration = 10000; // 10 seconds per slide
   private lastSlideShown = false;
@@ -81,6 +81,16 @@ export class CardVeiculoComponent implements OnInit, OnDestroy {
     console.log('🔄 Destroying home component');
     this.componentRegistry.unregisterComponent(this);
     this.stopAutoSlide();
+  }
+
+  getStatusPriority(status: string): number {
+    switch (status) {
+      case 'Sem Comunicar': return 1; // Highest priority
+      case 'Oficina': return 2;
+      case 'OK': return 3;
+      case 'Inativo': return 4; // Lowest priority
+      default: return 5;
+    }
   }
 
   loadVehicleData() {
@@ -118,6 +128,13 @@ export class CardVeiculoComponent implements OnInit, OnDestroy {
           this.calcularodoDesdeUltimaTroca(veiculo);
         });
 
+        // Ordenar veículos por prioridade de status
+        this.veiculos.sort((a, b) => {
+          const priorityA = this.getStatusPriority(a.status);
+          const priorityB = this.getStatusPriority(b.status);
+          return priorityA - priorityB;
+        });
+
         console.log('Processed vehicles:', this.veiculos.length);
         this.initializeCarousel();
         this.startAutoSlide();
@@ -133,11 +150,12 @@ export class CardVeiculoComponent implements OnInit, OnDestroy {
     this.vehicleGroups = [];
     for (let i = 0; i < this.veiculos.length; i += this.itemsPerSlide) {
       const group = this.veiculos.slice(i, Math.min(i + this.itemsPerSlide, this.veiculos.length));
+      while (group.length < this.itemsPerSlide) {
+        group.push(null);
+      }
       this.vehicleGroups.push(group);
     }
     console.log('Created vehicle groups:', this.vehicleGroups.length);
-
-    this.adjustItemsPerSlide();
   }
 
   @HostListener('window:resize')
@@ -147,36 +165,41 @@ export class CardVeiculoComponent implements OnInit, OnDestroy {
   }
 
   private adjustItemsPerSlide() {
-    const screenWidth = window.innerWidth;
-    if (screenWidth < 640) { // Mobile
-      this.itemsPerSlide = 14; // 7 rows x 2 columns
-    } else if (screenWidth < 768) { // Small tablets
-      this.itemsPerSlide = 28; // 7 rows x 4 columns
-    } else if (screenWidth < 1024) { // Tablets
-      this.itemsPerSlide = 42; // 7 rows x 6 columns
-    } else if (screenWidth < 1280) { // Small desktop
-      this.itemsPerSlide = 56; // 7 rows x 8 columns
-    } else { // Large desktop
-      this.itemsPerSlide = 63; // 7 rows x 9 columns
+    this.itemsPerSlide = 90;
+    this.regroupVehicles();
+  }
+
+  private regroupVehicles() {
+    this.vehicleGroups = [];
+    for (let i = 0; i < this.veiculos.length; i += this.itemsPerSlide) {
+      const group = this.veiculos.slice(i, Math.min(i + this.itemsPerSlide, this.veiculos.length));
+      while (group.length < this.itemsPerSlide) {
+        group.push(null);
+      }
+      this.vehicleGroups.push(group);
     }
+    console.log('Regrouped vehicles into groups:', this.vehicleGroups.length);
+    
+    this.currentSlide = Math.min(this.currentSlide, Math.max(0, this.vehicleGroups.length - 1));
   }
 
   private startAutoSlide() {
-    console.log('🎠 Starting auto slide for home component');
-    this.lastSlideShown = false;
+    console.log('🎠 Starting auto slide');
     this.autoSlideInterval = setInterval(() => {
-      if (this.currentSlide === this.vehicleGroups.length - 1) {
-        console.log('🎠 Last slide reached in home component');
-        this.lastSlideShown = true;
+      if (this.currentSlide < this.vehicleGroups.length - 1) {
+        this.currentSlide++;
+        console.log('🎠 Moving to next slide:', this.currentSlide);
+      } else {
+        console.log('🎠 Reached last slide, notifying completion');
         this.stopAutoSlide();
         this.carouselStateService.notifyCarouselComplete();
-      } else {
-        this.nextSlide();
+        this.currentSlide = 0; // Reset to first slide
       }
-    }, this.slideTimeoutDuration);
+    }, 5000); // 5 segundos por slide
   }
 
   private stopAutoSlide() {
+    console.log('🎠 Stopping auto slide');
     if (this.autoSlideInterval) {
       clearInterval(this.autoSlideInterval);
       this.autoSlideInterval = null;
@@ -184,16 +207,21 @@ export class CardVeiculoComponent implements OnInit, OnDestroy {
   }
 
   private resetAutoSlideTimer() {
-    if (!this.lastSlideShown) {
-      this.stopAutoSlide();
-      this.startAutoSlide();
-    }
+    console.log('🎠 Resetting auto slide timer');
+    this.stopAutoSlide();
+    this.startAutoSlide();
   }
 
   nextSlide() {
     if (this.currentSlide < this.vehicleGroups.length - 1) {
       this.currentSlide++;
+      console.log('🎠 Moving to next slide via button:', this.currentSlide);
       this.resetAutoSlideTimer();
+    } else {
+      console.log('🎠 Reached last slide via next button, notifying completion');
+      this.stopAutoSlide();
+      this.carouselStateService.notifyCarouselComplete();
+      this.currentSlide = 0; // Reset to first slide
     }
   }
 

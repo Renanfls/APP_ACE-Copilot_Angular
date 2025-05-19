@@ -48,7 +48,7 @@ export class CardVeiculoTemperaturaComponent implements OnInit, OnDestroy {
   // Carousel properties
   currentSlide = 0;
   vehicleGroups: any[][] = [];
-  itemsPerSlide = 63; // 7 rows x 9 columns
+  itemsPerSlide = 90; // 9 rows x 10 columns
   autoSlideInterval: any;
   slideTimeoutDuration = 10000; // 10 seconds per slide
   private lastSlideShown = false;
@@ -96,25 +96,27 @@ export class CardVeiculoTemperaturaComponent implements OnInit, OnDestroy {
             cor,
             icone: this.icones[index] || ''
           })),
-          // Inicializar comentários para cada veículo
           comentarios: v.comentarios || [],
-          // Inicializar propriedades de troca de óleo, se não existirem
           odoAtual: v.odoAtual || 0,
           ultimaTrocaOleo: v.ultimaTrocaOleo || null,
           odoNaUltimaTroca: v.odoNaUltimaTroca || 0,
-          // Inicializar array de registros de troca de óleo
           trocasOleo: v.trocasOleo || []
         }));
         
         // Assegurar que todas as cores estejam no formato esperado
         this.veiculos.forEach(veiculo => {
           veiculo.atributos.forEach((atributo: any, index: number) => {
-            // Garantir que as cores correspondam às opções disponíveis
             atributo.cor = this.getClosestColorMatch(atributo.cor);
           });
           
-          // Calcular odo desde a última troca de óleo
           this.calcularodoDesdeUltimaTroca(veiculo);
+        });
+
+        // Ordenar veículos pela prioridade do atributo de temperatura
+        this.veiculos.sort((a, b) => {
+          const priorityA = this.getAttributePriority(a);
+          const priorityB = this.getAttributePriority(b);
+          return priorityA - priorityB;
         });
 
         console.log('Processed vehicles:', this.veiculos.length);
@@ -140,7 +142,7 @@ export class CardVeiculoTemperaturaComponent implements OnInit, OnDestroy {
   }
 
   private adjustItemsPerSlide() {
-    this.itemsPerSlide = 63;
+    this.itemsPerSlide = 90;
     this.regroupVehicles();
   }
 
@@ -161,7 +163,12 @@ export class CardVeiculoTemperaturaComponent implements OnInit, OnDestroy {
   nextSlide() {
     if (this.currentSlide < this.vehicleGroups.length - 1) {
       this.currentSlide++;
+      console.log('🎠 Moving to next slide via button:', this.currentSlide);
       this.resetAutoSlideTimer();
+    } else {
+      console.log('🎠 Reached last slide via next button, notifying completion');
+      this.stopAutoSlide();
+      this.carouselStateService.notifyCarouselComplete();
     }
   }
 
@@ -181,20 +188,20 @@ export class CardVeiculoTemperaturaComponent implements OnInit, OnDestroy {
 
   private startAutoSlide() {
     console.log('🎠 Starting auto slide for temperature component');
-    this.lastSlideShown = false;
     this.autoSlideInterval = setInterval(() => {
-      if (this.currentSlide === this.vehicleGroups.length - 1) {
-        console.log('🎠 Last slide reached in temperature component');
-        this.lastSlideShown = true;
+      if (this.currentSlide < this.vehicleGroups.length - 1) {
+        this.currentSlide++;
+        console.log('🎠 Moving to next slide:', this.currentSlide);
+      } else {
+        console.log('🎠 Reached last slide, notifying completion');
         this.stopAutoSlide();
         this.carouselStateService.notifyCarouselComplete();
-      } else {
-        this.nextSlide();
       }
-    }, this.slideTimeoutDuration);
+    }, 5000); // 5 segundos por slide
   }
 
   private stopAutoSlide() {
+    console.log('🎠 Stopping auto slide');
     if (this.autoSlideInterval) {
       clearInterval(this.autoSlideInterval);
       this.autoSlideInterval = null;
@@ -202,10 +209,9 @@ export class CardVeiculoTemperaturaComponent implements OnInit, OnDestroy {
   }
 
   private resetAutoSlideTimer() {
-    if (!this.lastSlideShown) {
-      this.stopAutoSlide();
-      this.startAutoSlide();
-    }
+    console.log('🎠 Resetting auto slide timer');
+    this.stopAutoSlide();
+    this.startAutoSlide();
   }
 
   // Calcular quilometragem desde a última troca de óleo
@@ -557,5 +563,22 @@ export class CardVeiculoTemperaturaComponent implements OnInit, OnDestroy {
       firstElement.focus();
       event.preventDefault();
     }
+  }
+
+  getColorPriority(color: string): number {
+    switch (color) {
+      case '#6224AE': return 1; // Roxo - Muito Alto
+      case '#AE2724': return 2; // Vermelho - Alto
+      case '#F56B15': return 3; // Laranja - Médio
+      case '#387E38': return 4; // Verde - OK
+      case '#242427': return 5; // Inativo
+      default: return 6;
+    }
+  }
+
+  getAttributePriority(veiculo: any): number {
+    if (!veiculo.atributos || veiculo.atributos.length === 0) return 6;
+    // Considera apenas o atributo de temperatura (índice 0)
+    return this.getColorPriority(veiculo.atributos[0].cor);
   }
 }

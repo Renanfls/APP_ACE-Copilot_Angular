@@ -1,0 +1,240 @@
+<div class="flex flex-col h-full">
+  <!-- Header -->
+  <app-header-dash-veiculos></app-header-dash-veiculos>
+
+  <!-- Main Content -->
+  <div class="flex-1 p-4 overflow-hidden">
+    <!-- Carousel Container -->
+    <div class="relative h-full">
+      <!-- Vehicle Grid -->
+      <div class="grid grid-cols-10 gap-2 h-full">
+        <ng-container *ngFor="let veiculo of vehicleGroups[currentSlide]; let i = index">
+          <div *ngIf="veiculo" 
+               class="bg-white rounded-lg shadow-md p-2 cursor-pointer hover:shadow-lg transition-shadow"
+               [style.background-color]="getBackgroundColor(veiculo.status)"
+               (click)="openHelpDialog(veiculo)"
+               (keydown.enter)="openHelpDialog(veiculo)"
+               tabindex="0"
+               role="button"
+               [attr.aria-label]="'Veículo ' + veiculo.id">
+            
+            <!-- Vehicle ID and Status -->
+            <div class="flex justify-between items-center mb-2">
+              <span class="font-semibold">{{ veiculo.id }}</span>
+              <span class="text-sm" [style.color]="veiculo.status === 'OK' ? '#387E38' : '#AE2724'">
+                {{ veiculo.status }}
+              </span>
+            </div>
+
+            <!-- Attributes -->
+            <div class="grid grid-cols-3 gap-1">
+              <div *ngFor="let a of veiculo.atributos; let i = index" 
+                   class="flex items-center justify-center p-1 rounded"
+                   [style.background-color]="a.cor">
+                <img [src]="a.icone" [alt]="getAttributeName(i)" class="w-4 h-4" />
+              </div>
+            </div>
+
+            <!-- Oil Change Alert -->
+            <div *ngIf="shouldShowOilChangeAlert(veiculo)" 
+                 class="mt-2 text-center text-sm text-red-600">
+              Troca de óleo necessária
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- Navigation Arrows -->
+      <button *ngIf="currentSlide > 0"
+              class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white/80 p-2 rounded-r-lg shadow-md hover:bg-white"
+              (click)="previousSlide()"
+              aria-label="Slide anterior">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+
+      <button *ngIf="currentSlide < vehicleGroups.length - 1"
+              class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white/80 p-2 rounded-l-lg shadow-md hover:bg-white"
+              (click)="nextSlide()"
+              aria-label="Próximo slide">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+
+      <!-- Slide Indicators -->
+      <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+        <button *ngFor="let group of vehicleGroups; let i = index"
+                class="w-2 h-2 rounded-full"
+                [class.bg-blue-600]="i === currentSlide"
+                [class.bg-gray-300]="i !== currentSlide"
+                (click)="goToSlide(i)"
+                [attr.aria-label]="'Ir para slide ' + (i + 1)">
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <app-footer-dash-veiculos></app-footer-dash-veiculos>
+
+  <!-- Help Dialog -->
+  <app-modal *ngIf="isHelpDialogOpen"
+             [isOpen]="isHelpDialogOpen"
+             (close)="closeHelpDialog()">
+    <div *ngIf="selectedVehicle" class="p-4">
+      <!-- Vehicle Info -->
+      <div class="mb-4">
+        <h2 class="text-xl font-bold mb-2">Veículo {{ selectedVehicle.id }}</h2>
+        <p class="text-gray-600">Status: {{ selectedVehicle.status }}</p>
+      </div>
+
+      <!-- Attributes -->
+      <div class="mb-4">
+        <h3 class="font-semibold mb-2">Atributos</h3>
+        <div class="grid grid-cols-2 gap-2">
+          <div *ngFor="let atributo of selectedVehicle.atributos; let j = index"
+               class="flex items-center space-x-2 p-2 rounded"
+               [style.background-color]="atributo.cor">
+            <img [src]="atributo.icone" 
+                 [alt]="getAttributeName(j)"
+                 class="w-6 h-6">
+            <span class="text-white">{{ getAttributeName(j) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Color Selection -->
+      <div class="mb-4">
+        <h3 class="font-semibold mb-2">Alterar Cores</h3>
+        <div class="grid grid-cols-2 gap-2">
+          <div *ngFor="let atributo of selectedVehicle.atributos; let j = index"
+               class="flex items-center space-x-2">
+            <span class="w-24">{{ getAttributeName(j) }}:</span>
+            <select [value]="atributo.cor"
+                    (change)="updateAttributeColor(j, $event)"
+                    class="border rounded p-1">
+              <option *ngFor="let option of getColorOptions()"
+                      [value]="option.value">
+                {{ option.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comments Section -->
+      <div class="mb-4">
+        <button (click)="toggleComments()"
+                class="flex items-center space-x-2 text-blue-600 hover:text-blue-800">
+          <span class="font-semibold">Comentários</span>
+          <svg xmlns="http://www.w3.org/2000/svg" 
+               class="h-5 w-5 transform transition-transform"
+               [class.rotate-180]="showComments"
+               fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <div *ngIf="showComments" 
+             class="mt-2 space-y-2"
+             @slideUpDown>
+          <div *ngFor="let comment of selectedVehicle.comentarios"
+               class="bg-gray-100 p-2 rounded">
+            <div class="flex justify-between text-sm text-gray-600">
+              <span>{{ comment.author }}</span>
+              <span>{{ comment.date }}</span>
+            </div>
+            <p class="mt-1">{{ comment.text }}</p>
+          </div>
+
+          <div class="flex space-x-2">
+            <input type="text"
+                   [(ngModel)]="newComment"
+                   placeholder="Adicionar comentário..."
+                   class="flex-1 border rounded p-1">
+            <button (click)="addComment()"
+                    class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
+              Adicionar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Oil Change Section -->
+      <div class="mb-4">
+        <button (click)="toggleOilChangeForm()"
+                class="flex items-center space-x-2 text-blue-600 hover:text-blue-800">
+          <span class="font-semibold">Registrar Troca de Óleo</span>
+          <svg xmlns="http://www.w3.org/2000/svg" 
+               class="h-5 w-5 transform transition-transform"
+               [class.rotate-180]="showOilChangeForm"
+               fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <div *ngIf="showOilChangeForm"
+             class="mt-2 space-y-2"
+             @slideUpDown>
+          <div class="bg-gray-100 p-2 rounded">
+            <p class="text-sm text-gray-600">
+              Odômetro atual: {{ selectedVehicle.odoAtual }} km
+            </p>
+            <p class="text-sm text-gray-600">
+              Última troca: {{ selectedVehicle.odoNaUltimaTroca }} km
+            </p>
+            <p class="text-sm text-gray-600">
+              Quilometragem desde última troca: {{ selectedVehicle.odoDesdeUltimaTroca }} km
+            </p>
+          </div>
+
+          <button (click)="registrarTrocaOleo()"
+                  class="w-full bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">
+            Confirmar Troca de Óleo
+          </button>
+        </div>
+      </div>
+
+      <!-- Oil Change Records -->
+      <div class="mb-4">
+        <button (click)="toggleOilChangeRecords()"
+                class="flex items-center space-x-2 text-blue-600 hover:text-blue-800">
+          <span class="font-semibold">Registros de Troca de Óleo</span>
+          <svg xmlns="http://www.w3.org/2000/svg" 
+               class="h-5 w-5 transform transition-transform"
+               [class.rotate-180]="showOilChangeRecords"
+               fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <div *ngIf="showOilChangeRecords"
+             class="mt-2 space-y-2"
+             @slideUpDown>
+          <div *ngFor="let record of selectedVehicle.trocasOleo"
+               class="bg-gray-100 p-2 rounded">
+            <div class="flex justify-between text-sm text-gray-600">
+              <span>{{ record.author }}</span>
+              <span>{{ record.date }}</span>
+            </div>
+            <p class="mt-1">{{ record.text }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex justify-end space-x-2">
+        <button (click)="cancelChanges()"
+                class="px-4 py-2 border rounded hover:bg-gray-100">
+          Cancelar
+        </button>
+        <button (click)="saveChanges()"
+                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+          Salvar
+        </button>
+      </div>
+    </div>
+  </app-modal>
+</div> 

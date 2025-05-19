@@ -5,7 +5,7 @@ import { BehaviorSubject, interval, Observable, of, Subscription, tap, throwErro
 import { catchError, retry } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
-const API_URL = `${environment.apiUrl}/auth`;
+const API_URL = `${environment.apiURL}/auth`;
 
 export interface User {
   id: string;
