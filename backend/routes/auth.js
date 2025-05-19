@@ -93,37 +93,61 @@ router.post('/register', async (req, res) => {
 
     await user.save();
 
-    console.log('Usuário registrado com sucesso:', {
+    const savedUser = {
       id: user._id,
       name: user.name,
       email: user.email,
+      phone: user.phone,
       registration: user.registration,
+      companyCode: user.companyCode,
       status: user.status
+    };
+
+    console.log('Usuário registrado com sucesso:', savedUser);
+
+    // Tenta enviar notificação WebSocket
+    let notificationSent = false;
+    try {
+      if (typeof global.notifyClients === 'function') {
+        notificationSent = global.notifyClients({
+          type: 'USER_REGISTERED',
+          data: savedUser
+        });
+      }
+    } catch (notificationError) {
+      console.warn('Erro ao enviar notificação WebSocket:', notificationError);
+      // Não propaga o erro, apenas loga
+    }
+
+    // Retorna sucesso mesmo se a notificação falhar
+    return res.status(201).json({ 
+      message: 'Solicitação enviada com sucesso! Aguarde a aprovação do administrador.',
+      user: savedUser,
+      notificationSent
     });
 
-    res.status(201).json({ 
-      message: 'Solicitação enviada com sucesso! Aguarde a aprovação do administrador.',
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        registration: user.registration,
-        status: user.status
-      }
-    });
   } catch (error) {
     console.error('Erro ao registrar usuário:', error);
+    
+    // Trata erros específicos de validação do Mongoose
     if (error.name === 'ValidationError') {
       return res.status(400).json({ 
         message: 'Erro de validação', 
-        error: error.message,
-        details: error.errors
+        errors: Object.values(error.errors).map(err => err.message)
       });
     }
-    res.status(500).json({ 
-      message: 'Erro ao registrar usuário', 
-      error: error.message,
-      details: error.stack
+    
+    // Trata erros de duplicação do MongoDB
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyPattern)[0];
+      return res.status(400).json({ 
+        message: `${field === 'email' ? 'Email' : 'Matrícula'} já cadastrado(a)`
+      });
+    }
+
+    // Para outros erros, retorna uma mensagem genérica
+    return res.status(500).json({ 
+      message: 'Erro ao registrar usuário. Tente novamente.'
     });
   }
 });
@@ -163,9 +187,12 @@ router.post('/login', async (req, res) => {
 
     console.log('Usuário encontrado:', {
       id: user._id,
+      name: user.name,
+      email: user.email,
       registration: user.registration,
       companyCode: user.companyCode,
-      status: user.status
+      status: user.status,
+      isAdmin: user.isAdmin
     });
 
     // Check password
@@ -178,32 +205,37 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Credenciais inválidas' });
     }
 
-    // Check status
-    if (user.status !== 'approved') {
-      console.log('Erro: Usuário não aprovado');
-      return res.status(401).json({ 
-        message: user.status === 'pending' 
-          ? 'Aguardando aprovação do administrador'
-          : 'Acesso negado'
-      });
-    }
-
-    // Generate token
+    // Generate token for all authenticated users
     const token = jwt.sign(
       { userId: user._id },
-      process.env.JWT_SECRET || 'your-secret-key',
+      process.env.JWT_SECRET || 'ace-copilot-secret-key-2024',
       { expiresIn: '24h' }
     );
 
+    // Return success response with user status
     console.log('Login bem-sucedido!');
+    console.log('Detalhes do usuário:', {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      registration: user.registration,
+      companyCode: user.companyCode,
+      status: user.status,
+      isAdmin: user.isAdmin
+    });
+
+    // Return user data with token
     res.json({
       token,
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
+        phone: user.phone,
+        companyCode: user.companyCode,
         registration: user.registration,
-        status: user.status
+        status: user.status,
+        isAdmin: user.isAdmin
       }
     });
   } catch (error) {
@@ -223,13 +255,17 @@ router.get('/me', auth, async (req, res) => {
 });
 
 // Get pending users (admin only)
-router.get('/pending-users', adminAuth, async (req, res) => {
+router.get('/pending-users', auth, adminAuth, async (req, res) => {
   try {
+    console.log('=== Buscando usuários ===');
+    
     const users = await User.find()
       .select('-password')
       .sort({ createdAt: -1 });
 
-    res.json(users.map(user => ({
+    console.log(`Encontrados ${users.length} usuários`);
+
+    const formattedUsers = users.map(user => ({
       id: user._id,
       name: user.name,
       email: user.email,
@@ -237,39 +273,61 @@ router.get('/pending-users', adminAuth, async (req, res) => {
       companyCode: user.companyCode,
       registration: user.registration,
       status: user.status,
-      createdAt: user.createdAt
-    })));
+      createdAt: user.createdAt,
+      isAdmin: user.isAdmin
+    }));
+
+    console.log('Enviando lista de usuários');
+    res.json(formattedUsers);
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao buscar usuários pendentes', error: error.message });
+    console.error('Erro ao buscar usuários:', error);
+    res.status(500).json({ 
+      message: 'Erro ao buscar usuários', 
+      error: error.message,
+      stack: error.stack 
+    });
   }
 });
 
-// Update user status (admin only)
-router.patch('/users/:userId/status', adminAuth, async (req, res) => {
+// Approve user
+router.patch('/users/:userId/status', auth, adminAuth, async (req, res) => {
   try {
     const { userId } = req.params;
     const { status } = req.body;
 
-    if (!['approved', 'rejected', 'blocked', 'unblocked'].includes(status)) {
-      return res.status(400).json({ message: 'Status inválido' });
-    }
-
-    // If status is 'unblocked', set it to 'approved'
-    const newStatus = status === 'unblocked' ? 'approved' : status;
-
     const user = await User.findByIdAndUpdate(
       userId,
-      { status: newStatus },
+      { status },
       { new: true }
-    ).select('-password');
+    );
 
     if (!user) {
       return res.status(404).json({ message: 'Usuário não encontrado' });
     }
 
+    // Tenta notificar os clientes, mas não falha se der erro
+    try {
+      if (typeof global.notifyClients === 'function') {
+        global.notifyClients({
+          type: 'USER_STATUS_CHANGED',
+          data: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            registration: user.registration,
+            status: user.status
+          }
+        });
+      }
+    } catch (notificationError) {
+      console.warn('Erro ao enviar notificação WebSocket:', notificationError);
+      // Não propaga o erro, apenas loga
+    }
+
     res.json(user);
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao atualizar status do usuário', error: error.message });
+    console.error('Erro ao atualizar status do usuário:', error);
+    res.status(500).json({ message: 'Erro ao atualizar status do usuário' });
   }
 });
 

@@ -19,7 +19,7 @@ import { RouterModule } from '@angular/router';
           <img class="h-6 md:h-8" src="assets/Vector (1).svg" alt="Icone Home">  
           <small class="mt-2 md:mt-3">Ás no ACE</small>
         </button>
-        <button hlmBtn variant="ghost" (click)="scrollToTop()" class="flex flex-col justify-center items-center h-14 focus:opacity-100 hover:opacity-100 opacity-25">
+        <button hlmBtn variant="ghost" routerLink="/treinamento-online" (click)="scrollToTop()" class="flex flex-col justify-center items-center h-14 focus:opacity-100 hover:opacity-100 opacity-25">
           <img class="h-6 md:h-8" src="assets/animated_images (1).svg" alt="Icone Home"> 
           <small class="mt-2 md:mt-3">Treinamento</small>
         </button>

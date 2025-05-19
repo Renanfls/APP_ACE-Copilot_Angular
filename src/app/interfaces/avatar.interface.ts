@@ -19,167 +19,241 @@ export interface UserAvatar extends Avatar {
 export const FREE_AVATARS: Avatar[] = [
   // Male Avatar
   {
-    id: 'm1',
-    image: 'assets/avatars/adventurer-avatar-m1.svg',
+    id: 'free-1',
+    image: './assets/avatars/free-1.svg',
+    category: 'male',
+    style: 'adventurer',
+    type: 'free'
+  },
+  {
+    id: 'free-2',
+    image: './assets/avatars/free-2.svg',
+    category: 'male',
+    style: 'adventurer',
+    type: 'free'
+  },
+  {
+    id: 'free-3',
+    image: './assets/avatars/free-3.svg',
     category: 'male',
     style: 'adventurer',
     type: 'free'
   },
   // Female Avatar
   {
-    id: 'f1',
-    image: 'assets/avatars/adventurer-avatar-f1.svg',
+    id: 'free-4',
+    image: './assets/avatars/free-4.svg',
     category: 'female',
     style: 'adventurer',
     type: 'free'
   },
-  // Neutral Avatar
   {
-    id: 'n1',
-    image: 'assets/avatars/adventurer-avatar-n1.svg',
-    category: 'neutral',
+    id: 'free-5',
+    image: './assets/avatars/free-5.svg',
+    category: 'female',
     style: 'adventurer',
     type: 'free'
-  }
+  },
+  {
+    id: 'free-6',
+    image: './assets/avatars/free-6.svg',
+    category: 'female',
+    style: 'adventurer',
+    type: 'free'
+  },
 ];
 
 // Premium avatars
 export const PREMIUM_AVATARS: Avatar[] = [
   // Male Premium Avatars
   {
-    id: 'm2',
-    image: 'assets/avatars/premium/adventurer-avatar-m2.svg',
+    id: 'premium-1',
+    image: './assets/avatars/premium/premium-1.svg',
     category: 'male',
     style: 'adventurer',
     type: 'premium',
-    price: 40
+    price: 75
   },
   {
-    id: 'm3',
-    image: 'assets/avatars/premium/adventurer-avatar-m3.svg',
+    id: 'premium-2',
+    image: './assets/avatars/premium/premium-2.svg',
     category: 'male',
     style: 'adventurer',
     type: 'premium',
-    price: 45
+    price: 75
   },
   {
-    id: 'm4',
-    image: 'assets/avatars/premium/adventurer-avatar-m4.svg',
+    id: 'premium-3',
+    image: './assets/avatars/premium/premium-3.svg',
     category: 'male',
     style: 'adventurer',
     type: 'premium',
-    price: 50
+    price: 100
+  },
+  {
+    id: 'premium-4',
+    image: './assets/avatars/premium/premium-4.svg',
+    category: 'male',
+    style: 'adventurer',
+    type: 'premium',
+    price: 75
   },
   // Female Premium Avatars
   {
-    id: 'f2',
-    image: 'assets/avatars/premium/adventurer-avatar-f2.svg',
+    id: 'premium-5',
+    image: './assets/avatars/premium/premium-5.svg',
     category: 'female',
     style: 'adventurer',
     type: 'premium',
-    price: 40
+    price: 75
   },
   {
-    id: 'f3',
-    image: 'assets/avatars/premium/adventurer-avatar-f3.svg',
+    id: 'premium-6',
+    image: './assets/avatars/premium/premium-6.svg',
     category: 'female',
     style: 'adventurer',
     type: 'premium',
-    price: 45
+    price: 75
   },
   {
-    id: 'f4',
-    image: 'assets/avatars/premium/adventurer-avatar-f4.svg',
+    id: 'premium-7',
+    image: './assets/avatars/premium/premium-7.svg',
     category: 'female',
     style: 'adventurer',
     type: 'premium',
-    price: 50
-  },
-  // Neutral Premium Avatars
-  {
-    id: 'n2',
-    image: 'assets/avatars/premium/adventurer-avatar-n2.svg',
-    category: 'neutral',
-    style: 'adventurer',
-    type: 'premium',
-    price: 40
+    price: 100
   },
   {
-    id: 'n3',
-    image: 'assets/avatars/premium/adventurer-avatar-n3.svg',
-    category: 'neutral',
+    id: 'premium-8',
+    image: './assets/avatars/premium/premium-8.svg',
+    category: 'female',
     style: 'adventurer',
     type: 'premium',
-    price: 45
+    price: 75
   },
   {
-    id: 'n4',
-    image: 'assets/avatars/premium/adventurer-avatar-n4.svg',
-    category: 'neutral',
+    id: 'premium-9',
+    image: './assets/avatars/premium/premium-9.svg',
+    category: 'female',
     style: 'adventurer',
     type: 'premium',
-    price: 50
-  }
+    price: 75
+  },
+  {
+    id: 'premium-10',
+    image: './assets/avatars/premium/premium-10.svg',
+    category: 'female',
+    style: 'adventurer',
+    type: 'premium',
+    price: 75
+  },
+  {
+    id: 'premium-11',
+    image: './assets/avatars/premium/premium-11.svg',
+    category: 'female',
+    style: 'adventurer',
+    type: 'premium',
+    price: 75
+  },
+  {
+    id: 'premium-12',
+    image: './assets/avatars/premium/premium-12.svg',
+    category: 'female',
+    style: 'adventurer',
+    type: 'premium',
+    price: 75
+  },
 ];
 
 // Custom avatars (special/limited)
 export const CUSTOM_AVATARS: Avatar[] = [
   // Male Custom Avatars
   {
-    id: 'cm1',
-    image: 'assets/avatars/custom/adventurer-avatar-cm1.svg',
+    id: 'custom-1',
+    image: './assets/avatars/custom/custom-1.svg',
     category: 'male',
     style: 'adventurer',
     type: 'custom',
-    price: 100
+    price: 25
   },
   {
-    id: 'cm2',
-    image: 'assets/avatars/custom/adventurer-avatar-cm2.svg',
+    id: 'custom-2',
+    image: './assets/avatars/custom/custom-2.svg',
     category: 'male',
     style: 'adventurer',
     type: 'custom',
-    price: 150
+    price: 25
+  },
+  {
+    id: 'custom-3',
+    image: './assets/avatars/custom/custom-3.svg',
+    category: 'male',
+    style: 'adventurer',
+    type: 'custom',
+    price: 25
+  },
+  {
+    id: 'custom-6',
+    image: './assets/avatars/custom/custom-6.svg',
+    category: 'male',
+    style: 'adventurer',
+    type: 'custom',
+    price: 25
+  },
+  {
+    id: 'custom-7',
+    image: './assets/avatars/custom/custom-7.svg',
+    category: 'male',
+    style: 'adventurer',
+    type: 'custom',
+    price: 50
+  },
+  {
+    id: 'custom-8',
+    image: './assets/avatars/custom/custom-8.svg',
+    category: 'male',
+    style: 'adventurer',
+    type: 'custom',
+    price: 50
+  },
+  {
+    id: 'custom-9',
+    image: './assets/avatars/custom/custom-9.svg',
+    category: 'male',
+    style: 'adventurer',
+    type: 'custom',
+    price: 50
   },
   // Female Custom Avatars
   {
-    id: 'cf1',
-    image: 'assets/avatars/custom/adventurer-avatar-cf1.svg',
+    id: 'custom-4',
+    image: './assets/avatars/custom/custom-4.svg',
     category: 'female',
     style: 'adventurer',
     type: 'custom',
-    price: 100
+    price: 25
   },
   {
-    id: 'cf2',
-    image: 'assets/avatars/custom/adventurer-avatar-cf2.svg',
+    id: 'custom-5',
+    image: './assets/avatars/custom/custom-5.svg',
     category: 'female',
     style: 'adventurer',
     type: 'custom',
-    price: 150
-  },
-  // Neutral Custom Avatars
-  {
-    id: 'cn1',
-    image: 'assets/avatars/custom/adventurer-avatar-cn1.svg',
-    category: 'neutral',
-    style: 'adventurer',
-    type: 'custom',
-    price: 100
+    price: 25
   },
   {
-    id: 'cn2',
-    image: 'assets/avatars/custom/adventurer-avatar-cn2.svg',
-    category: 'neutral',
+    id: 'custom-6',
+    image: './assets/avatars/custom/custom-6.svg',
+    category: 'female',
     style: 'adventurer',
     type: 'custom',
-    price: 150
-  }
+    price: 25
+  },
 ];
 
 // All available avatars
 export const ALL_AVATARS: Avatar[] = [
   ...FREE_AVATARS,
+  ...CUSTOM_AVATARS,
   ...PREMIUM_AVATARS,
-  ...CUSTOM_AVATARS
 ]; 

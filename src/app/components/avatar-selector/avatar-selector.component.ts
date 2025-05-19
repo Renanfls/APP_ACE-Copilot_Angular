@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
     matAdd,
@@ -192,7 +193,7 @@ import { AvatarService } from '../../services/avatar.service';
             >
               <div class="aspect-square w-full p-4 flex items-center justify-center">
                 <img
-                  [src]="avatar.image"
+                  [src]="getSafeImageUrl(avatar.image)"
                   [alt]="'Avatar ' + avatar.id"
                   class="w-24 h-24 object-contain transition-transform duration-300 group-hover:scale-110"
                 >
@@ -233,8 +234,7 @@ import { AvatarService } from '../../services/avatar.service';
                 *ngIf="isAdmin"
                 class="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2 text-xs"
               >
-                <div class="flex justify-between">
-                  <span>ID: {{ avatar.id }}</span>
+                <div class="flex justify-end">
                   <span>{{ avatar.price ? avatar.price + ' cupons' : 'Grátis' }}</span>
                 </div>
               </div>
@@ -368,7 +368,10 @@ export class AvatarSelectorComponent implements OnInit {
   types: AvatarType[] = ['free', 'premium', 'custom'];
   selectedType: AvatarType | 'all' = 'all';
 
-  constructor(private avatarService: AvatarService) {}
+  constructor(
+    private avatarService: AvatarService,
+    private sanitizer: DomSanitizer
+  ) {}
 
   ngOnInit() {
     this.avatarService.getAvailableCoupons().subscribe(coupons => {
@@ -537,5 +540,9 @@ export class AvatarSelectorComponent implements OnInit {
       this.avatarService.unlockAvatar(this.selectedAvatar.id);
       this.showNotification('success', 'Avatar desbloqueado com sucesso!');
     }
+  }
+
+  getSafeImageUrl(url: string): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 } 

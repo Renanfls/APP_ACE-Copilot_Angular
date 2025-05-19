@@ -4,23 +4,24 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Router } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
-    matAdd,
-    matArrowBack,
-    matBadge,
-    matBusiness,
-    matEmail,
-    matLocalOffer,
-    matPerson,
-    matPhone,
-    matPhotoCamera,
-    matRefresh,
-    matSettings,
-    matWork
+  matAdd,
+  matArrowBack,
+  matBadge,
+  matBusiness,
+  matEmail,
+  matLocalOffer,
+  matPerson,
+  matPhone,
+  matPhotoCamera,
+  matRefresh,
+  matSettings,
+  matWork
 } from '@ng-icons/material-icons/baseline';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { AvatarSelectorComponent } from '../../../components/avatar-selector/avatar-selector.component';
 import { Avatar } from '../../../interfaces/avatar.interface';
 import { User } from '../../../interfaces/user.interface';
+import { PhonePipe } from '../../../pipes/phone.pipe';
 import { AuthService } from '../../../services/auth.service';
 import { CouponService, CouponStats } from '../../../services/coupon.service';
 import { NotificationService } from '../../../services/notification.service';
@@ -39,7 +40,8 @@ import { HeaderComponent } from '../../header/header.component';
     HlmButtonDirective,
     HeaderComponent,
     FooterComponent,
-    AvatarSelectorComponent
+    AvatarSelectorComponent,
+    PhonePipe
   ],
   viewProviders: [
     provideIcons({
@@ -70,7 +72,7 @@ import { HeaderComponent } from '../../header/header.component';
               <!-- Avatar Section -->
               <div class="relative mb-0 md:mr-8">
                 <div class="profile-avatar w-40 h-40 rounded-full overflow-hidden border-4 border-amber-400 shadow-lg hover:scale-105 transition-transform">
-                  <img [src]="user().avatar || 'assets/Logo_AceCopilot 1.png'"
+                  <img [src]="user().avatar || 'assets/sem-avatar.png'"
                        [alt]="user().name"
                        class="w-full h-full object-cover">
                 </div>
@@ -99,7 +101,7 @@ import { HeaderComponent } from '../../header/header.component';
                 <div class="mt-4 flex flex-wrap justify-center md:justify-start gap-4">
                   <div class="flex items-center text-md dark:text-gray-400" *ngIf="user().phone">
                     <ng-icon name="matPhone" class="mr-2 text-amber-400"/>
-                    {{ user().phone }}
+                    {{ user().phone | phone }}
                   </div>
                 </div>
               </div>
@@ -155,6 +157,7 @@ import { HeaderComponent } from '../../header/header.component';
                     <div class="relative">
                       <input type="tel"
                              formControlName="phone"
+                             [value]="user().phone | phone"
                              class="input-field w-full px-4 py-3 rounded-lg dark:bg-[#1a1a1a] dark:text-white border border-gray-700 focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-all cursor-not-allowed opacity-75">
                       <div class="absolute right-3 top-3 text-gray-500">
                         <ng-icon name="matPhone"/>
@@ -451,6 +454,32 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit() {
+    const currentUser = this.authService.getCurrentUser();
+    
+    if (currentUser) {
+      this.user.update(current => ({
+        ...current,
+        name: currentUser.name,
+        email: currentUser.email,
+        phone: currentUser.phone,
+        registration: currentUser.registration,
+        company: currentUser.companyCode,
+        role: 'Motorista', // Default role
+        phase: 'Ouro', // Default phase
+        isAdmin: currentUser.isAdmin
+      }));
+
+      this.profileForm.patchValue({
+        name: currentUser.name,
+        registration: currentUser.registration,
+        phone: currentUser.phone,
+        company: currentUser.companyCode,
+        role: 'Motorista',
+        darkMode: this.themeService.isDarkMode(),
+        notifications: this.notificationService.isNotificationsEnabled(),
+      });
+    }
+
     // Carregar avatar salvo
     const savedAvatar = localStorage.getItem('userAvatar');
     if (savedAvatar) {
@@ -459,20 +488,6 @@ export class ProfileComponent implements OnInit {
         avatar: savedAvatar
       }));
     }
-
-    // Log user role and registration for debugging
-    console.log('User Role:', localStorage.getItem('userRole'));
-    console.log('User Registration:', localStorage.getItem('registration'));
-
-    this.profileForm.patchValue({
-      name: this.user().name,
-      registration: this.user().registration,
-      phone: this.user().phone,
-      company: this.user().company,
-      role: this.user().role,
-      darkMode: this.themeService.isDarkMode(),
-      notifications: this.notificationService.isNotificationsEnabled(),
-    });
   }
 
   openAvatarSelector(): void {

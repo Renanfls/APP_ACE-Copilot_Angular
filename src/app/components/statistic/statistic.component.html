@@ -3,7 +3,7 @@
     class="pt-4 md:pt-8 pb-4 md:pb-8 flex flex-col-reverse md:flex-row justify-evenly"
   >
     <div class="px-4 mt-8 md:mt-0 text-center md:text-left">
-      <h3 class="text-2xl font-bold text-amber-400 mb-3">Anabelle (53348)</h3>
+      <h3 class="text-2xl font-bold text-amber-400 mb-3">{{ currentUser?.name }} ({{ currentUser?.registration }})</h3>
       <p class="text-base md:text-lg">
         <strong>Fase:</strong> Ouro (01/02/2025)
       </p>
@@ -12,14 +12,14 @@
         <strong>Acesso:</strong> 10/04/2025 11:46:02
       </p>
       <small class="text-amber-400 font-semibold text-base md:text-lg"
-        >Oi ANABELLE! Precisamos melhorar em: Pedal</small
+        >Oi {{ currentUser?.name }}! Precisamos melhorar em: Pedal</small
       >
     </div>
     <div class="mb-23 md:mb-0 md:mt-0 md:me-6 self-center relative">
-      <button hlmBtn variant="default" (click)="openHelpDialog()">
+      <button hlmBtn variant="ghost" class="hover:bg-transparent absolute left-48 top-0" (click)="openHelpDialog()">
         <ng-icon
           name="matHelp"
-          class="text-amber-400 absolute left-48 top-0"
+          class="text-amber-400"
           style="font-size: 24px"
         />
       </button>

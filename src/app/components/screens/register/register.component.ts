@@ -323,7 +323,7 @@ export class RegisterComponent {
         const formData = this.registerForm.value;
         
         // Formata o código da empresa
-        formData.companyCode = this.formatCompanyCode(formData.companyCode.toString());
+        formData.companyCode = formData.companyCode.toString().padStart(4, '0');
         
         // Remove formatação do telefone
         formData.phone = formData.phone.replace(/\D/g, '');
@@ -331,31 +331,68 @@ export class RegisterComponent {
         // Formata a matrícula para garantir que seja uma string com pelo menos 6 dígitos
         formData.registration = formData.registration.toString().padStart(6, '0');
 
+        // Validações adicionais
+        if (formData.registration.length < 6) {
+          throw new Error('A matrícula deve ter no mínimo 6 dígitos');
+        }
+
+        if (formData.companyCode.length < 4) {
+          throw new Error('O código da empresa deve ter no mínimo 4 dígitos');
+        }
+
+        if (!/^\d+$/.test(formData.registration)) {
+          throw new Error('A matrícula deve conter apenas números');
+        }
+
+        if (!/^\d+$/.test(formData.companyCode)) {
+          throw new Error('O código da empresa deve conter apenas números');
+        }
+
+        if (formData.phone.length < 10 || formData.phone.length > 11) {
+          throw new Error('Telefone inválido. Use o formato (99) 99999-9999');
+        }
+
         console.log('Enviando dados de registro:', {
           ...formData,
           password: '***'
         });
 
+        // Tenta registrar o usuário
         await this.authService.register(formData);
         
-        // Fazer login automaticamente após o registro
-        try {
-          await this.authService.login({
-            companyCode: formData.companyCode,
-            registration: formData.registration,
-            password: formData.password
-          });
-          
-          // Redirecionar para a página de aguardando aprovação
-          this.router.navigate(['/awaiting-approval']);
-        } catch (loginError) {
-          console.error('Erro ao fazer login automático:', loginError);
-          // Em caso de erro no login automático, redireciona para a página de login
-          this.router.navigate(['/login']);
-        }
+        // Se chegou aqui, o registro foi bem-sucedido
+        // Redireciona para a página de aguardando aprovação
+        await this.router.navigate(['/awaiting-approval'], { replaceUrl: true });
       } catch (error: any) {
         console.error('Erro no registro:', error);
-        this.registerError = error.message || 'Erro ao enviar solicitação. Tente novamente.';
+        
+        // Trata diferentes tipos de erros
+        if (error.error?.message) {
+          this.registerError = error.error.message;
+        } else if (error.message) {
+          this.registerError = error.message;
+        } else {
+          this.registerError = 'Erro ao enviar solicitação. Tente novamente.';
+        }
+
+        // Trata erros específicos
+        if (this.registerError) {
+          if (this.registerError.includes('Email já cadastrado')) {
+            this.registerForm.patchValue({ email: '' });
+            const emailControl = this.registerForm.get('email');
+            if (emailControl) {
+              emailControl.markAsTouched();
+              emailControl.setErrors({ 'emailExists': true });
+            }
+          } else if (this.registerError.includes('Matrícula já cadastrada')) {
+            this.registerForm.patchValue({ registration: '' });
+            const registrationControl = this.registerForm.get('registration');
+            if (registrationControl) {
+              registrationControl.markAsTouched();
+              registrationControl.setErrors({ 'registrationExists': true });
+            }
+          }
+        }
       } finally {
         this.isLoading = false;
       }
@@ -368,12 +405,14 @@ export class RegisterComponent {
       else if (controls['name'].errors?.['minlength']) errorMessage = 'Nome deve ter no mínimo 3 caracteres';
       else if (controls['email'].errors?.['required']) errorMessage = 'Email é obrigatório';
       else if (controls['email'].errors?.['email']) errorMessage = 'Email inválido';
+      else if (controls['email'].errors?.['emailExists']) errorMessage = 'Email já cadastrado';
       else if (controls['phone'].errors?.['required']) errorMessage = 'Telefone é obrigatório';
       else if (controls['companyCode'].errors?.['required']) errorMessage = 'Código da empresa é obrigatório';
       else if (controls['companyCode'].errors?.['minlength']) errorMessage = 'Código da empresa deve ter no mínimo 4 dígitos';
       else if (controls['registration'].errors?.['required']) errorMessage = 'Matrícula é obrigatória';
       else if (controls['registration'].errors?.['minlength']) errorMessage = 'Matrícula deve ter no mínimo 6 dígitos';
       else if (controls['registration'].errors?.['pattern']) errorMessage = 'Matrícula deve conter apenas números';
+      else if (controls['registration'].errors?.['registrationExists']) errorMessage = 'Matrícula já cadastrada';
       else if (controls['password'].errors?.['required']) errorMessage = 'Senha é obrigatória';
       else if (controls['password'].errors?.['minlength']) errorMessage = 'Senha deve ter no mínimo 6 caracteres';
       

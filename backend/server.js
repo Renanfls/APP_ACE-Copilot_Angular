@@ -5,12 +5,53 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const User = require('./models/User');
 const authRoutes = require('./routes/auth');
+const http = require('http');
+const { Server } = require('socket.io');
+
+// Definir variáveis de ambiente se não existirem
+process.env.JWT_SECRET = process.env.JWT_SECRET || 'ace-copilot-secret-key-2024';
+process.env.MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://copilot:Copilot128@ace-copilot.qwvgn2f.mongodb.net/?retryWrites=true&w=majority&appName=ACE-COPILOT';
 
 const app = express();
+const server = http.createServer(app);
+
+// Configuração do Socket.IO
+const io = new Server(server, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST']
+  }
+});
+
+// Armazena clientes conectados
+const connectedClients = new Set();
+
+// Configuração do Socket.IO
+io.on('connection', (socket) => {
+  console.log('Cliente conectado:', socket.id);
+  connectedClients.add(socket);
+
+  socket.on('disconnect', () => {
+    console.log('Cliente desconectado:', socket.id);
+    connectedClients.delete(socket);
+  });
+});
+
+// Função global de notificação
+global.notifyClients = function(notification) {
+  try {
+    console.log('Enviando notificação para todos os clientes:', notification);
+    io.emit('notification', notification);
+    return true;
+  } catch (error) {
+    console.error('Erro ao enviar notificação:', error);
+    return false;
+  }
+};
 
 // Middleware
 app.use(cors({
-  origin: '*', // Allow all origins in development
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -51,16 +92,31 @@ async function createAdminUser() {
       // Verifica se a senha foi criada corretamente
       const isMatch = await adminUser.comparePassword('admin123');
       console.log('Verificação da senha após criação:', isMatch);
+      console.log('Status de admin:', adminUser.isAdmin);
     } else {
-      // Atualiza a senha do admin existente
+      // Atualiza o admin existente
       adminExists.password = 'admin123'; // Será hasheado automaticamente pelo middleware
-      adminExists.isAdmin = true;
+      adminExists.isAdmin = true; // Garante que é admin
+      adminExists.status = 'approved'; // Garante que está aprovado
       await adminExists.save();
-      console.log('Senha do admin atualizada com sucesso!');
+      console.log('Admin atualizado com sucesso!');
       
-      // Verifica se a senha foi atualizada corretamente
+      // Verifica se as atualizações foram aplicadas
       const isMatch = await adminExists.comparePassword('admin123');
       console.log('Verificação da senha após atualização:', isMatch);
+      console.log('Status de admin:', adminExists.isAdmin);
+      console.log('Status de aprovação:', adminExists.status);
+    }
+
+    // Verificação final
+    const finalCheck = await User.findOne({ registration: '000000' });
+    if (finalCheck) {
+      console.log('\nVerificação final do usuário admin:', {
+        isAdmin: finalCheck.isAdmin,
+        status: finalCheck.status,
+        companyCode: finalCheck.companyCode,
+        registration: finalCheck.registration
+      });
     }
   } catch (error) {
     console.error('Erro ao criar/atualizar usuário admin:', error);
@@ -69,10 +125,6 @@ async function createAdminUser() {
 
 // Connect to MongoDB Atlas
 console.log('Tentando conectar ao MongoDB Atlas...');
-if (!process.env.MONGODB_URI) {
-  console.error('MONGODB_URI não está definido no arquivo .env');
-  process.exit(1);
-}
 console.log('MongoDB URI:', process.env.MONGODB_URI);
 
 mongoose.connect(process.env.MONGODB_URI, {
@@ -90,7 +142,8 @@ mongoose.connect(process.env.MONGODB_URI, {
     console.log('Detalhes do admin:', {
       companyCode: adminUser.companyCode,
       registration: adminUser.registration,
-      status: adminUser.status
+      status: adminUser.status,
+      isAdmin: adminUser.isAdmin
     });
   }
 })
@@ -108,9 +161,9 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Algo deu errado!', error: err.message });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, '0.0.0.0', () => {
+const PORT = 5001;
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`Servidor rodando na porta ${PORT}`);
-  console.log(`API disponível em http://192.168.15.25:${PORT}`);
-  // console.log(`API disponível em http://192.168.0.9:${PORT}`);
+  console.log(`API disponível em http://192.168.0.9:${PORT}`);
+  console.log('WebSocket server iniciado');
 }); 

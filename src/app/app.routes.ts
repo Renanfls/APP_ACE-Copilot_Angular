@@ -10,7 +10,9 @@ import { DashVeiculosComponent } from './components/screens/dash-veiculos/dash-v
 import { DashDriveComponent } from './components/screens/dashDrive/dash-drive.component';
 import { GameComponent } from './components/screens/game/game.component';
 import { PremiacoesComponent } from './components/screens/premiacoes/premiacoes.component';
+import { QuizComponent } from './components/screens/quiz/quiz.component';
 import { ScoreComponent } from './components/screens/score/score.component';
+import { TreinamentoOnlineComponent } from './components/screens/treinamento/treinamento.component';
 import { UserManagementComponent } from './components/screens/user-management/user-management.component';
 import { AdminGuard } from './guards/admin.guard';
 import { AuthGuard } from './guards/auth.guard';
@@ -106,7 +108,11 @@ export const routes: Routes = [
     component: GameComponent,
   },
   {
+    path: 'treinamento-online',
+    component: TreinamentoOnlineComponent,
+  },
+  {
     path: 'quiz',
-    component: GameComponent,
+    component: QuizComponent,
   }
 ];

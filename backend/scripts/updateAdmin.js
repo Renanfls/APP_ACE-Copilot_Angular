@@ -3,41 +3,72 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
+const MONGODB_URI = 'mongodb+srv://copilot:Copilot128@ace-copilot.qwvgn2f.mongodb.net/?retryWrites=true&w=majority&appName=ACE-COPILOT';
+
 async function updateAdmin() {
   try {
     console.log('Conectando ao MongoDB Atlas...');
-    await mongoose.connect('mongodb+srv://copilot:Copilot128@ace-copilot.qwvgn2f.mongodb.net/?retryWrites=true&w=majority&appName=ACE-COPILOT', {
+    await mongoose.connect(MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
     console.log('Conectado ao MongoDB Atlas');
 
-    // Encontrar o usuário admin
-    const admin = await User.findOne({
+    // Primeiro, vamos remover qualquer usuário admin existente para garantir um estado limpo
+    console.log('Removendo usuário admin existente...');
+    await User.deleteOne({ registration: '000000' });
+    console.log('Usuário admin removido (se existia)');
+
+    // Criar novo usuário admin
+    console.log('Criando novo usuário admin...');
+    const plainPassword = 'admin123';
+    const hashedPassword = await bcrypt.hash(plainPassword, 10);
+    
+    const newAdmin = new User({
+      name: 'Administrador',
+      email: 'admin@acecopilot.com',
+      registration: '000000',
+      phone: '(00) 00000-0000',
       companyCode: '0123',
-      registration: '000000'
+      password: hashedPassword,
+      status: 'approved',
+      isAdmin: true
     });
 
-    if (admin) {
-      console.log('Usuário admin encontrado. Atualizando campo isAdmin...');
-      admin.isAdmin = true;
-      await admin.save();
-      console.log('Campo isAdmin atualizado com sucesso!');
+    await newAdmin.save();
+    console.log('Novo usuário admin criado com sucesso!');
 
-      // Verificar a atualização
-      const updatedAdmin = await User.findById(admin._id);
-      console.log('\nDetalhes do usuário admin atualizado:', {
-        id: updatedAdmin._id,
-        name: updatedAdmin.name,
-        email: updatedAdmin.email,
-        registration: updatedAdmin.registration,
-        companyCode: updatedAdmin.companyCode,
-        status: updatedAdmin.status,
-        isAdmin: updatedAdmin.isAdmin
-      });
-    } else {
-      console.log('Usuário admin não encontrado!');
+    // Verificar se o usuário foi criado corretamente
+    const createdAdmin = await User.findOne({ registration: '000000' });
+    if (!createdAdmin) {
+      throw new Error('Falha ao criar usuário admin - não encontrado após criação');
     }
+
+    console.log('\nDetalhes do admin criado:', {
+      id: createdAdmin._id,
+      name: createdAdmin.name,
+      email: createdAdmin.email,
+      registration: createdAdmin.registration,
+      companyCode: createdAdmin.companyCode,
+      status: createdAdmin.status,
+      isAdmin: createdAdmin.isAdmin
+    });
+
+    // Testar a senha
+    console.log('\nTestando autenticação...');
+    const isMatch = await createdAdmin.comparePassword(plainPassword);
+    console.log('Teste de senha:', isMatch ? 'SUCESSO' : 'FALHA');
+    
+    if (!isMatch) {
+      console.log('AVISO: A senha não está funcionando corretamente!');
+      console.log('Hash da senha armazenada:', createdAdmin.password);
+    } else {
+      console.log('\nCredenciais de acesso:');
+      console.log('Código da empresa:', createdAdmin.companyCode);
+      console.log('Matrícula:', createdAdmin.registration);
+      console.log('Senha:', plainPassword);
+    }
+
   } catch (error) {
     console.error('Erro:', error);
   } finally {

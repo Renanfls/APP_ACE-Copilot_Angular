@@ -61,24 +61,42 @@ const userSchema = new mongoose.Schema({
 
 // Hash password before saving
 userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) {
-    return next();
-  }
-  
   try {
+    // Só faz hash da senha se ela foi modificada ou é nova
+    if (!this.isModified('password')) {
+      return next();
+    }
+
+    // Gera um salt com fator 10
     const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
+    
+    // Faz o hash da senha com o salt
+    const hashedPassword = await bcrypt.hash(this.password, salt);
+    
+    // Substitui a senha em texto plano pelo hash
+    this.password = hashedPassword;
+    
+    console.log('Senha hasheada com sucesso');
     next();
   } catch (error) {
+    console.error('Erro ao fazer hash da senha:', error);
     next(error);
   }
 });
 
-// Method to compare password
+// Método para comparar senha
 userSchema.methods.comparePassword = async function(candidatePassword) {
   try {
-    return await bcrypt.compare(candidatePassword, this.password);
+    // Usa bcrypt.compare para comparar a senha fornecida com o hash armazenado
+    const isMatch = await bcrypt.compare(candidatePassword, this.password);
+    console.log('Comparação de senha:', {
+      candidatePassword,
+      hashedPassword: this.password,
+      isMatch
+    });
+    return isMatch;
   } catch (error) {
+    console.error('Erro ao comparar senha:', error);
     throw error;
   }
 };

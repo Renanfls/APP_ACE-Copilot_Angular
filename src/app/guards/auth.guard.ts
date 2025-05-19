@@ -23,29 +23,39 @@ export class AuthGuard implements CanActivate {
       return false;
     }
 
-    // Se for admin, permite acesso a qualquer rota
-    if (this.authService.isAdmin()) {
-      return true;
-    }
+    try {
+      // Verifica o status atual do usuário no banco de dados
+      const currentStatus = await this.authService.checkRegistrationStatus();
+      const user = this.authService.getCurrentUser();
 
-    const user = this.authService.getCurrentUser();
-
-    // Se for usuário pendente, só permite acesso à página de aguardando aprovação
-    if (user?.status === 'pending') {
-      if (path === 'awaiting-approval') {
+      // Se for admin, permite acesso a qualquer rota
+      if (user?.isAdmin) {
         return true;
       }
-      await this.router.navigate(['/awaiting-approval']);
+
+      // Se for usuário pendente, só permite acesso à página de aguardando aprovação
+      if (currentStatus === 'pending') {
+        if (path === 'awaiting-approval') {
+          return true;
+        }
+        // Redireciona para a tela de aguardando aprovação
+        console.log('Usuário pendente, redirecionando para awaiting-approval');
+        await this.router.navigate(['/awaiting-approval'], { replaceUrl: true });
+        return false;
+      }
+
+      // Se for usuário aprovado, permite acesso
+      if (currentStatus === 'approved') {
+        return true;
+      }
+
+      // Se for rejeitado ou bloqueado, faz logout e redireciona para login
+      await this.authService.logout(true);
+      return false;
+    } catch (error) {
+      console.error('Erro ao verificar status do usuário:', error);
+      await this.authService.logout(true);
       return false;
     }
-
-    // Se for usuário aprovado, permite acesso
-    if (user?.status === 'approved') {
-      return true;
-    }
-
-    // Para qualquer outro caso, redireciona para login
-    await this.router.navigate(['/login']);
-    return false;
   }
 } 

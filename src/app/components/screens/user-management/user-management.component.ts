@@ -12,6 +12,7 @@ import {
     matWork
 } from '@ng-icons/material-icons/baseline';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
+import { PhonePipe } from '../../../pipes/phone.pipe';
 import { AuthService } from '../../../services/auth.service';
 import { FooterComponent } from '../../footer/footer.component';
 import { HeaderComponent } from '../../header/header.component';
@@ -36,7 +37,8 @@ interface PendingUser {
     NgIconComponent, 
     HlmButtonDirective,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    PhonePipe
   ],
   viewProviders: [
     provideIcons({ 
@@ -108,6 +110,12 @@ interface PendingUser {
               class="text-xl"
             />
             {{ notification.message }}
+            <button
+              (click)="dismissNotification()"
+              class="ml-2 text-white hover:text-gray-200 focus:outline-none"
+            >
+              <ng-icon name="matClose" class="text-xl"/>
+            </button>
           </div>
 
           <!-- User List -->
@@ -127,7 +135,7 @@ interface PendingUser {
                   </div>
                   <div class="flex items-center gap-2">
                     <ng-icon name="matPhone" class="text-gray-400"/>
-                    {{ user.phone }}
+                    {{ user.phone | phone }}
                   </div>
                   <div class="flex items-center gap-2">
                     <ng-icon name="matBusiness" class="text-gray-400"/>
@@ -248,18 +256,56 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   }
 
   loadUsers() {
+    console.log('=== Iniciando carregamento de usuários ===');
+    console.log('Tab atual:', this.currentTab);
+    
     this.isLoading = true;
     this.error = null;
     
+    if (!this.authService.isLoggedIn()) {
+      console.error('Usuário não está logado');
+      this.error = 'Sessão expirada. Por favor, faça login novamente.';
+      this.isLoading = false;
+      return;
+    }
+
+    if (!this.authService.isAdmin()) {
+      console.error('Usuário não é admin');
+      this.error = 'Você não tem permissão para acessar esta página.';
+      this.isLoading = false;
+      return;
+    }
+    
     this.authService.getPendingUsers().subscribe({
       next: (users) => {
+        console.log(`Recebidos ${users.length} usuários`);
         this.users = users;
         this.isLoading = false;
+
+        // Log detalhado dos usuários por status
+        const usersByStatus = {
+          pending: this.getUsersByStatus('pending').length,
+          approved: this.getUsersByStatus('approved').length,
+          rejected: this.getUsersByStatus('rejected').length,
+          blocked: this.getUsersByStatus('blocked').length
+        };
+        console.log('Usuários por status:', usersByStatus);
       },
       error: (error) => {
-        this.error = 'Erro ao carregar usuários. Por favor, tente novamente.';
+        console.error('Erro ao carregar usuários:', error);
+        
+        if (error.status === 401 || error.status === 403 || error.message?.includes('permissão')) {
+          this.error = 'Sessão expirada ou sem permissão. Por favor, faça login novamente.';
+          setTimeout(() => window.location.href = '/login', 2000);
+        } else if (error.status === 404) {
+          this.error = 'Não foi possível encontrar a lista de usuários.';
+        } else if (error.status === 0) {
+          this.error = 'Não foi possível conectar ao servidor. Verifique sua conexão.';
+        } else {
+          this.error = 'Erro ao carregar usuários. Por favor, tente novamente.';
+        }
+        
         this.isLoading = false;
-        console.error('Error loading users:', error);
       }
     });
   }
@@ -283,50 +329,114 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     }
   }
 
+  private showNotification(type: 'success' | 'error', message: string) {
+    console.log('Mostrando notificação:', { type, message });
+    this.notification = { type, message };
+  }
+
   async approveUser(user: PendingUser) {
+    console.log('=== Iniciando aprovação de usuário ===', {
+      userId: user.id,
+      name: user.name,
+      status: user.status
+    });
+
     try {
+      if (!this.authService.isAdmin()) {
+        throw new Error('Você não tem permissão para realizar esta ação.');
+      }
+
+      const token = this.authService.getToken();
+      if (!token) {
+        throw new Error('Sessão expirada. Por favor, faça login novamente.');
+      }
+
       await this.authService.approveUser(user.id).toPromise();
-      this.loadUsers();
+      console.log('Usuário aprovado com sucesso');
+      
       this.showNotification('success', 'Usuário aprovado com sucesso!');
-    } catch (error) {
-      this.showNotification('error', 'Erro ao aprovar usuário');
+      await this.loadUsers();
+    } catch (error: any) {
+      console.error('Erro ao aprovar usuário:', error);
+      
+      let errorMessage = 'Erro ao aprovar usuário. ';
+      if (error.status === 401 || error.status === 403) {
+        errorMessage += 'Você não tem permissão ou sua sessão expirou.';
+      } else if (error.status === 404) {
+        errorMessage += 'Usuário não encontrado.';
+      } else if (error.status === 0) {
+        errorMessage += 'Não foi possível conectar ao servidor.';
+      } else {
+        errorMessage += error.message || 'Por favor, tente novamente.';
+      }
+      
+      this.showNotification('error', errorMessage);
     }
   }
 
   async rejectUser(user: PendingUser) {
+    console.log('=== Iniciando rejeição de usuário ===', {
+      userId: user.id,
+      name: user.name,
+      status: user.status
+    });
+
     try {
+      if (!this.authService.isAdmin()) {
+        throw new Error('Você não tem permissão para realizar esta ação.');
+      }
+
+      const token = this.authService.getToken();
+      if (!token) {
+        throw new Error('Sessão expirada. Por favor, faça login novamente.');
+      }
+
       await this.authService.rejectUser(user.id).toPromise();
-      this.loadUsers();
+      console.log('Usuário rejeitado com sucesso');
+      
       this.showNotification('success', 'Usuário rejeitado com sucesso!');
-    } catch (error) {
-      this.showNotification('error', 'Erro ao rejeitar usuário');
+      await this.loadUsers();
+    } catch (error: any) {
+      console.error('Erro ao rejeitar usuário:', error);
+      
+      let errorMessage = 'Erro ao rejeitar usuário. ';
+      if (error.status === 401 || error.status === 403) {
+        errorMessage += 'Você não tem permissão ou sua sessão expirou.';
+      } else if (error.status === 404) {
+        errorMessage += 'Usuário não encontrado.';
+      } else if (error.status === 0) {
+        errorMessage += 'Não foi possível conectar ao servidor.';
+      } else {
+        errorMessage += error.message || 'Por favor, tente novamente.';
+      }
+      
+      this.showNotification('error', errorMessage);
     }
   }
 
   async blockUser(user: PendingUser) {
     try {
       await this.authService.blockUser(user.id).toPromise();
-      this.loadUsers();
       this.showNotification('success', 'Usuário bloqueado com sucesso!');
-    } catch (error) {
-      this.showNotification('error', 'Erro ao bloquear usuário');
+      await this.loadUsers();
+    } catch (error: any) {
+      console.error('Erro ao bloquear usuário:', error);
+      this.showNotification('error', 'Erro ao bloquear usuário. Por favor, tente novamente.');
     }
   }
 
   async unblockUser(user: PendingUser) {
     try {
       await this.authService.unblockUser(user.id).toPromise();
-      this.loadUsers();
       this.showNotification('success', 'Usuário desbloqueado com sucesso!');
-    } catch (error) {
-      this.showNotification('error', 'Erro ao desbloquear usuário');
+      await this.loadUsers();
+    } catch (error: any) {
+      console.error('Erro ao desbloquear usuário:', error);
+      this.showNotification('error', 'Erro ao desbloquear usuário. Por favor, tente novamente.');
     }
   }
 
-  private showNotification(type: 'success' | 'error', message: string) {
-    this.notification = { type, message };
-    setTimeout(() => {
-      this.notification = null;
-    }, 3000);
+  dismissNotification() {
+    this.notification = null;
   }
 } 

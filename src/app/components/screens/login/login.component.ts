@@ -237,19 +237,11 @@ export class LoginComponent implements OnInit {
         // Formata a matrícula para ter 6 dígitos
         formData.registration = formData.registration.toString().padStart(6, '0');
 
+        // O serviço de autenticação irá cuidar do redirecionamento
         await this.authService.login(formData);
-        
-        // Verifica o status do usuário após o login
-        const user = this.authService.getCurrentUser();
-        
-        if (user && user.status === 'pending') {
-          this.router.navigate(['/awaiting-approval']);
-        } else {
-          this.router.navigate(['/home']);
-        }
       } catch (error: any) {
         console.error('Erro no login:', error);
-        this.loginError = error.message;
+        this.loginError = error.message || 'Erro ao realizar login. Tente novamente.';
       } finally {
         this.isLoading = false;
       }

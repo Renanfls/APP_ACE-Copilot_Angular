@@ -3,13 +3,13 @@ import { Component, HostListener, inject, OnDestroy, OnInit, signal } from '@ang
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
-  matClose,
-  matDarkMode,
-  matLightMode,
-  matMoreVert,
-  matNotificationsActive,
-  matNotificationsNone,
-  matPerson,
+    matClose,
+    matDarkMode,
+    matLightMode,
+    matMoreVert,
+    matNotificationsActive,
+    matNotificationsNone,
+    matPerson,
 } from '@ng-icons/material-icons/baseline';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { Subscription } from 'rxjs';
@@ -192,7 +192,7 @@ interface Notification {
             ></span>
           </div>
           <div>
-            <p class="font-medium">Anabelle</p>
+            <p class="font-medium">{{ currentUser?.name || 'Usuário' }}</p>
             <p class="text-sm opacity-70">Fase: Ouro</p>
           </div>
         </div>
@@ -313,7 +313,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private authSubscription: Subscription | undefined;
   private adminSubscription: Subscription | undefined;
   public authService = inject(AuthService);
-  private currentUser: User | null = null;
+  public currentUser: User | null = null;
   private isUserAdmin = signal(false);
 
   isSidebarOpen = signal(false);
@@ -367,29 +367,44 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.scrollToTop();
     });
 
-    // Subscribe to auth changes
-    this.authSubscription = this.authService.onAuthStateChanged().subscribe(isAuthenticated => {
-      console.log('=== Mudança no estado de autenticação ===', {
-        isAuthenticated,
-        currentUser: this.authService.getCurrentUser(),
-        isAdmin: this.authService.isAdmin()
-      });
-    });
+    // Subscribe to auth state changes
+    this.authSubscription = this.authService.onAuthStateChanged().subscribe(
+      (isAuthenticated) => {
+        console.log('=== Mudança no estado de autenticação ===', {
+          isAuthenticated,
+          currentUser: this.authService.getCurrentUser(),
+          isAdmin: this.authService.isAdmin()
+        });
+        
+        // Verifica o estado de admin quando houver mudança na autenticação
+        if (isAuthenticated) {
+          this.currentUser = this.authService.getCurrentUser();
+          this.isUserAdmin.set(Boolean(this.currentUser?.isAdmin));
+        } else {
+          this.currentUser = null;
+          this.isUserAdmin.set(false);
+        }
+      }
+    );
 
-    // Subscribe to admin changes
-    this.adminSubscription = this.authService.onAdminStateChanged().subscribe(isAdmin => {
-      console.log('=== Mudança no estado de admin ===', {
-        isAdmin,
-        currentUser: this.authService.getCurrentUser()
-      });
-      this.isUserAdmin.set(isAdmin);
-    });
+    // Subscribe to admin state changes
+    this.adminSubscription = this.authService.onAdminStateChanged().subscribe(
+      (isAdmin) => {
+        console.log('=== Mudança no estado de admin ===', {
+          isAdmin,
+          currentUser: this.authService.getCurrentUser()
+        });
+        this.isUserAdmin.set(isAdmin);
+      }
+    );
 
-    // Verificação inicial do estado de admin
-    const initialAdminState = this.authService.isAdmin();
+    // Initialize current values
+    this.currentUser = this.authService.getCurrentUser();
+    const initialAdminState = this.authService.isAdmin() || Boolean(this.currentUser?.isAdmin);
     console.log('=== Estado inicial de admin ===', {
       isAdmin: initialAdminState,
-      currentUser: this.authService.getCurrentUser()
+      currentUser: this.currentUser,
+      isAdminFromUser: this.currentUser?.isAdmin
     });
     this.isUserAdmin.set(initialAdminState);
   }
@@ -484,11 +499,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   shouldShowAdminSection(): boolean {
     const isAdmin = this.isUserAdmin();
+    const currentUser = this.authService.getCurrentUser();
     console.log('=== Verificando visibilidade da seção admin ===', {
       signalValue: isAdmin,
       directCheck: this.authService.isAdmin(),
-      currentUser: this.authService.getCurrentUser()
+      currentUser: currentUser,
+      isAdminFromUser: currentUser?.isAdmin
     });
-    return isAdmin;
+    return isAdmin || (currentUser?.isAdmin === true);
   }
 }

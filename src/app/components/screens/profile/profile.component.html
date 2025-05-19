@@ -1,0 +1,15 @@
+                  <!-- Phone -->
+                  <div>
+                    <label class="block text-sm font-medium dark:text-gray-300 mb-2">
+                      Telefone
+                    </label>
+                    <div class="relative">
+                      <input type="tel"
+                             formControlName="phone"
+                             [value]="user().phone | phone"
+                             class="input-field w-full px-4 py-3 rounded-lg dark:bg-[#1a1a1a] dark:text-white border border-gray-700 focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-all cursor-not-allowed opacity-75">
+                      <div class="absolute right-3 top-3 text-gray-500">
+                        <ng-icon name="matPhone"/>
+                      </div>
+                    </div>
+                  </div> 

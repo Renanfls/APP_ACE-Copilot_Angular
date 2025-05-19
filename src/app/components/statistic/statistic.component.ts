@@ -1,7 +1,9 @@
-import { Component, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { matHelp } from '@ng-icons/material-icons/baseline';
+import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
+import { AuthService, User } from '../../services/auth.service';
 import { GaugeComponent } from '../gauge/gauge.component';
 
 interface Turno {
@@ -17,6 +19,7 @@ interface Turno {
     CommonModule,
     GaugeComponent,
     NgIconComponent,
+    HlmButtonDirective,
   ],
   templateUrl: './statistic.component.html',
   styleUrl: './statistic.component.css',
@@ -26,7 +29,8 @@ interface Turno {
     }),
   ],
 })
-export class StatisticComponent {
+export class StatisticComponent implements OnInit {
+  currentUser: User | null = null;
   turnos: Turno[] = [
     {
       turno: 'Madrugada',
@@ -57,7 +61,11 @@ export class StatisticComponent {
 
   isHelpDialogOpen = false;
 
-  constructor(private renderer: Renderer2) {}
+  constructor(private renderer: Renderer2, private authService: AuthService) {}
+
+  ngOnInit() {
+    this.currentUser = this.authService.getCurrentUser();
+  }
 
   openHelpDialog() {
     this.isHelpDialogOpen = true;

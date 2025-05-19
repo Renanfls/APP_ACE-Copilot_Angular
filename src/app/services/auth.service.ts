@@ -1,7 +1,8 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, interval, Observable, of, Subscription, tap, throwError } from 'rxjs';
+import { catchError, retry } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 const API_URL = `${environment.apiUrl}/auth`;
@@ -147,6 +148,57 @@ export class AuthService implements OnDestroy {
     }
   }
 
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Ocorreu um erro na operação.';
+    
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = `Erro: ${error.error.message}`;
+      console.error('Client error:', error.error.message);
+    } else {
+      // Server-side error
+      console.error(
+        `Backend retornou código ${error.status}, ` +
+        `body:`, error.error
+      );
+      
+      // Se o erro vier com uma mensagem do backend, usa ela
+      if (error.error?.message) {
+        errorMessage = error.error.message;
+      } else {
+        switch (error.status) {
+          case 0:
+            errorMessage = 'Não foi possível conectar ao servidor. Verifique sua conexão.';
+            break;
+          case 400:
+            errorMessage = error.error?.message || 'Dados inválidos. Verifique as informações e tente novamente.';
+            break;
+          case 401:
+            errorMessage = 'Sessão expirada ou inválida. Por favor, faça login novamente.';
+            this.logout();
+            break;
+          case 403:
+            errorMessage = 'Você não tem permissão para realizar esta operação.';
+            break;
+          case 404:
+            errorMessage = 'Recurso não encontrado.';
+            break;
+          case 409:
+            errorMessage = error.error?.message || 'Conflito de dados. Por favor, tente novamente.';
+            break;
+          case 422:
+            errorMessage = error.error?.message || 'Dados inválidos fornecidos.';
+            break;
+          case 500:
+            errorMessage = 'Erro interno do servidor. Por favor, tente novamente mais tarde.';
+            break;
+        }
+      }
+    }
+
+    return throwError(() => new Error(errorMessage));
+  }
+
   async register(userData: {
     name: string;
     email: string;
@@ -155,14 +207,50 @@ export class AuthService implements OnDestroy {
     registration: string;
     password: string;
   }): Promise<void> {
-    return this.http.post(`${API_URL}/register`, userData).toPromise()
-      .then((response: any) => {
-        console.log('Registration successful:', response);
-      })
-      .catch(error => {
-        console.error('Registration error:', error);
-        throw new Error(error.error.message || 'Erro ao registrar usuário');
+    try {
+      console.log('Enviando dados de registro:', {
+        ...userData,
+        password: '***'
       });
+
+      const response = await this.http.post<{
+        message: string;
+        user: User;
+        notificationSent: boolean;
+      }>(`${API_URL}/register`, userData)
+        .pipe(
+          catchError((error) => {
+            console.error('Erro na requisição de registro:', error);
+            // Se o erro for 500 mas o usuário foi criado, não propaga o erro
+            if (error.status === 500 && error.error?.message?.includes('notifyClients')) {
+              console.warn('Erro de notificação WebSocket, mas usuário foi criado');
+              return of({
+                message: 'Registro realizado com sucesso!',
+                user: error.error.user,
+                notificationSent: false
+              });
+            }
+            return this.handleError(error);
+          })
+        )
+        .toPromise();
+      
+      if (!response) {
+        throw new Error('Resposta inválida do servidor');
+      }
+
+      console.log('Registro realizado com sucesso:', response);
+
+      // Atualiza os dados do usuário em memória
+      this.currentUser = response.user;
+      localStorage.setItem('user', JSON.stringify(response.user));
+
+      // Redireciona para a página de aguardando aprovação
+      await this.router.navigate(['/awaiting-approval'], { replaceUrl: true });
+    } catch (error: any) {
+      console.error('Registration error:', error);
+      throw error;
+    }
   }
 
   async login(credentials: { 
@@ -170,16 +258,26 @@ export class AuthService implements OnDestroy {
     registration: string; 
     password: string 
   }): Promise<void> {
-    console.log('=== Iniciando login ===', credentials);
+    console.log('=== Iniciando login ===', {
+      companyCode: credentials.companyCode,
+      registration: credentials.registration,
+      hasPassword: !!credentials.password
+    });
 
     try {
       const response = await this.http.post<LoginResponse>(
         `${API_URL}/login`,
         credentials,
         { headers: new HttpHeaders().set('Content-Type', 'application/json') }
-      ).toPromise();
+      )
+      .pipe(
+        retry(1),
+        catchError(this.handleError.bind(this))
+      )
+      .toPromise();
 
       if (!response || !response.token || !response.user) {
+        console.error('Resposta inválida do servidor:', response);
         throw new Error('Resposta inválida do servidor');
       }
 
@@ -196,7 +294,8 @@ export class AuthService implements OnDestroy {
       console.log('=== Login bem-sucedido ===', {
         companyCode: response.user.companyCode,
         registration: response.user.registration,
-        status: response.user.status
+        status: response.user.status,
+        isAdmin: response.user.isAdmin
       });
 
       // Atualiza estados
@@ -204,15 +303,27 @@ export class AuthService implements OnDestroy {
       
       // Atualiza status de admin e verifica
       this.updateAdminStatus();
-      console.log('=== Verificação final do status de admin após login ===', {
-        isAdmin: this.isAdmin(),
-        currentUser: this.currentUser
-      });
       
+      // Inicia verificação periódica de status
       this.startStatusCheck();
-    } catch (error) {
+
+      // Redireciona baseado no status e tipo de usuário
+      if (response.user.isAdmin) {
+        console.log('Redirecionando admin para /user-management');
+        await this.router.navigate(['/user-management']);
+      } else if (response.user.status === 'pending') {
+        console.log('Redirecionando usuário pendente para /awaiting-approval');
+        await this.router.navigate(['/awaiting-approval']);
+      } else if (response.user.status === 'approved') {
+        console.log('Redirecionando usuário aprovado para /home');
+        await this.router.navigate(['/home']);
+      } else {
+        console.log('Status inválido, fazendo logout');
+        this.logout(true);
+      }
+    } catch (error: any) {
       console.error('Erro no login:', error);
-      throw error;
+      throw new Error(error.message || 'Erro ao fazer login. Verifique suas credenciais.');
     }
   }
 
@@ -248,67 +359,232 @@ export class AuthService implements OnDestroy {
   }
 
   getPendingUsers(): Observable<User[]> {
+    console.log('=== Buscando usuários ===');
+    
+    if (!this.token) {
+      console.error('Token não encontrado');
+      return throwError(() => new Error('Token não encontrado. Por favor, faça login novamente.'));
+    }
+
+    if (!this.isAdmin()) {
+      console.error('Usuário não é admin');
+      return throwError(() => new Error('Você não tem permissão para ver esta página.'));
+    }
+
+    console.log('Token:', this.token.substring(0, 10) + '...');
+    console.log('URL:', `${API_URL}/pending-users`);
+
     return this.http.get<User[]>(`${API_URL}/pending-users`, {
-      headers: { Authorization: `Bearer ${this.token}` }
-    });
+      headers: new HttpHeaders()
+        .set('Authorization', `Bearer ${this.token}`)
+        .set('Content-Type', 'application/json')
+    }).pipe(
+      tap(users => {
+        console.log('Usuários recebidos:', users?.length || 0);
+        if (users?.length > 0) {
+          console.log('Primeiro usuário:', {
+            id: users[0].id,
+            status: users[0].status,
+            isAdmin: users[0].isAdmin
+          });
+        }
+      }),
+      catchError(error => {
+        console.error('Erro ao buscar usuários:', error);
+        return this.handleError(error);
+      })
+    );
   }
 
   approveUser(userId: string): Observable<User> {
-    return this.http.patch<User>(`${API_URL}/users/${userId}/status`, { status: 'approved' }, {
-      headers: { Authorization: `Bearer ${this.token}` }
-    });
+    console.log('=== Aprovando usuário ===', { userId });
+    
+    if (!this.token) {
+      console.error('Token não encontrado');
+      return throwError(() => new Error('Token não encontrado. Por favor, faça login novamente.'));
+    }
+
+    if (!this.isAdmin()) {
+      console.error('Usuário não é admin');
+      return throwError(() => new Error('Você não tem permissão para realizar esta ação.'));
+    }
+
+    console.log('Token:', this.token.substring(0, 10) + '...');
+    console.log('URL:', `${API_URL}/users/${userId}/status`);
+
+    return this.http.patch<User>(`${API_URL}/users/${userId}/status`, 
+      { status: 'approved' },
+      {
+        headers: new HttpHeaders()
+          .set('Authorization', `Bearer ${this.token}`)
+          .set('Content-Type', 'application/json')
+      }
+    ).pipe(
+      tap(response => {
+        console.log('Resposta do servidor:', response);
+      }),
+      catchError(error => {
+        console.error('Erro ao aprovar usuário:', error);
+        return this.handleError(error);
+      })
+    );
   }
 
   rejectUser(userId: string): Observable<User> {
-    return this.http.patch<User>(`${API_URL}/users/${userId}/status`, { status: 'rejected' }, {
-      headers: { Authorization: `Bearer ${this.token}` }
-    });
+    console.log('=== Rejeitando usuário ===', { userId });
+    
+    if (!this.token) {
+      console.error('Token não encontrado');
+      return throwError(() => new Error('Token não encontrado. Por favor, faça login novamente.'));
+    }
+
+    if (!this.isAdmin()) {
+      console.error('Usuário não é admin');
+      return throwError(() => new Error('Você não tem permissão para realizar esta ação.'));
+    }
+
+    console.log('Token:', this.token.substring(0, 10) + '...');
+    console.log('URL:', `${API_URL}/users/${userId}/status`);
+
+    return this.http.patch<User>(`${API_URL}/users/${userId}/status`, 
+      { status: 'rejected' },
+      {
+        headers: new HttpHeaders()
+          .set('Authorization', `Bearer ${this.token}`)
+          .set('Content-Type', 'application/json')
+      }
+    ).pipe(
+      tap(response => {
+        console.log('Resposta do servidor:', response);
+      }),
+      catchError(error => {
+        console.error('Erro ao rejeitar usuário:', error);
+        return this.handleError(error);
+      })
+    );
   }
 
   blockUser(userId: string): Observable<User> {
+    console.log('=== Bloqueando usuário ===', { userId });
+    if (!this.token) {
+      console.error('Token não encontrado');
+      return throwError(() => new Error('Token não encontrado. Por favor, faça login novamente.'));
+    }
+
     return this.http.patch<User>(`${API_URL}/users/${userId}/status`, { status: 'blocked' }, {
-      headers: { Authorization: `Bearer ${this.token}` }
-    });
+      headers: new HttpHeaders().set('Authorization', `Bearer ${this.token}`)
+    }).pipe(
+      retry(1),
+      catchError((error) => {
+        console.error('Erro ao bloquear usuário:', error);
+        return this.handleError(error);
+      })
+    );
   }
 
   unblockUser(userId: string): Observable<User> {
+    console.log('=== Desbloqueando usuário ===', { userId });
+    if (!this.token) {
+      console.error('Token não encontrado');
+      return throwError(() => new Error('Token não encontrado. Por favor, faça login novamente.'));
+    }
+
     return this.http.patch<User>(`${API_URL}/users/${userId}/status`, { status: 'approved' }, {
-      headers: { Authorization: `Bearer ${this.token}` }
-    });
+      headers: new HttpHeaders().set('Authorization', `Bearer ${this.token}`)
+    }).pipe(
+      retry(1),
+      catchError((error) => {
+        console.error('Erro ao desbloquear usuário:', error);
+        return this.handleError(error);
+      })
+    );
   }
 
   async checkRegistrationStatus(): Promise<'pending' | 'approved' | 'rejected' | 'blocked'> {
     try {
+      // Verifica se tem token
+      if (!this.token) {
+        console.error('Token não encontrado');
+        throw new Error('Token não encontrado');
+      }
+
+      console.log('Verificando status com token:', this.token.substring(0, 10) + '...');
+
       const response = await this.http.get<User>(`${API_URL}/me`, {
-        headers: { Authorization: `Bearer ${this.token}` }
+        headers: new HttpHeaders().set('Authorization', `Bearer ${this.token}`)
       }).toPromise();
       
-      if (response) {
-        // Update the cached user data
-        this.currentUser = response;
-        localStorage.setItem('user', JSON.stringify(response));
-        return response.status;
+      if (!response) {
+        console.error('Resposta vazia ao verificar status');
+        throw new Error('Resposta vazia ao verificar status');
       }
-      return 'pending';
-    } catch (error) {
+
+      console.log('Status atual do usuário:', response.status);
+      
+      // Atualiza os dados em memória
+      this.currentUser = response;
+      localStorage.setItem('user', JSON.stringify(response));
+      return response.status;
+    } catch (error: any) {
       console.error('Error checking registration status:', error);
-      throw new Error('Erro ao verificar status do registro');
+      
+      // Se o token estiver inválido, propaga o erro
+      if (error.status === 401) {
+        throw new Error('Token inválido');
+      }
+      
+      throw error;
     }
   }
 
   async updateUserAccess(): Promise<void> {
     try {
+      // Verifica se tem token
+      if (!this.token) {
+        console.error('Token não encontrado');
+        throw new Error('Token não encontrado');
+      }
+
+      console.log('Atualizando dados do usuário...');
+      
       const response = await this.http.get<User>(`${API_URL}/me`, {
-        headers: { Authorization: `Bearer ${this.token}` }
+        headers: new HttpHeaders().set('Authorization', `Bearer ${this.token}`)
       }).toPromise();
       
-      if (response) {
-        this.currentUser = response;
-        localStorage.setItem('user', JSON.stringify(this.currentUser));
+      if (!response) {
+        console.error('Resposta vazia ao atualizar dados do usuário');
+        throw new Error('Resposta vazia ao atualizar dados do usuário');
       }
-    } catch (error) {
+
+      console.log('Dados do usuário atualizados:', {
+        id: response.id,
+        status: response.status,
+        isAdmin: response.isAdmin
+      });
+      
+      // Atualiza os dados em memória e no localStorage
+      this.currentUser = response;
+      localStorage.setItem('user', JSON.stringify(this.currentUser));
+      
+      // Atualiza o status de admin
+      this.updateAdminStatus();
+      
+      // Se o usuário não estiver mais aprovado, faz logout
+      if (response.status !== 'approved') {
+        console.log('Usuário não está mais aprovado, fazendo logout...');
+        this.logout(true);
+        return;
+      }
+    } catch (error: any) {
       console.error('Error updating user access:', error);
-      throw new Error('Erro ao atualizar acesso do usuário');
+      
+      // Se o token estiver inválido, faz logout
+      if (error.status === 401) {
+        console.log('Token inválido, fazendo logout...');
+        this.logout(true);
+      }
+      
+      throw error;
     }
   }
 

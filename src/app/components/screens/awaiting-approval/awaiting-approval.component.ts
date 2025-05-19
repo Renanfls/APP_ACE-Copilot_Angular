@@ -106,89 +106,140 @@ import { AuthService } from '../../../services/auth.service';
 export class AwaitingApprovalComponent implements OnInit {
   isChecking = false;
   message = 'Aguardando Liberação';
-  subMessage = 'O acesso ao aplicativo será liberado por nossa equipe após seu treinamento.';
+  subMessage = 'Seu cadastro está em análise. Por favor, aguarde a liberação do administrador.';
 
   constructor(
-    private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
-  async ngOnInit() {
-    // Verificar status inicial
-    await this.checkInitialStatus();
+  ngOnInit() {
+    this.checkInitialStatus();
   }
 
   private async checkInitialStatus() {
+    const currentUser = this.authService.getCurrentUser();
+    
+    // Se não estiver logado, redireciona para login
+    if (!currentUser) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
     // Redirecionar para home se for admin
     if (this.authService.isAdmin()) {
       this.router.navigate(['/home']);
       return;
     }
 
-    // Verificar status atual
-    const status = await this.authService.checkRegistrationStatus();
-    this.updateMessageBasedOnStatus(status);
+    // Define a mensagem padrão
+    this.message = 'Aguardando Liberação';
+    this.subMessage = 'Seu cadastro está em análise. Por favor, aguarde a liberação do administrador.';
 
-    // Redirecionar se necessário
-    if (status === 'approved') {
-      this.router.navigate(['/home']);
-    } else if (status === 'rejected' || status === 'blocked') {
-      this.authService.logout();
-    }
-  }
-
-  private updateMessageBasedOnStatus(status: 'pending' | 'approved' | 'rejected' | 'blocked') {
-    switch (status) {
-      case 'pending':
-        this.message = 'Aguardando Liberação';
-        this.subMessage = 'O acesso ao aplicativo será liberado por nossa equipe após seu treinamento.';
-        break;
-      case 'rejected':
-        this.message = 'Acesso Negado';
-        this.subMessage = 'Sua solicitação de acesso foi negada.';
-        break;
-      case 'blocked':
-        this.message = 'Acesso Bloqueado';
-        this.subMessage = 'Sua conta está bloqueada. Entre em contato com o administrador.';
-        break;
-      case 'approved':
-        this.message = 'Acesso Liberado';
-        this.subMessage = 'Redirecionando para a página inicial...';
-        break;
+    try {
+      // Verificar status atual
+      const status = await this.authService.checkRegistrationStatus();
+      
+      // Redirecionar se necessário
+      if (status === 'approved') {
+        console.log('Usuário aprovado, redirecionando para home...');
+        this.message = 'Cadastro Aprovado!';
+        this.subMessage = 'Seu cadastro foi aprovado. Redirecionando...';
+        
+        // Força atualização do usuário antes de redirecionar
+        await this.authService.updateUserAccess();
+        
+        // Redireciona após um breve delay
+        setTimeout(() => {
+          this.router.navigate(['/home'], { replaceUrl: true });
+        }, 1500);
+      } else if (status === 'rejected' || status === 'blocked') {
+        this.message = status === 'rejected' ? 'Cadastro Rejeitado' : 'Acesso Bloqueado';
+        this.subMessage = 'Você será redirecionado em alguns instantes...';
+        setTimeout(() => {
+          this.authService.logout();
+        }, 2000);
+      }
+    } catch (error: any) {
+      console.error('Erro ao verificar status inicial:', error);
+      // Em caso de erro, mantém a mensagem padrão
     }
   }
 
   async checkAccess() {
-    if (this.isChecking) return;
+    if (this.isChecking) {
+      console.log('Já está verificando status, ignorando chamada...');
+      return;
+    }
     
+    console.log('=== Iniciando verificação de status ===');
     this.isChecking = true;
-    this.message = 'Verificando Status';
-    this.subMessage = 'Aguarde enquanto verificamos seu status...';
     
     try {
-      const status = await this.authService.checkRegistrationStatus();
-      console.log('Status atual:', status);
-      
-      this.updateMessageBasedOnStatus(status);
-      
-      if (status === 'approved') {
-        // Atualiza o acesso do usuário
-        await this.authService.updateUserAccess();
-        // Redireciona para a home
-        this.router.navigate(['/home']);
-      } else if (status === 'rejected' || status === 'blocked') {
-        // Aguarda 2 segundos para mostrar a mensagem antes de fazer logout
-        await new Promise(resolve => setTimeout(resolve, 2000));
+      // Verifica se tem usuário logado
+      const currentUser = this.authService.getCurrentUser();
+      const token = this.authService.getToken();
+
+      if (!currentUser || !token) {
+        console.log('Usuário não está logado, redirecionando para login...');
         this.authService.logout();
+        return;
       }
-    } catch (error) {
-      console.error('Erro ao verificar status:', error);
-      this.message = 'Erro ao Verificar Status';
-      this.subMessage = 'Ocorreu um erro ao verificar seu status. Tente novamente.';
+
+      console.log('Verificando status com token:', token.substring(0, 10) + '...');
+      
+      this.message = 'Verificando Status';
+      this.subMessage = 'Aguarde enquanto verificamos seu status...';
+
+      // Verifica o status atual
+      console.log('Chamando checkRegistrationStatus...');
+      const status = await this.authService.checkRegistrationStatus();
+      console.log('Status retornado:', status);
+
+      if (status === 'approved') {
+        console.log('=== Usuário APROVADO, iniciando redirecionamento ===');
+        this.message = 'Cadastro Aprovado!';
+        this.subMessage = 'Seu cadastro foi aprovado. Redirecionando...';
+        
+        // Força atualização do usuário antes de redirecionar
+        await this.authService.updateUserAccess();
+        
+        // Redireciona após um breve delay
+        setTimeout(() => {
+          this.router.navigate(['/home'], { replaceUrl: true });
+        }, 1500);
+      } else if (status === 'rejected') {
+        console.log('=== Usuário REJEITADO ===');
+        this.message = 'Cadastro Rejeitado';
+        this.subMessage = 'Seu cadastro foi rejeitado pelo administrador.';
+        setTimeout(() => this.authService.logout(), 2000);
+      } else if (status === 'blocked') {
+        console.log('=== Usuário BLOQUEADO ===');
+        this.message = 'Acesso Bloqueado';
+        this.subMessage = 'Seu acesso foi bloqueado pelo administrador.';
+        setTimeout(() => this.authService.logout(), 2000);
+      } else {
+        console.log('=== Usuário ainda PENDENTE ===');
+        this.message = 'Aguardando Liberação';
+        this.subMessage = 'Seu cadastro está em análise. Por favor, aguarde a liberação do administrador.';
+      }
+    } catch (error: unknown) {
+      console.error('=== ERRO ao verificar status ===', error);
+      
+      // Se for erro de token, faz logout
+      if (error instanceof Error && error.message.includes('Token')) {
+        console.log('Erro de token, redirecionando para login...');
+        this.authService.logout();
+        return;
+      }
+      
+      this.message = 'Aguardando Liberação';
+      this.subMessage = 'Seu cadastro está em análise. Por favor, aguarde a liberação do administrador.';
     } finally {
+      console.log('=== Finalizando verificação de status ===');
       setTimeout(() => {
         this.isChecking = false;
-      }, 500); // Mantém o spinner por meio segundo após a resposta para melhor feedback visual
+      }, 500);
     }
   }
 

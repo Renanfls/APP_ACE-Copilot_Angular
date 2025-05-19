@@ -1,105 +1,321 @@
-<app-header/>
+<div class="min-h-screen">
+  <app-header></app-header>
 
-<div class="flex-1 px-4 md:container py-28">
-  <section class="container mt-12 grid xs:grid-cols-2 gap-3 md:gap-4 xl:px-52 pb-6 md:pb-10 dark:border-b-4" style="border-color: #1d1d1d;">
-    <!-- Ranking Empresa -->
-    <button hlmBtn variant="ghost" routerLink="/ranking-empresa" 
-      class="group bg-amber-400 hover:bg-white flex justify-between md:p-5 gap-4 h-20 md:h-24 rounded-2xl md:rounded-3xl relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-      <div class="absolute inset-0 bg-gradient-to-r from-amber-300 to-amber-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-      <div class="flex items-center gap-4 z-10">
-        <div class="w-10 md:w-12 h-10 md:h-12 bg-black bg-opacity-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-          <img src="assets/crown.svg" class="w-6 md:w-8" alt="Icone Ranking Empresa">
+  <main class="container mx-auto px-4 py-32">
+    <!-- Original Content -->
+    <section class="container mt-12 grid xs:grid-cols-2 gap-3 md:gap-4 xl:px-52 pb-6 md:pb-10 dark:border-b-4" style="border-color: #1d1d1d;">
+      <!-- Ranking Empresa -->
+      <button hlmBtn variant="ghost" routerLink="/ranking-empresa" 
+        class="group bg-amber-400 hover:bg-white flex justify-between md:p-5 gap-4 h-20 md:h-24 rounded-2xl md:rounded-3xl relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+        <div class="absolute inset-0 bg-gradient-to-r from-amber-300 to-amber-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+        <div class="flex items-center gap-4 z-10">
+          <div class="w-10 md:w-12 h-10 md:h-12 bg-black bg-opacity-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <img src="assets/crown.svg" class="w-6 md:w-8" alt="Icone Ranking Empresa">
+          </div>
+          <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg">Ranking Empresa</p>
         </div>
-        <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg">Ranking Empresa</p>
-      </div>
-    </button>
+      </button>
 
-    <!-- Ranking Geral -->
-    <button hlmBtn variant="ghost" routerLink="/ranking-geral" 
-      class="group bg-amber-400 hover:bg-white flex justify-between md:p-5 gap-4 h-20 md:h-24 rounded-2xl md:rounded-3xl relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-      <div class="absolute inset-0 bg-gradient-to-r from-amber-300 to-amber-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-      <div class="flex items-center gap-4 z-10">
-        <div class="w-10 md:w-12 h-10 md:h-12 bg-black bg-opacity-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-          <img src="assets/crown.svg" class="w-6 md:w-8" alt="Icone Ranking Geral">
+      <!-- Ranking Geral -->
+      <button hlmBtn variant="ghost" routerLink="/ranking-geral" 
+        class="group bg-amber-400 hover:bg-white flex justify-between md:p-5 gap-4 h-20 md:h-24 rounded-2xl md:rounded-3xl relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+        <div class="absolute inset-0 bg-gradient-to-r from-amber-300 to-amber-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+        <div class="flex items-center gap-4 z-10">
+          <div class="w-10 md:w-12 h-10 md:h-12 bg-black bg-opacity-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <img src="assets/crown.svg" class="w-6 md:w-8" alt="Icone Ranking Geral">
+          </div>
+          <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg">Ranking Geral</p>
         </div>
-        <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg">Ranking Geral</p>
-      </div>
-    </button>
+      </button>
 
-    <!-- Game Dia -->
-    <button hlmBtn variant="ghost" routerLink="/game-dia" 
-      class="group bg-amber-400 hover:bg-white flex justify-between md:p-5 gap-4 h-20 md:h-24 rounded-2xl md:rounded-3xl relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-      <div class="absolute inset-0 bg-gradient-to-r from-amber-300 to-amber-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-      <div class="flex items-center gap-4 z-10">
-        <div class="w-10 md:w-12 h-10 md:h-12 bg-black bg-opacity-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-          <img src="assets/calendar_month.svg" class="w-6 md:w-8" alt="Icone Game Dia">
+      <!-- Game Dia -->
+      <button hlmBtn variant="ghost" routerLink="/game-dia" 
+        class="group bg-amber-400 hover:bg-white flex justify-between md:p-5 gap-4 h-20 md:h-24 rounded-2xl md:rounded-3xl relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+        <div class="absolute inset-0 bg-gradient-to-r from-amber-300 to-amber-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+        <div class="flex items-center gap-4 z-10">
+          <div class="w-10 md:w-12 h-10 md:h-12 bg-black bg-opacity-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <img src="assets/calendar_month.svg" class="w-6 md:w-8" alt="Icone Game Dia">
+          </div>
+          <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg">Game Dia</p>
         </div>
-        <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg">Game Dia</p>
-      </div>
-    </button>
+      </button>
 
-    <!-- Quiz -->
-    <button hlmBtn variant="ghost" routerLink="/quiz" 
-      class="group bg-amber-400 hover:bg-white flex justify-between md:p-5 gap-4 h-20 md:h-24 rounded-2xl md:rounded-3xl relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-      <div class="absolute inset-0 bg-gradient-to-r from-amber-300 to-amber-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-      <div class="flex items-center gap-4 z-10">
-        <div class="w-10 md:w-12 h-10 md:h-12 bg-black bg-opacity-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-          <img src="assets/cognition_2.svg" class="w-6 md:w-8" alt="Icone Quiz">
+      <!-- Quiz -->
+      <button hlmBtn variant="ghost" routerLink="/quiz" 
+        class="group bg-amber-400 hover:bg-white flex justify-between md:p-5 gap-4 h-20 md:h-24 rounded-2xl md:rounded-3xl relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+        <div class="absolute inset-0 bg-gradient-to-r from-amber-300 to-amber-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+        <div class="flex items-center gap-4 z-10">
+          <div class="w-10 md:w-12 h-10 md:h-12 bg-black bg-opacity-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <img src="assets/cognition_2.svg" class="w-6 md:w-8" alt="Icone Quiz">
+          </div>
+          <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg">Quiz</p>
         </div>
-        <p class="text-black font-bold text-start text-xs sm:text-sm md:text-lg">Quiz</p>
+      </button>
+    </section>
+
+    <!-- Quiz Levels Section -->
+    <section class="container xl:px-52 pt-6 md:pt-10 pb-6 md:pb-10 dark:border-b-4" style="border-color: #1d1d1d;">
+      <h2 class="font-bold text-2xl md:text-3xl mb-8">Níveis do Quiz</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <ng-container *ngFor="let level of levels">
+          <div 
+            class="relative group cursor-pointer"
+            [class.cursor-not-allowed]="level.locked"
+            (click)="selectLevel(level)"
+          >
+            <!-- Level Card -->
+            <div 
+              class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-all duration-300"
+              [class.opacity-50]="level.locked"
+              [class.group-hover:shadow-xl]="!level.locked"
+              [class.group-hover:-translate-y-1]="!level.locked"
+            >
+              <!-- Level Icon -->
+              <div 
+                class="w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto"
+                [ngClass]="getLevelIconClass(level)"
+              >
+                <ng-icon 
+                  [name]="level.locked ? 'matLock' : (level.completed ? 'matCheckCircle' : 'matLockOpen')"
+                  class="text-2xl"
+                  [ngClass]="getLevelIconColor(level)"
+                ></ng-icon>
+              </div>
+
+              <!-- Level Info -->
+              <h3 class="text-xl font-semibold text-gray-900 dark:text-white text-center mb-2">
+                {{ level.name }}
+              </h3>
+              <p 
+                class="text-sm font-medium text-center mb-4"
+                [ngClass]="getDifficultyColor(level)"
+              >
+                {{ getDifficultyText(level.difficulty) }}
+              </p>
+
+              <!-- Progress Bar -->
+              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-4">
+                <div 
+                  class="h-2.5 rounded-full transition-all duration-300"
+                  [ngClass]="{
+                    'bg-green-500': level.completed,
+                    'bg-amber-500': !level.completed && !level.locked,
+                    'bg-gray-400': level.locked
+                  }"
+                  [style.width.%]="getLevelProgress(level)"
+                ></div>
+              </div>
+
+              <!-- Level Status -->
+              <p class="text-sm text-center text-gray-600 dark:text-gray-400">
+                {{ level.completed ? 'Concluído' : (level.locked ? 'Bloqueado' : 'Disponível') }}
+              </p>
+            </div>
+
+            <!-- Connection Line -->
+            <div 
+              *ngIf="!isLastLevel(level)"
+              class="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gray-300 dark:bg-gray-600"
+            ></div>
+          </div>
+        </ng-container>
       </div>
-    </button>
-  </section>
+    </section>
 
-  <section class="container xl:px-52 pt-6 md:pt-10 pb-6 md:pb-10" style="border-color: #1d1d1d;">
-    <h2 class="font-bold text-2xl md:text-3xl">Tarefas Diárias</h2>
-    <app-task
-    [label]="'Abrir o Aplicativo'"
-    [quantity]="1"
-    [current]="0"
-    [icon]="'matAddToHomeScreenRound'"
-    />
-    <app-task
-    [label]="'Abrir Pontuação ACE'"
-    [quantity]="1"
-    [current]="0"
-    [icon]="'matLocalPlayRound'"
-    />
-    <app-task
-    [label]="'Responder a um Quiz'"
-    [quantity]="1"
-    [current]="0"
-    [icon]="'matQuizRound'"
-    />
-    <app-task
-    [label]="'Ler uma Dica de Economia'"
-    [quantity]="1"
-    [current]="0"
-    [icon]="'matAddCommentRound'"
-    />
-  </section>
+    <section class="container xl:px-52 pt-6 md:pt-10 pb-6 md:pb-10 dark:border-b-4" style="border-color: #1d1d1d;">
+      <h2 class="font-bold text-2xl md:text-3xl">Tarefas Diárias</h2>
+      <app-task
+      [label]="'Abrir o Aplicativo'"
+      [quantity]="1"
+      [current]="0"
+      [icon]="'matAddToHomeScreenRound'"
+      />
+      <app-task
+      [label]="'Abrir Pontuação ACE'"
+      [quantity]="1"
+      [current]="0"
+      [icon]="'matLocalPlayRound'"
+      />
+      <app-task
+      [label]="'Responder a um Quiz'"
+      [quantity]="1"
+      [current]="0"
+      [icon]="'matQuizRound'"
+      />
+      <app-task
+      [label]="'Ler uma Dica de Economia'"
+      [quantity]="1"
+      [current]="0"
+      [icon]="'matAddCommentRound'"
+      />
+    </section>
 
-  <section class="container xl:px-52 pt-6 md:pt-10 pb-6 md:pb-10 dark:border-b-4" style="border-color: #1d1d1d;">
-    <h2 class="font-bold text-2xl md:text-3xl">Tarefas Mensais</h2>
-    <app-task
-    [label]="'Refazer o treinamento'"
-    [quantity]="10"
-    [current]="10"
-    [icon]="'matVideoLibraryRound'"
-    />
-    <app-task
-    [label]="'5 Acessos ao Aplicativo'"
-    [quantity]="5"
-    [current]="2"
-    [icon]="'matAddToHomeScreenRound'"
-    />
-    <app-task
-    [label]="'20 Acessos ao Aplicativo'"
-    [quantity]="20"
-    [current]="2"
-    [icon]="'matAddToHomeScreenRound'"
-    />
-  </section>
+    <section class="container xl:px-52 pt-6 md:pt-10 pb-6 md:pb-10 dark:border-b-4" style="border-color: #1d1d1d;">
+      <h2 class="font-bold text-2xl md:text-3xl">Tarefas Mensais</h2>
+      <app-task
+      [label]="'Refazer o treinamento'"
+      [quantity]="10"
+      [current]="10"
+      [icon]="'matVideoLibraryRound'"
+      />
+      <app-task
+      [label]="'5 Acessos ao Aplicativo'"
+      [quantity]="5"
+      [current]="2"
+      [icon]="'matAddToHomeScreenRound'"
+      />
+      <app-task
+      [label]="'20 Acessos ao Aplicativo'"
+      [quantity]="20"
+      [current]="2"
+      [icon]="'matAddToHomeScreenRound'"
+      />
+    </section>
+  </main>
+
+  <app-footer></app-footer>
+
+  <!-- Quiz Modal -->
+  <div *ngIf="showQuiz" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto relative">
+      <!-- Close Button -->
+      <button 
+        class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+        (click)="closeQuiz()"
+      >
+        <ng-icon name="matClose" class="text-2xl"></ng-icon>
+      </button>
+
+      <!-- Game Header -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center space-x-4">
+            <div class="text-2xl font-bold text-gray-900 dark:text-white">
+              Nível {{ currentLevel?.id }}
+            </div>
+            <div class="text-sm font-medium px-3 py-1 rounded-full"
+                 [ngClass]="getDifficultyColor(currentLevel!)">
+              {{ getDifficultyText(currentLevel?.difficulty || '') }}
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-2">
+              <ng-icon name="matLocalFireDepartment" class="text-2xl text-amber-500"></ng-icon>
+              <span class="text-xl font-bold text-gray-900 dark:text-white">{{ correctAnswers }}</span>
+            </div>
+            <div class="text-xl font-bold text-gray-900 dark:text-white">
+              {{ score }} pts
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+          <div 
+            class="h-2.5 rounded-full bg-green-500 transition-all duration-300"
+            [style.width.%]="progressPercentage"
+          ></div>
+        </div>
+      </div>
+
+      <!-- Results Screen -->
+      <div *ngIf="showResults" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">Game Over!</h2>
+        
+        <!-- Score Display -->
+        <div class="grid grid-cols-3 gap-8 mb-8">
+          <div class="text-center">
+            <div class="text-4xl font-bold text-green-500 mb-2">{{ correctAnswers }}</div>
+            <div class="text-gray-600 dark:text-gray-400">Acertos</div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-bold text-red-500 mb-2">{{ incorrectAnswers }}</div>
+            <div class="text-gray-600 dark:text-gray-400">Erros</div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-bold text-amber-500 mb-2">{{ score }}</div>
+            <div class="text-gray-600 dark:text-gray-400">Pontos</div>
+          </div>
+        </div>
+
+        <!-- Review Section -->
+        <div *ngIf="incorrectQuestions.length > 0" class="mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Revisão de Erros</h3>
+          <div class="space-y-4">
+            <div *ngFor="let question of incorrectQuestions" 
+                 class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+              <p class="text-gray-900 dark:text-white mb-2">{{ question.texto }}</p>
+              <p class="text-green-600 dark:text-green-400">
+                Resposta correta: {{ getCorrectAnswer(question) }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Restart Button -->
+        <button 
+          hlmBtn
+          variant="default"
+          class="w-full"
+          (click)="restartQuiz()"
+        >
+          Jogar Novamente
+        </button>
+      </div>
+
+      <!-- Question Card -->
+      <div *ngIf="!showResults" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+        <div class="mb-8">
+          <div class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+            Questão {{ currentQuestionIndex + 1 }} de {{ totalQuestions }}
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+            {{ currentQuestion?.texto }}
+          </h3>
+        </div>
+
+        <!-- Answer Options -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <button 
+            *ngFor="let answer of shuffledAnswers"
+            class="relative flex items-center p-4 rounded-lg transition-all duration-300"
+            [ngClass]="getAnswerButtonClass(answer)"
+            (click)="selectAnswer(answer)"
+            [disabled]="hasAnswered"
+          >
+            <ng-icon 
+              name="matDragIndicator" 
+              class="text-gray-400 mr-3 opacity-0 group-hover:opacity-100 transition-opacity"
+            ></ng-icon>
+            <span class="flex-1 text-left">{{ answer.texto }}</span>
+          </button>
+        </div>
+
+        <!-- Feedback Message -->
+        <div 
+          *ngIf="hasAnswered"
+          class="mb-8 p-4 rounded-lg text-center"
+          [ngClass]="{
+            'bg-green-100 dark:bg-green-900 text-green-900 dark:text-green-100': isCorrect,
+            'bg-red-100 dark:bg-red-900 text-red-900 dark:text-red-100': !isCorrect
+          }"
+        >
+          {{ feedbackMessage }}
+        </div>
+
+        <!-- Next Button -->
+        <button 
+          hlmBtn
+          variant="default"
+          class="w-full"
+          [disabled]="!hasAnswered"
+          (click)="nextQuestion()"
+        >
+          {{ isLastQuestion ? 'Finalizar' : 'Próxima' }}
+          <ng-icon name="matArrowForward" class="ml-2"></ng-icon>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
-
-<app-footer/>
