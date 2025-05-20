@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
     matBlock,
@@ -12,6 +13,7 @@ import {
     matWork
 } from '@ng-icons/material-icons/baseline';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
+import { Subscription } from 'rxjs';
 import { PhonePipe } from '../../../pipes/phone.pipe';
 import { AuthService } from '../../../services/auth.service';
 import { FooterComponent } from '../../footer/footer.component';
@@ -238,10 +240,19 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   error: string | null = null;
   notification: { type: 'success' | 'error'; message: string } | null = null;
   private refreshInterval: any;
+  private userSubscription: Subscription | null = null;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
+    if (!this.authService.isAdmin()) {
+      this.router.navigate(['/dashboard']);
+      return;
+    }
+
     this.loadUsers();
     // Atualizar a lista a cada 30 segundos
     this.refreshInterval = setInterval(() => {
@@ -249,9 +260,12 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     }, 30000);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     if (this.refreshInterval) {
       clearInterval(this.refreshInterval);
+    }
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
     }
   }
 
@@ -276,7 +290,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
       return;
     }
     
-    this.authService.getPendingUsers().subscribe({
+    this.userSubscription = this.authService.getPendingUsers().subscribe({
       next: (users) => {
         console.log(`Recebidos ${users.length} usuários`);
         this.users = users;
@@ -305,6 +319,9 @@ export class UserManagementComponent implements OnInit, OnDestroy {
           this.error = 'Erro ao carregar usuários. Por favor, tente novamente.';
         }
         
+        this.isLoading = false;
+      },
+      complete: () => {
         this.isLoading = false;
       }
     });

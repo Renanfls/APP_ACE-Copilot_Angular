@@ -121,8 +121,8 @@ import { AuthService } from '../../../services/auth.service';
           </div>
 
           <!-- Mensagem de Erro -->
-          <div *ngIf="loginError" class="text-red-500 text-sm text-center">
-            {{ loginError }}
+          <div *ngIf="errorMessage" class="text-red-500 text-sm text-center">
+            {{ errorMessage }}
           </div>
 
           <!-- Botão de Login -->
@@ -188,70 +188,49 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
-  isLoading = false;
-  loginError: string | null = null;
+  errorMessage: string = '';
+  isLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {
     this.loginForm = this.fb.group({
-      companyCode: ['', [
-        Validators.required, 
-        Validators.minLength(4),
-        Validators.pattern('^[0-9]*$')
-      ]],
-      registration: ['', [
-        Validators.required, 
-        Validators.minLength(6),
-        Validators.pattern('^[0-9]*$')
-      ]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      rememberMe: [false]
+      companyCode: ['', [Validators.required, Validators.pattern('^[0-9]{4}$')]],
+      registration: ['', [Validators.required, Validators.pattern('^[0-9]{6}$')]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
-  ngOnInit() {
-    // Preencher campos para admin em desenvolvimento
-    if (location.hostname === 'localhost') {
-      this.loginForm.patchValue({
-        companyCode: '0123',
-        registration: '000000',
-        password: 'admin123'
-      });
+  ngOnInit(): void {
+    // Verificar se já está autenticado
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/dashboard']);
     }
   }
 
-  async onSubmit() {
-    if (this.loginForm.valid) {
-      this.isLoading = true;
-      this.loginError = null;
+  async onSubmit(): Promise<void> {
+    if (this.loginForm.invalid) {
+      return;
+    }
 
-      try {
-        const formData = this.loginForm.value;
-        
-        // Formata o código da empresa para ter 4 dígitos
-        formData.companyCode = formData.companyCode.toString().padStart(4, '0');
-        
-        // Formata a matrícula para ter 6 dígitos
-        formData.registration = formData.registration.toString().padStart(6, '0');
+    this.isLoading = true;
+    this.errorMessage = '';
 
-        // O serviço de autenticação irá cuidar do redirecionamento
-        await this.authService.login(formData);
-      } catch (error: any) {
-        console.error('Erro no login:', error);
-        this.loginError = error.message || 'Erro ao realizar login. Tente novamente.';
-      } finally {
-        this.isLoading = false;
+    try {
+      const { companyCode, registration, password } = this.loginForm.value;
+      const success = await this.authService.login(companyCode, registration, password);
+
+      if (success) {
+        this.router.navigate(['/dashboard']);
+      } else {
+        this.errorMessage = 'Código da empresa, matrícula ou senha inválidos';
       }
-    } else {
-      this.showErrorMessage('Por favor, preencha todos os campos corretamente');
+    } catch (error: any) {
+      this.errorMessage = error.message || 'Erro ao fazer login';
+    } finally {
+      this.isLoading = false;
     }
-  }
-
-  showErrorMessage(message: string) {
-    this.loginError = message;
-    this.isLoading = false;
   }
 } 

@@ -1,23 +1,24 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, effect, ElementRef, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
-  matAdd,
-  matArrowBack,
-  matBadge,
-  matBusiness,
-  matEmail,
-  matLocalOffer,
-  matPerson,
-  matPhone,
-  matPhotoCamera,
-  matRefresh,
-  matSettings,
-  matWork
+    matAdd,
+    matArrowBack,
+    matBadge,
+    matBusiness,
+    matEmail,
+    matLocalOffer,
+    matPerson,
+    matPhone,
+    matPhotoCamera,
+    matRefresh,
+    matSettings,
+    matWork
 } from '@ng-icons/material-icons/baseline';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
+import { Subscription } from 'rxjs';
 import { AvatarSelectorComponent } from '../../../components/avatar-selector/avatar-selector.component';
 import { Avatar } from '../../../interfaces/avatar.interface';
 import { User } from '../../../interfaces/user.interface';
@@ -378,7 +379,7 @@ import { HeaderComponent } from '../../header/header.component';
     }
   `],
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   private originalThemeState: boolean = false;
   isAvatarSelectorOpen = false;
@@ -393,20 +394,29 @@ export class ProfileComponent implements OnInit {
     id: '',
     name: '',
     email: '',
+    phone: '',
+    companyCode: '',
+    registration: '',
+    status: 'pending',
+    createdAt: new Date(),
+    role: 'user',
+    isAdmin: false,
+    // Optional fields
     phase: '',
     avatar: '',
-    phone: '',
     company: '',
-    role: '',
-    registration: '',
     preferences: {
       darkMode: true,
       notifications: true
-    },
-    isAdmin: false
+    }
   });
 
   profileForm: FormGroup;
+  currentUser: User | null = null;
+  private userSubscription: Subscription | null = null;
+  isLoading: boolean = false;
+  errorMessage: string = '';
+  successMessage: string = '';
 
   constructor(
     private fb: FormBuilder, 
@@ -419,13 +429,14 @@ export class ProfileComponent implements OnInit {
     this.originalThemeState = this.themeService.isDarkMode();
     
     this.profileForm = this.fb.group({
-      name: ['', Validators.required],
-      registration: [{value: '', disabled: true}],
-      phone: [{value: '', disabled: true}],
-      company: [{value: '', disabled: true}],
-      role: [{value: '', disabled: true}],
-      darkMode: [this.themeService.isDarkMode()],
-      notifications: [this.notificationService.isNotificationsEnabled()],
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
+      phone: ['', [Validators.required, Validators.pattern('^[0-9]{10,11}$')]],
+      registration: ['', [Validators.required, Validators.pattern('^[0-9]{6}$')]],
+      company: ['', [Validators.required, Validators.pattern('^[0-9]{4}$')]],
+      currentPassword: ['', [Validators.required, Validators.minLength(6)]],
+      newPassword: ['', [Validators.minLength(6)]],
+      confirmPassword: ['']
     });
 
     // Create effect to watch theme changes from sidebar
@@ -453,32 +464,33 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    const currentUser = this.authService.getCurrentUser();
-    
-    if (currentUser) {
-      this.user.update(current => ({
-        ...current,
-        name: currentUser.name,
-        email: currentUser.email,
-        phone: currentUser.phone,
-        registration: currentUser.registration,
-        company: currentUser.companyCode,
-        role: 'Motorista', // Default role
-        phase: 'Ouro', // Default phase
-        isAdmin: currentUser.isAdmin
-      }));
+  ngOnInit(): void {
+    this.userSubscription = this.authService.getCurrentUser().subscribe(user => {
+      if (user) {
+        this.currentUser = user;
+        this.user.update(current => ({
+          ...current,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          registration: user.registration,
+          company: user.companyCode,
+          role: 'Motorista', // Default role
+          phase: 'Ouro', // Default phase
+          isAdmin: user.isAdmin
+        }));
 
-      this.profileForm.patchValue({
-        name: currentUser.name,
-        registration: currentUser.registration,
-        phone: currentUser.phone,
-        company: currentUser.companyCode,
-        role: 'Motorista',
-        darkMode: this.themeService.isDarkMode(),
-        notifications: this.notificationService.isNotificationsEnabled(),
-      });
-    }
+        this.profileForm.patchValue({
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          registration: user.registration,
+          company: user.companyCode,
+          darkMode: this.themeService.isDarkMode(),
+          notifications: this.notificationService.isNotificationsEnabled(),
+        });
+      }
+    });
 
     // Carregar avatar salvo
     const savedAvatar = localStorage.getItem('userAvatar');
@@ -487,6 +499,12 @@ export class ProfileComponent implements OnInit {
         ...current,
         avatar: savedAvatar
       }));
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
     }
   }
 
@@ -511,15 +529,31 @@ export class ProfileComponent implements OnInit {
     this.showToast('Avatar atualizado com sucesso!', 'success');
   }
 
-  onSubmit() {
-    if (this.profileForm.valid) {
-      const formValue = this.profileForm.value;
+  async onSubmit(): Promise<void> {
+    if (this.profileForm.invalid) {
+      return;
+    }
+
+    this.isLoading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    try {
+      const formData = this.profileForm.value;
       
+      // Validar senha se estiver alterando
+      if (formData.newPassword) {
+        if (formData.newPassword !== formData.confirmPassword) {
+          this.errorMessage = 'As senhas não conferem';
+          return;
+        }
+      }
+
       // Update theme state
-      this.originalThemeState = formValue.darkMode;
+      this.originalThemeState = formData.darkMode;
 
       // Update notifications based on form value
-      if (formValue.notifications) {
+      if (formData.notifications) {
         this.notificationService.enableNotifications();
       } else {
         this.notificationService.disableNotifications();
@@ -527,20 +561,25 @@ export class ProfileComponent implements OnInit {
 
       this.user.update(current => ({
         ...current,
-        name: formValue.name,
-        registration: formValue.registration,
-        phone: formValue.phone,
-        company: formValue.company,
-        role: formValue.role,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        registration: formData.registration,
+        company: formData.company,
+        role: formData.role,
         preferences: {
-          darkMode: formValue.darkMode,
-          notifications: formValue.notifications,
+          darkMode: formData.darkMode,
+          notifications: formData.notifications,
         },
       }));
 
       console.log('Profile updated:', this.user());
       this.profileForm.markAsPristine();
-      this.showToast('Perfil atualizado com sucesso!', 'success');
+      this.successMessage = 'Perfil atualizado com sucesso!';
+    } catch (error: any) {
+      this.errorMessage = error.message || 'Erro ao atualizar perfil';
+    } finally {
+      this.isLoading = false;
     }
   }
 
@@ -607,8 +646,9 @@ export class ProfileComponent implements OnInit {
       // Reset form
       this.profileForm.reset({
         name: this.user().name,
-        registration: this.user().registration,
+        email: this.user().email,
         phone: this.user().phone,
+        registration: this.user().registration,
         company: this.user().company,
         role: this.user().role,
         darkMode: false,

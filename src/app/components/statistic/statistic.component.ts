@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { matHelp } from '@ng-icons/material-icons/baseline';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
-import { AuthService, User } from '../../services/auth.service';
+import { Subscription } from 'rxjs';
+import { User } from '../../interfaces/user.interface';
+import { AuthService } from '../../services/auth.service';
 import { GaugeComponent } from '../gauge/gauge.component';
 
 interface Turno {
@@ -29,8 +31,9 @@ interface Turno {
     }),
   ],
 })
-export class StatisticComponent implements OnInit {
+export class StatisticComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;
+  private userSubscription: Subscription | null = null;
   turnos: Turno[] = [
     {
       turno: 'Madrugada',
@@ -63,8 +66,16 @@ export class StatisticComponent implements OnInit {
 
   constructor(private renderer: Renderer2, private authService: AuthService) {}
 
-  ngOnInit() {
-    this.currentUser = this.authService.getCurrentUser();
+  ngOnInit(): void {
+    this.userSubscription = this.authService.getCurrentUser().subscribe(user => {
+      this.currentUser = user;
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
   }
 
   openHelpDialog() {

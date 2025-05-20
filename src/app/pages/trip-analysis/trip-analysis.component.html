@@ -1,0 +1,349 @@
+<!-- Header -->
+<header class="fixed top-0 left-0 right-0 z-50 py-2 shadow-md bg-primary">
+  <div class="container mx-auto px-8 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <img [src]="'assets/Logo_AceCopilot_branco.png'" alt="ACE Copilot" class="h-8">
+    </div>
+    <div class="flex items-center gap-4">
+      <button mat-icon-button (click)="exportToExcel()" class="text-on-surface-variant hover:text-amber-400 transition-colors">
+        <ng-icon name="matDownloadRound"></ng-icon>
+      </button>
+      <button mat-icon-button (click)="toggleTheme()" class="text-on-surface-variant hover:text-amber-400 transition-colors">
+        <ng-icon [name]="isDarkMode ? 'matLightModeRound' : 'matDarkModeRound'"></ng-icon>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main class="container mx-auto px-8 pt-24 pb-8">
+
+  <div class="flex items-center gap-4 p-4">
+    <h1 class="text-2xl font-bold text-on-surface flex items-center">
+      Análise de Viagens
+    </h1>
+  </div>
+
+  <!-- Filter Section -->
+  <mat-card class="mb-8 surface-container-highest">
+    <mat-card-header class="mb-6 flex items-center p-6 border-b border-outline-variant">
+      <div class="flex items-center pb-4">
+        <div class="w-10 h-10 rounded-full bg-amber-400 bg-opacity-10 flex items-center justify-center mr-4">
+          <ng-icon name="matFilterAltRound" class="text-amber-400 text-xl"></ng-icon>
+        </div>
+        <mat-card-title class="text-on-surface text-xl font-semibold">Filtros</mat-card-title>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content class="p-6">
+      <form [formGroup]="filterForm" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Placa Input -->
+        <mat-form-field appearance="fill" class="w-full">
+          <mat-label class="font-bold text-lg">Número do Veículo</mat-label>
+          <input matInput formControlName="placa" 
+                 placeholder="48122"
+                 maxlength="5">
+          <ng-icon matSuffix name="matDirectionsCarRound"></ng-icon>
+          <mat-error *ngIf="filterForm.get('placa')?.errors?.['required']">
+            Número é obrigatório
+          </mat-error>
+          <mat-error *ngIf="filterForm.get('placa')?.errors?.['pattern']">
+            Formato inválido (48122)
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Hora Inicial Input -->
+        <mat-form-field appearance="fill" class="w-full">
+          <mat-label class="font-bold text-lg">Hora Inicial</mat-label>
+          <input matInput type="time" formControlName="horaInicial">
+          <ng-icon matSuffix name="matScheduleRound"></ng-icon>
+          <mat-error *ngIf="filterForm.get('horaInicial')?.errors?.['required']">
+            Hora inicial é obrigatória
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Hora Final Input -->
+        <mat-form-field appearance="fill" class="w-full">
+          <mat-label class="font-bold text-lg">Hora Final</mat-label>
+          <input matInput type="time" formControlName="horaFinal">
+          <ng-icon matSuffix name="matAvTimerRound"></ng-icon>
+          <mat-error *ngIf="filterForm.get('horaFinal')?.errors?.['required']">
+            Hora final é obrigatória
+          </mat-error>
+          <mat-error *ngIf="filterForm.get('horaFinal')?.errors?.['horaFinalInvalida']">
+            Hora final deve ser maior que a inicial
+          </mat-error>
+        </mat-form-field>
+
+        <div class="flex items-center gap-2 pb-4">
+          <button mat-button 
+                  (click)="resetFilters()"
+                  class="!h-10 !px-6 !rounded-full border !border-outline hover:!bg-surface-container-highest"
+                  type="button">
+            <ng-icon name="matClearRound" class="mr-2 text-on-surface-variant"></ng-icon>
+            <span class="text-on-surface-variant font-medium">Limpar</span>
+          </button>
+          <button mat-flat-button 
+                  color="accent"
+                  [disabled]="!filterForm.valid"
+                  (click)="applyFilter()"
+                  class="!h-10 !px-6 !rounded-full !bg-amber-400 hover:!bg-amber-500"
+                  type="submit">
+            <ng-icon name="matSearchRound" class="mr-2"></ng-icon>
+            <span class="text-black font-medium">Buscar</span>
+          </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <!-- Distância Total -->
+    <mat-card class="surface-container-high hover:-translate-y-1 transition-all duration-300 hover:shadow-lg bg-gradient-to-br from-amber-400/10 via-amber-400/5 to-transparent">
+      <mat-card-content class="p-6">
+        <div class="w-12 h-12 rounded-full bg-amber-400 bg-opacity-10 flex items-center justify-center mb-4">
+          <ng-icon name="matSpeedRound" class="text-amber-400 text-2xl"></ng-icon>
+        </div>
+        <h3 class="text-sm font-medium text-on-surface-variant">Distância Total</h3>
+        <p class="text-2xl font-bold text-on-surface mt-1">{{ getTotalDistance() }} km</p>
+        <div class="flex items-center mt-3 text-sm" [class.text-green-500]="getDistanceChange() > 0" [class.text-red-500]="getDistanceChange() < 0">
+          <ng-icon [name]="getDistanceChange() > 0 ? 'matTrendingUpRound' : 'matTrendingDownRound'" class="text-base mr-1"></ng-icon>
+          {{ getDistanceChange() }}% vs mês anterior
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Consumo Médio -->
+    <mat-card class="surface-container-high hover:-translate-y-1 transition-all duration-300 hover:shadow-lg bg-gradient-to-br from-amber-400/10 via-amber-400/5 to-transparent">
+      <mat-card-content class="p-6">
+        <div class="w-12 h-12 rounded-full bg-amber-400 bg-opacity-10 flex items-center justify-center mb-4">
+          <ng-icon name="matLocalGasStationRound" class="text-amber-400 text-2xl"></ng-icon>
+        </div>
+        <h3 class="text-sm font-medium text-on-surface-variant">Consumo Médio</h3>
+        <p class="text-2xl font-bold text-on-surface mt-1">{{ getAverageFuelConsumption() }} km/l</p>
+        <div class="flex items-center mt-3 text-sm" [class.text-green-500]="getFuelConsumptionChange() > 0" [class.text-red-500]="getFuelConsumptionChange() < 0">
+          <ng-icon [name]="getFuelConsumptionChange() > 0 ? 'matTrendingUpRound' : 'matTrendingDownRound'" class="text-base mr-1"></ng-icon>
+          {{ getFuelConsumptionChange() }}% vs mês anterior
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Velocidade Média -->
+    <mat-card class="surface-container-high hover:-translate-y-1 transition-all duration-300 hover:shadow-lg bg-gradient-to-br from-amber-400/10 via-amber-400/5 to-transparent">
+      <mat-card-content class="p-6">
+        <div class="w-12 h-12 rounded-full bg-amber-400 bg-opacity-10 flex items-center justify-center mb-4">
+          <ng-icon name="matAvTimerRound" class="text-amber-400 text-2xl"></ng-icon>
+        </div>
+        <h3 class="text-sm font-medium text-on-surface-variant">Velocidade Média</h3>
+        <p class="text-2xl font-bold text-on-surface mt-1">{{ getAverageSpeed() }} km/h</p>
+        <div class="flex items-center mt-3 text-sm" [class.text-green-500]="getSpeedChange() > 0" [class.text-red-500]="getSpeedChange() < 0">
+          <ng-icon [name]="getSpeedChange() > 0 ? 'matTrendingUpRound' : 'matTrendingDownRound'" class="text-base mr-1"></ng-icon>
+          {{ getSpeedChange() }}% vs mês anterior
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Uso do Freio -->
+    <mat-card class="surface-container-high hover:-translate-y-1 transition-all duration-300 hover:shadow-lg bg-gradient-to-br from-amber-400/10 via-amber-400/5 to-transparent">
+      <mat-card-content class="p-6">
+        <div class="w-12 h-12 rounded-full bg-amber-400 bg-opacity-10 flex items-center justify-center mb-4">
+          <ng-icon name="matBatteryAlertRound" class="text-amber-400 text-2xl"></ng-icon>
+        </div>
+        <h3 class="text-sm font-medium text-on-surface-variant">Média de Freio</h3>
+        <p class="text-2xl font-bold text-on-surface mt-1">{{ getAverageBrakeUsage() }} %</p>
+        <div class="flex items-center mt-3 text-sm" [class.text-green-500]="getBrakeUsageChange() < 0" [class.text-red-500]="getBrakeUsageChange() > 0">
+          <ng-icon [name]="getBrakeUsageChange() > 0 ? 'matTrendingUpRound' : 'matTrendingDownRound'" class="text-base mr-1"></ng-icon>
+          {{ getBrakeUsageChange() }}% vs mês anterior
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Média de Giro -->
+    <mat-card class="surface-container-high hover:-translate-y-1 transition-all duration-300 hover:shadow-lg bg-gradient-to-br from-amber-400/10 via-amber-400/5 to-transparent">
+      <mat-card-content class="p-6">
+        <div class="w-12 h-12 rounded-full bg-amber-400 bg-opacity-10 flex items-center justify-center mb-4">
+          <ng-icon name="matSpeedRound" class="text-amber-400 text-2xl"></ng-icon>
+        </div>
+        <h3 class="text-sm font-medium text-on-surface-variant">Média de Giro</h3>
+        <p class="text-2xl font-bold text-on-surface mt-1">{{ getAverageRPM() }} %</p>
+        <div class="flex items-center mt-3 text-sm" [class.text-green-500]="getRPMChange() < 0" [class.text-red-500]="getRPMChange() > 0">
+          <ng-icon [name]="getRPMChange() > 0 ? 'matTrendingUpRound' : 'matTrendingDownRound'" class="text-base mr-1"></ng-icon>
+          {{ getRPMChange() }}% vs mês anterior
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Uso do Pedal -->
+    <mat-card class="surface-container-high hover:-translate-y-1 transition-all duration-300 hover:shadow-lg bg-gradient-to-br from-amber-400/10 via-amber-400/5 to-transparent">
+      <mat-card-content class="p-6">
+        <div class="w-12 h-12 rounded-full bg-amber-400 bg-opacity-10 flex items-center justify-center mb-4">
+          <ng-icon name="matPedalBikeRound" class="text-amber-400 text-2xl"></ng-icon>
+        </div>
+        <h3 class="text-sm font-medium text-on-surface-variant">Média de Pedal</h3>
+        <p class="text-2xl font-bold text-on-surface mt-1">{{ getAveragePedalUsage() }} %</p>
+        <div class="flex items-center mt-3 text-sm" [class.text-green-500]="getPedalChange() < 0" [class.text-red-500]="getPedalChange() > 0">
+          <ng-icon [name]="getPedalChange() > 0 ? 'matTrendingUpRound' : 'matTrendingDownRound'" class="text-base mr-1"></ng-icon>
+          {{ getPedalChange() }}% vs mês anterior
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Table Section -->
+  <mat-card class="mb-8 surface-container-highest overflow-hidden">
+    <mat-card-header class="p-6 border-b border-outline-variant">
+      <div class="flex items-center pb-4">
+        <div class="w-10 h-10 rounded-full bg-amber-400 bg-opacity-10 flex items-center justify-center mr-4">
+          <ng-icon name="matDirectionsCarRound" class="text-amber-400 text-xl"></ng-icon>
+        </div>
+        <mat-card-title class="text-on-surface text-xl font-semibold">Resumo da Viagem</mat-card-title>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content class="p-6">
+      <!-- Desktop Layout -->
+      <div class="hidden md:block">
+        <div class="grid grid-cols-16 gap-4 mb-4">
+          <!-- Headers -->
+          <div class="text-on-surface-variant">Início</div>
+          <div class="text-on-surface-variant">Fim</div>
+          <div class="text-on-surface-variant">Mecânica</div>
+          <div class="text-on-surface-variant">Modelo</div>
+          <div class="text-on-surface-variant">Versão</div>
+          <div class="text-on-surface-variant">Status</div>
+          <div class="text-on-surface-variant">KM</div>
+          <div class="text-on-surface-variant">Distância</div>
+          <div class="text-on-surface-variant">Litros</div>
+          <div class="text-on-surface-variant">L. Parado</div>
+          <div class="text-on-surface-variant">KM/Litro</div>
+          <div class="text-on-surface-variant">Giro</div>
+          <div class="text-on-surface-variant">Freio</div>
+          <div class="text-on-surface-variant">Pedal</div>
+          <div class="text-on-surface-variant">O. Inicial</div>
+          <div class="text-on-surface-variant">O. Final</div>
+        </div>
+
+        <!-- Values -->
+        <div class="grid grid-cols-16 gap-4 py-3 border-b border-outline-variant">
+          <div class="text-on-surface">{{dataSource.data[0]?.inicio | date:'HH:mm'}}</div>
+          <div class="text-on-surface">{{dataSource.data[0]?.fim | date:'HH:mm'}}</div>
+          <div class="text-on-surface">{{dataSource.data[0]?.mecanica}}</div>
+          <div class="text-on-surface">{{dataSource.data[0]?.modelo || '-'}}</div>
+          <div class="text-on-surface">{{dataSource.data[0]?.versao}}</div>
+          <div>
+            <span class="px-3 py-1 rounded-full text-xs font-medium" 
+                  [class.bg-green-100]="dataSource.data[0]?.status === 'Ok'"
+                  [class.text-green-800]="dataSource.data[0]?.status === 'Ok'"
+                  [class.bg-amber-100]="dataSource.data[0]?.status !== 'Ok'"
+                  [class.text-amber-800]="dataSource.data[0]?.status !== 'Ok'">
+              {{dataSource.data[0]?.status}}
+            </span>
+          </div>
+          <div class="text-on-surface">{{dataSource.data[0]?.km?.toFixed(1)}}</div>
+          <div class="text-on-surface">{{dataSource.data[0]?.distancia?.toFixed(1)}} km</div>
+          <div class="text-on-surface">{{dataSource.data[0]?.litros?.toFixed(1)}}</div>
+          <div class="text-on-surface">{{dataSource.data[0]?.litrosParado}} ({{dataSource.data[0]?.litrosParado && dataSource.data[0]?.litros ? ((dataSource.data[0].litrosParado / dataSource.data[0].litros) * 100).toFixed(0) : 0}}%)</div>
+          <div class="text-on-surface">{{dataSource.data[0]?.kmPorLitro?.toFixed(2)}}</div>
+          <div class="text-on-surface">{{dataSource.data[0]?.giro}}%</div>
+          <div class="text-on-surface">{{dataSource.data[0]?.freio}}%</div>
+          <div class="text-on-surface">{{dataSource.data[0]?.pedal}}%</div>
+          <div class="text-on-surface">{{dataSource.data[0]?.odometroInicial?.toFixed(1)}}</div>
+          <div class="text-on-surface">{{dataSource.data[0]?.odometroFinal?.toFixed(1)}}</div>
+        </div>
+      </div>
+
+      <!-- Mobile Layout -->
+      <div class="grid grid-cols-2 gap-6 md:hidden">
+        <!-- Left Column -->
+        <div class="space-y-4">
+          <div class="flex justify-between py-3 border-b border-outline-variant">
+            <span class="text-on-surface-variant">Início</span>
+            <span class="text-on-surface">{{dataSource.data[0]?.inicio | date:'HH:mm'}}</span>
+          </div>
+          <div class="flex justify-between py-3 border-b border-outline-variant">
+            <span class="text-on-surface-variant">Fim</span>
+            <span class="text-on-surface">{{dataSource.data[0]?.fim | date:'HH:mm'}}</span>
+          </div>
+          <div class="flex justify-between py-3 border-b border-outline-variant">
+            <span class="text-on-surface-variant">Mecânica</span>
+            <span class="text-on-surface">{{dataSource.data[0]?.mecanica}}</span>
+          </div>
+          <div class="flex justify-between py-3 border-b border-outline-variant">
+            <span class="text-on-surface-variant">Modelo</span>
+            <span class="text-on-surface">{{dataSource.data[0]?.modelo || '-'}}</span>
+          </div>
+          <div class="flex justify-between py-3 border-b border-outline-variant">
+            <span class="text-on-surface-variant">Versão</span>
+            <span class="text-on-surface">{{dataSource.data[0]?.versao}}</span>
+          </div>
+          <div class="flex justify-between py-3 border-b border-outline-variant">
+            <span class="text-on-surface-variant">Status</span>
+            <span class="px-3 py-1 rounded-full text-xs font-medium" 
+                  [class.bg-green-100]="dataSource.data[0]?.status === 'Ok'"
+                  [class.text-green-800]="dataSource.data[0]?.status === 'Ok'"
+                  [class.bg-amber-100]="dataSource.data[0]?.status !== 'Ok'"
+                  [class.text-amber-800]="dataSource.data[0]?.status !== 'Ok'">
+              {{dataSource.data[0]?.status}}
+            </span>
+          </div>
+          <div class="flex justify-between py-3 border-b border-outline-variant">
+            <span class="text-on-surface-variant">O. Inicial</span>
+            <span class="text-on-surface">{{dataSource.data[0]?.odometroInicial?.toFixed(1)}}</span>
+          </div>
+          <div class="flex justify-between py-3 border-b border-outline-variant">
+            <span class="text-on-surface-variant">O. Final</span>
+            <span class="text-on-surface">{{dataSource.data[0]?.odometroFinal?.toFixed(1)}}</span>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="space-y-4">
+          <div class="flex justify-between py-3 border-b border-outline-variant">
+            <span class="text-on-surface-variant">KM</span>
+            <span class="text-on-surface">{{dataSource.data[0]?.km?.toFixed(1)}}</span>
+          </div>
+          <div class="flex justify-between py-3 border-b border-outline-variant">
+            <span class="text-on-surface-variant">Distância</span>
+            <span class="text-on-surface">{{dataSource.data[0]?.distancia?.toFixed(1)}} km</span>
+          </div>
+          <div class="flex justify-between py-3 border-b border-outline-variant">
+            <span class="text-on-surface-variant">Litros</span>
+            <span class="text-on-surface">{{dataSource.data[0]?.litros?.toFixed(1)}}</span>
+          </div>
+          <div class="flex justify-between py-3 border-b border-outline-variant">
+            <span class="text-on-surface-variant">L. Parado</span>
+            <span class="text-on-surface">{{dataSource.data[0]?.litrosParado}} ({{dataSource.data[0]?.litrosParado && dataSource.data[0]?.litros ? ((dataSource.data[0].litrosParado / dataSource.data[0].litros) * 100).toFixed(0) : 0}}%)</span>
+          </div>
+          <div class="flex justify-between py-3 border-b border-outline-variant">
+            <span class="text-on-surface-variant">KM/Litro</span>
+            <span class="text-on-surface">{{dataSource.data[0]?.kmPorLitro?.toFixed(2)}}</span>
+          </div>
+          <div class="flex justify-between py-3 border-b border-outline-variant">
+            <span class="text-on-surface-variant">Giro</span>
+            <span class="text-on-surface">{{dataSource.data[0]?.giro}}%</span>
+          </div>
+          <div class="flex justify-between py-3 border-b border-outline-variant">
+            <span class="text-on-surface-variant">Freio</span>
+            <span class="text-on-surface">{{dataSource.data[0]?.freio}}%</span>
+          </div>
+          <div class="flex justify-between py-3 border-b border-outline-variant">
+            <span class="text-on-surface-variant">Pedal</span>
+            <span class="text-on-surface">{{dataSource.data[0]?.pedal}}%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="dataSource.data.length === 0" class="text-center py-16">
+        <div class="w-16 h-16 rounded-full bg-surface-container-low flex items-center justify-center mx-auto mb-4">
+          <ng-icon name="matSearchOffRound" class="text-on-surface-variant text-3xl"></ng-icon>
+        </div>
+        <p class="text-on-surface-variant text-lg">Nenhum dado encontrado para os filtros selecionados</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+
+</main> 

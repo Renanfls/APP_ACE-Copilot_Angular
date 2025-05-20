@@ -16,6 +16,7 @@ import { TreinamentoOnlineComponent } from './components/screens/treinamento/tre
 import { UserManagementComponent } from './components/screens/user-management/user-management.component';
 import { AdminGuard } from './guards/admin.guard';
 import { AuthGuard } from './guards/auth.guard';
+import { TripAnalysisComponent } from './pages/trip-analysis/trip-analysis.component';
 
 export const routes: Routes = [
   {
@@ -114,5 +115,9 @@ export const routes: Routes = [
   {
     path: 'quiz',
     component: QuizComponent,
+  },
+  {
+    path: 'analise-viagem',
+    component: TripAnalysisComponent,
   }
 ];

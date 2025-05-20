@@ -14,7 +14,8 @@ import {
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { AuthService, User } from '../../services/auth.service';
+import { User } from '../../interfaces/user.interface';
+import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
 import { ThemeService } from '../../services/theme.service';
 
@@ -372,13 +373,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
       (isAuthenticated) => {
         console.log('=== Mudança no estado de autenticação ===', {
           isAuthenticated,
-          currentUser: this.authService.getCurrentUser(),
+          currentUser: this.authService.getCurrentUserValue(),
           isAdmin: this.authService.isAdmin()
         });
         
         // Verifica o estado de admin quando houver mudança na autenticação
         if (isAuthenticated) {
-          this.currentUser = this.authService.getCurrentUser();
+          this.currentUser = this.authService.getCurrentUserValue();
           this.isUserAdmin.set(Boolean(this.currentUser?.isAdmin));
         } else {
           this.currentUser = null;
@@ -392,14 +393,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
       (isAdmin) => {
         console.log('=== Mudança no estado de admin ===', {
           isAdmin,
-          currentUser: this.authService.getCurrentUser()
+          currentUser: this.authService.getCurrentUserValue()
         });
         this.isUserAdmin.set(isAdmin);
       }
     );
 
     // Initialize current values
-    this.currentUser = this.authService.getCurrentUser();
+    this.currentUser = this.authService.getCurrentUserValue();
     const initialAdminState = this.authService.isAdmin() || Boolean(this.currentUser?.isAdmin);
     console.log('=== Estado inicial de admin ===', {
       isAdmin: initialAdminState,
@@ -499,7 +500,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   shouldShowAdminSection(): boolean {
     const isAdmin = this.isUserAdmin();
-    const currentUser = this.authService.getCurrentUser();
+    const currentUser = this.authService.getCurrentUserValue();
     console.log('=== Verificando visibilidade da seção admin ===', {
       signalValue: isAdmin,
       directCheck: this.authService.isAdmin(),
