@@ -23,6 +23,7 @@ export class AuthService implements OnDestroy {
   private currentUser: User | null = null;
   private statusCheckInterval: Subscription | null = null;
   private isAdminSubject = new BehaviorSubject<boolean>(false);
+  private userId: number = 0; // Assuming a default value, actual implementation needed
 
   constructor(
     private http: HttpClient,
@@ -557,5 +558,9 @@ export class AuthService implements OnDestroy {
 
   isLoggedIn(): boolean {
     return this.token !== null && this.currentUser !== null;
+  }
+
+  getUserId(): number {
+    return this.userId;
   }
 }

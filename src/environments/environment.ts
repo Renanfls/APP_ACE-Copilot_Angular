@@ -9,6 +9,8 @@ export const environment = {
   appSettings: SETTINGS,
   googleMapsApiKey: 'AIzaSyBSvo0x8v3C6aFWcSi2zooOC9tqGCOqCj4',
   portGraphql: "4100",
-  apiUrl: 'http://192.168.0.9:5001/api',
-  wsUrl: 'ws://192.168.0.9:5001'
+  apiUrl: 'http://linux.copiloto.com.br:3000',
+  wsUrl: 'ws://linux.copiloto.com.br:3000',
+  // apiUrl: 'http://192.168.0.9:5001/api',
+  // wsUrl: 'ws://192.168.0.9:5001'
 };

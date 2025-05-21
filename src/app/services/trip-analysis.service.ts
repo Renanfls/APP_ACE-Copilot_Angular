@@ -95,9 +95,15 @@ export class TripAnalysisService {
     return this.directionsService.route(request);
   }
 
-  exportToExcel(data: TripData[]): void {
-    const worksheet: WorkSheet = utils.json_to_sheet(data);
-    const workbook: WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-    writeFile(workbook, 'analise_viagem.xlsx');
+  exportToExcel(data: any[]): void {
+    if (data.length > 0) {
+      const date = data[0]['Data'];
+      const mecanica = data[0]['Mecânica'];
+      const fileName = `analise_viagem_${mecanica}_${date.replace(/\//g, '-')}.xlsx`;
+      
+      const worksheet: WorkSheet = utils.json_to_sheet(data);
+      const workbook: WorkBook = { Sheets: { 'Dados da Viagem': worksheet }, SheetNames: ['Dados da Viagem'] };
+      writeFile(workbook, fileName);
+    }
   }
 } 

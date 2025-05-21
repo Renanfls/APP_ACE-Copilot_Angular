@@ -1,6 +1,7 @@
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe, formatDate } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { GoogleMap, GoogleMapsModule, MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -12,37 +13,48 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
-    matAddRound,
-    matAvTimerRound,
-    matBarChartRound,
-    matBatteryAlertRound,
-    matClearRound,
-    matDarkModeRound,
-    matDirectionsCarRound,
-    matDownloadRound,
-    matFilterAltRound,
-    matGridViewRound,
-    matInsightsRound,
-    matLightModeRound,
-    matLocalGasStationRound,
-    matMapRound,
-    matPedalBikeRound,
-    matRefreshRound,
-    matRemoveRound,
-    matScheduleRound,
-    matSearchOffRound,
-    matSearchRound,
-    matSpeedRound,
-    matTrendingDownRound,
-    matTrendingUpRound
+  matAddRound,
+  matAvTimerRound,
+  matBarChartRound,
+  matBatteryAlertRound,
+  matCalendarTodayRound,
+  matClearRound,
+  matDarkModeRound,
+  matDirectionsCarRound,
+  matDownloadRound,
+  matFilterAltRound,
+  matGridViewRound,
+  matInsightsRound,
+  matLightModeRound,
+  matLocalGasStationRound,
+  matMapRound,
+  matPedalBikeRound,
+  matRefreshRound,
+  matRemoveRound,
+  matScheduleRound,
+  matSearchOffRound,
+  matSearchRound,
+  matSpeedRound,
+  matTrendingDownRound,
+  matTrendingUpRound
 } from '@ng-icons/material-icons/round';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { environment } from '../../../environments/environment';
+import { AuthService } from '../../services/auth.service';
 import { TripAnalysisService, TripData } from '../../services/trip-analysis.service';
+
+interface TripAnalysisData {
+  cpo1: string;
+  val1: string;
+  cpo2: string;
+  val2: string;
+}
 
 @Component({
   selector: 'app-trip-analysis',
@@ -66,7 +78,9 @@ import { TripAnalysisService, TripData } from '../../services/trip-analysis.serv
     MatPaginatorModule,
     MatProgressSpinnerModule,
     GoogleMapsModule,
-    BaseChartDirective
+    BaseChartDirective,
+    FormsModule,
+    MatSelectModule
   ],
   viewProviders: [
     provideIcons({
@@ -92,7 +106,8 @@ import { TripAnalysisService, TripData } from '../../services/trip-analysis.serv
       matRefreshRound,
       matInsightsRound,
       matGridViewRound,
-      matBarChartRound
+      matBarChartRound,
+      matCalendarTodayRound
     }),
     { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }
   ],
@@ -135,22 +150,83 @@ import { TripAnalysisService, TripData } from '../../services/trip-analysis.serv
 
     /* Material Design 3 Form Field Styles */
     ::ng-deep .mat-mdc-form-field {
-      --mdc-filled-text-field-container-color: var(--md-sys-color-surface-container);
-      --mdc-filled-text-field-focus-active-indicator-color: #F59E0B;
-      --mdc-filled-text-field-hover-active-indicator-color: #F59E0B;
-      --mdc-filled-text-field-focus-label-text-color: #F59E0B;
-      --mdc-filled-text-field-label-text-color: var(--md-sys-color-on-surface-variant);
-      --mdc-filled-text-field-input-text-color: var(--md-sys-color-on-surface);
-      border-radius: 0.5rem;
+      --mdc-outlined-text-field-container-shape: 1rem;
+      --mdc-outlined-text-field-outline-color: var(--md-sys-color-outline);
+      --mdc-outlined-text-field-focus-outline-color: #F59E0B;
+      --mdc-outlined-text-field-hover-outline-color: #F59E0B;
+      --mdc-outlined-text-field-focus-label-text-color: #F59E0B;
+      --mdc-outlined-text-field-label-text-color: var(--md-sys-color-on-surface-variant);
+      --mdc-outlined-text-field-input-text-color: var(--md-sys-color-on-surface);
+      --mdc-outlined-text-field-disabled-outline-color: var(--md-sys-color-outline);
+      --mdc-outlined-text-field-disabled-label-text-color: var(--md-sys-color-on-surface-variant);
     }
 
-    ::ng-deep .mat-mdc-form-field-flex {
-      border-radius: 0.5rem 0.5rem 0 0;
-      padding: 0 16px !important;
+    ::ng-deep .mat-mdc-form-field.mat-mdc-form-field-type-mat-input .mdc-notched-outline__notch {
+      border-right: none;
+    }
+
+    ::ng-deep .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-outline-start,
+    ::ng-deep .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-outline-end {
+      border-radius: 1rem !important;
+    }
+
+    ::ng-deep .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-flex {
+      background-color: var(--md-sys-color-surface-container-highest);
+      border-radius: 1rem !important;
+      min-height: 56px;
+      padding: 0 !important;
+      gap: 0;
+      align-items: center;
     }
 
     ::ng-deep .mat-mdc-text-field-wrapper {
-      border-radius: 0.5rem 0.5rem 0 0;
+      padding: 0 !important;
+    }
+
+    ::ng-deep .mat-mdc-form-field-infix {
+      padding: 8px 0 !important;
+      min-height: 48px !important;
+    }
+
+    ::ng-deep .mdc-text-field--outlined {
+      padding: 0 16px !important;
+    }
+
+    ::ng-deep .mat-mdc-form-field-icon-suffix {
+      padding: 0 !important;
+      margin-right: -8px !important;
+    }
+
+    ::ng-deep .mat-mdc-form-field-icon-suffix > .mat-icon {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    ::ng-deep .mat-datepicker-toggle {
+      margin-right: -12px !important;
+    }
+
+    ::ng-deep .mat-mdc-form-field input.mat-mdc-input-element {
+      padding: 8px 16px !important;
+    }
+
+    ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+      padding: 0 16px !important;
+    }
+
+    ::ng-deep .mat-mdc-form-field-hint-wrapper, 
+    ::ng-deep .mat-mdc-form-field-error-wrapper {
+      padding: 0 16px !important;
+    }
+
+    ::ng-deep .mat-mdc-form-field-label {
+      padding-left: 16px !important;
+      margin-top: -4px !important;
+    }
+
+    ::ng-deep .mat-mdc-form-field-appearance-outline .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+      --mat-mdc-form-field-label-transform: translateY(-34px) scale(0.75);
+      transform: var(--mat-mdc-form-field-label-transform);
     }
 
     /* Material Design 3 Button Styles */
@@ -391,11 +467,36 @@ import { TripAnalysisService, TripData } from '../../services/trip-analysis.serv
         margin-right: 8px;
       }
     }
+
+    .TitleClass {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+    .HeaderCenter {
+      text-align: center;
+    }
+    .BodyCenter {
+      text-align: center;
+    }
+    .form-container {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    mat-form-field {
+      width: 100%;
+    }
+    .mat-elevation-z8 {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
   `]
 })
 export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
   filterForm: FormGroup;
   displayedColumns: string[] = [
+    'data',
     'inicio',
     'fim',
     'mecanica',
@@ -410,10 +511,13 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
     'giro',
     'freio',
     'pedal',
-    'velocidadeMedia',
     'odometroInicial',
     'odometroFinal'
   ];
+
+  // Add new property for Analise de Viagem table columns
+  analiseColumns: string[] = ['campo1', 'valor1', 'campo2', 'valor2'];
+
   dataSource = new MatTableDataSource<TripData>();
   previousPeriodData: TripData[] = [];
   isDarkMode = true;
@@ -632,18 +736,27 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private markers: google.maps.Marker[] = [];
 
+  isAdmin = true;
+  veiculoIV: string = '';
+  dateRangeIV: Date[] = [];
+  dadosViagem: TripAnalysisData[] = [];
+  lblUltConIV: string = '';
+  empresa: number = 165; // Empresa fixa como 165
+  veiculos: Array<{value: string, label: string}> = [];
+
   constructor(
-    private fb: FormBuilder,
-    private tripAnalysisService: TripAnalysisService
+    private readonly fb: FormBuilder,
+    private readonly tripAnalysisService: TripAnalysisService,
+    private http: HttpClient,
+    private authSrv: AuthService
   ) {
     this.filterForm = this.fb.group({
-      placa: ['', [Validators.required, Validators.pattern('^[0-9]{5}$')]],
-      data: [new Date(), Validators.required],
-      horaInicial: ['00:00', Validators.required],
-      horaFinal: ['23:59', [Validators.required, this.horaFinalValidator()]]
+      placa: ['47457', [Validators.required, Validators.pattern('^[0-9]{5}$')]],
+      data: [new Date('2024-05-20'), Validators.required],
+      horaInicial: ['06:00', Validators.required],
+      horaFinal: ['12:00', [Validators.required, this.horaFinalValidator()]]
     });
 
-    // Verifica se há preferência de tema salva
     const savedTheme = localStorage.getItem('theme');
     this.isDarkMode = savedTheme === 'dark';
     this.updateTheme();
@@ -682,6 +795,7 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
     // Adiciona listener para mudanças no tamanho da tela
     this.handleScreenSize();
     window.addEventListener('resize', () => this.handleScreenSize());
+    this.loadVeiculos();
   }
 
   ngAfterViewInit() {
@@ -806,12 +920,19 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
     return previousFilters;
   }
 
-  onDateChange(event: MatDatepickerInputEvent<Date>, field: string): void {
-    this.filterForm.get(field)?.setValue(event.value);
+  onDateChange(event: any, field: string): void {
+    if (event instanceof MatDatepickerInputEvent) {
+      this.filterForm.get(field)?.setValue(event.value);
+    } else {
+      // Handle native date input event
+      const date = new Date(event.target.value);
+      this.filterForm.get(field)?.setValue(date);
+    }
   }
 
-  onTimeChange(event: any, field: string): void {
-    this.filterForm.get(field)?.setValue(event.target.value);
+  onTimeChange(event: Event, field: string): void {
+    const target = event.target as HTMLInputElement;
+    this.filterForm.get(field)?.setValue(target.value);
   }
 
   applyFilter(): void {
@@ -821,91 +942,114 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
 
   resetFilters(): void {
     this.filterForm.reset({
-      placa: '48122',
-      horaInicial: '09:00',
-      horaFinal: '11:35'
+      placa: '47457',
+      data: new Date('2024-05-20'),
+      horaInicial: '06:00',
+      horaFinal: '12:00'
     });
     this.loadData();
     this.loadPreviousPeriodData();
   }
 
   exportToExcel(): void {
-    this.tripAnalysisService.exportToExcel(this.dataSource.data);
+    const currentData = this.getCurrentPageData();
+    if (currentData) {
+      const exportData = {
+        'Data': new Date(currentData.inicio).toLocaleDateString('pt-BR'),
+        'Hora Início': new Date(currentData.inicio).toLocaleTimeString('pt-BR'),
+        'Hora Fim': new Date(currentData.fim).toLocaleTimeString('pt-BR'),
+        'Mecânica': currentData.mecanica,
+        'Modelo': currentData.modelo || '-',
+        'Versão': currentData.versao,
+        'Status': currentData.status,
+        'KM': currentData.km?.toFixed(1),
+        'Distância (km)': currentData.distancia?.toFixed(1),
+        'Litros': currentData.litros?.toFixed(1),
+        'Litros Parado': currentData.litrosParado,
+        'KM/Litro': currentData.kmPorLitro?.toFixed(2),
+        'Giro (%)': currentData.giro,
+        'Freio (%)': currentData.freio,
+        'Pedal (%)': currentData.pedal,
+        'Odômetro Inicial': currentData.odometroInicial?.toFixed(1),
+        'Odômetro Final': currentData.odometroFinal?.toFixed(1)
+      };
+
+      this.tripAnalysisService.exportToExcel([exportData]);
+    }
   }
 
-  // Summary card calculations
   getTotalDistance(): number {
-    return this.dataSource.data.reduce((total, trip) => total + trip.distancia, 0);
+    return this.dataSource.data.reduce((total, trip) => total + (trip.distancia || 0), 0);
   }
 
   getDistanceChange(): number {
     const currentTotal = this.getTotalDistance();
-    const previousTotal = this.previousPeriodData.reduce((total, trip) => total + trip.distancia, 0);
+    const previousTotal = this.previousPeriodData.reduce((total, trip) => total + (trip.distancia || 0), 0);
     return previousTotal ? Math.round(((currentTotal - previousTotal) / previousTotal) * 100) : 0;
   }
 
   getAverageFuelConsumption(): number {
     const trips = this.dataSource.data;
     if (!trips.length) return 0;
-    return Math.round(trips.reduce((total, trip) => total + trip.kmPorLitro, 0) / trips.length * 100) / 100;
+    return Math.round(trips.reduce((total, trip) => total + (trip.kmPorLitro || 0), 0) / trips.length * 100) / 100;
   }
 
   getFuelConsumptionChange(): number {
     const currentAvg = this.getAverageFuelConsumption();
-    const previousAvg = this.previousPeriodData.length ? 
-      this.previousPeriodData.reduce((total, trip) => total + trip.kmPorLitro, 0) / this.previousPeriodData.length : 0;
+    const previousAvg = this.previousPeriodData.length ?
+      this.previousPeriodData.reduce((total, trip) => total + (trip.kmPorLitro || 0), 0) / this.previousPeriodData.length : 0;
     return previousAvg ? Math.round(((currentAvg - previousAvg) / previousAvg) * 100) : 0;
   }
 
   getAverageSpeed(): number {
     const trips = this.dataSource.data;
     if (!trips.length) return 0;
-    return Math.round(trips.reduce((total, trip) => total + trip.velocidadeMedia, 0) / trips.length);
+    return Math.round(trips.reduce((total, trip) => total + (trip.velocidadeMedia || 0), 0) / trips.length);
   }
 
   getSpeedChange(): number {
     const currentAvg = this.getAverageSpeed();
-    const previousAvg = this.previousPeriodData.length ? 
-      this.previousPeriodData.reduce((total, trip) => total + trip.velocidadeMedia, 0) / this.previousPeriodData.length : 0;
+    const previousAvg = this.previousPeriodData.length ?
+      this.previousPeriodData.reduce((total, trip) => total + (trip.velocidadeMedia || 0), 0) / this.previousPeriodData.length : 0;
     return previousAvg ? Math.round(((currentAvg - previousAvg) / previousAvg) * 100) : 0;
   }
 
   getAverageBrakeUsage(): number {
     const trips = this.dataSource.data;
     if (!trips.length) return 0;
-    return Math.round(trips.reduce((total, trip) => total + trip.freio, 0) / trips.length);
+    return Math.round(trips.reduce((total, trip) => total + (trip.freio || 0), 0) / trips.length);
   }
 
   getBrakeUsageChange(): number {
     const currentAvg = this.getAverageBrakeUsage();
-    const previousAvg = this.previousPeriodData.length ? 
-      this.previousPeriodData.reduce((total, trip) => total + trip.freio, 0) / this.previousPeriodData.length : 0;
+    const previousAvg = this.previousPeriodData.length ?
+      this.previousPeriodData.reduce((total, trip) => total + (trip.freio || 0), 0) / this.previousPeriodData.length : 0;
     return previousAvg ? Math.round(((currentAvg - previousAvg) / previousAvg) * 100) : 0;
   }
 
   getAverageRPM(): number {
     const trips = this.dataSource.data;
     if (!trips.length) return 0;
-    return Math.round(trips.reduce((total, trip) => total + trip.giro, 0) / trips.length);
+    return Math.round(trips.reduce((total, trip) => total + (trip.giro || 0), 0) / trips.length);
   }
 
   getRPMChange(): number {
     const currentAvg = this.getAverageRPM();
-    const previousAvg = this.previousPeriodData.length ? 
-      this.previousPeriodData.reduce((total, trip) => total + trip.giro, 0) / this.previousPeriodData.length : 0;
+    const previousAvg = this.previousPeriodData.length ?
+      this.previousPeriodData.reduce((total, trip) => total + (trip.giro || 0), 0) / this.previousPeriodData.length : 0;
     return previousAvg ? Math.round(((currentAvg - previousAvg) / previousAvg) * 100) : 0;
   }
 
   getAveragePedalUsage(): number {
     const trips = this.dataSource.data;
     if (!trips.length) return 0;
-    return Math.round(trips.reduce((total, trip) => total + trip.pedal, 0) / trips.length);
+    return Math.round(trips.reduce((total, trip) => total + (trip.pedal || 0), 0) / trips.length);
   }
 
   getPedalChange(): number {
     const currentAvg = this.getAveragePedalUsage();
-    const previousAvg = this.previousPeriodData.length ? 
-      this.previousPeriodData.reduce((total, trip) => total + trip.pedal, 0) / this.previousPeriodData.length : 0;
+    const previousAvg = this.previousPeriodData.length ?
+      this.previousPeriodData.reduce((total, trip) => total + (trip.pedal || 0), 0) / this.previousPeriodData.length : 0;
     return previousAvg ? Math.round(((currentAvg - previousAvg) / previousAvg) * 100) : 0;
   }
 
@@ -918,7 +1062,6 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.updateDisplayedData();
-    // Atualizar o mapa quando mudar de página
     setTimeout(() => {
       this.updateMapRoute();
     }, 100);
@@ -1080,8 +1223,9 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  getCurrentPageData(): any {
-    return this.dataSource.data[this.pageIndex];
+  getCurrentPageData(): TripData | null {
+    const startIndex = this.pageIndex * this.pageSize;
+    return this.dataSource.data[startIndex] || null;
   }
 
   getCurrentDayInfo(): string {
@@ -1228,4 +1372,105 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
       this.directionsRenderer.setMap(this.googleMap.googleMap);
     }
   }
-} 
+
+  loadVeiculos() {
+    const graphqlQuery = {
+      query: `
+        {
+          getVeiculos(token:"TKNAPI2100", sEmpresaId:${this.empresa}) {
+            placa
+          }
+        }
+      `
+    };
+
+    this.http.post(this.getPath('graphql'), graphqlQuery).subscribe({
+      next: (response: any) => {
+        if (response?.data?.getVeiculos) {
+          this.veiculos = response.data.getVeiculos.map((v: any) => ({
+            value: v.placa,
+            label: v.placa
+          }));
+        }
+      },
+      error: (error) => {
+        console.error('Erro ao carregar veículos:', error);
+        alert('Erro ao carregar lista de veículos');
+      }
+    });
+  }
+
+  getConsumoV4() {
+    if (!this.veiculoIV) {
+      alert("Selecione o veiculo");
+      return;
+    }
+    
+    if (!this.dateRangeIV || this.dateRangeIV.length !== 2) {
+      alert("Selecione o periodo");
+      return;
+    }
+
+    const firstDate = new Date(this.dateRangeIV[0]);
+    const secondDate = new Date(this.dateRangeIV[1]);
+    const agora = new Date();
+
+    if ((agora.getTime() - firstDate.getTime()) > 24 * 60 * 60 * 1000) {
+      alert("Inicio nao pode ser anterior a 24 horas");
+      return;
+    }
+
+    const dtIni = formatDate(firstDate, "yyyy/MM/dd HH:mm", "en-US");
+    const dtFim = formatDate(secondDate, "yyyy/MM/dd HH:mm", "en-US");
+
+    this.dadosViagem = [];
+    const graphqlQuery = {
+      query: `{ 
+        getConsumoV4(
+          token: "TKNAPI2100",
+          tipo: 1,
+          periodo: 1,
+          sEmpresaId: ${this.empresa},
+          strVei: "${this.veiculoIV}",
+          dtIni: "${dtIni}",
+          dtFim: "${dtFim}",
+          sUsrLog: ${this.authSrv.getUserId()}
+        ) { 
+          placa nmmodelo nmmodonibus nmEqpto dia hinisml hfimsml hinisql hfimsql
+          km dst litros litpar kml kmldst tfp efal efaldst mdf pedal pedalo500
+          vma vme dinisml dfimsml tpotor600 tpotor700 tpoEPP tpoMov tpoLig versao
+          versao_subst corretor dt_corretor idveiculo odoini odofim tpotor400
+          tpotor500 faixaspedal idmodelo tpoEFr rpmParCom rpmSemCon idEqpto
+          stsprob idhistprob id_wftd_tipo problema reserva13 modo_ope comar ultCon
+        }
+      }`
+    };
+
+    this.http.post(this.getPath('graphql'), graphqlQuery).subscribe({
+      next: (response: any) => {
+        if (response?.data?.getConsumoV4) {
+          const data = response.data.getConsumoV4;
+          this.formatTripData(data);
+          this.lblUltConIV = data.ultCon || '';
+        }
+      },
+      error: (error) => {
+        console.error('Erro na consulta:', error);
+        alert('Erro ao buscar dados da viagem');
+      }
+    });
+  }
+
+  private formatTripData(data: any) {
+    this.dadosViagem = [
+      { cpo1: 'Placa', val1: data.placa || '-', cpo2: 'Modelo', val2: data.nmmodelo || '-' },
+      { cpo1: 'Distância', val1: `${data.dst || '0'} km`, cpo2: 'Consumo', val2: `${data.litros || '0'} L` },
+      { cpo1: 'KM/L', val1: data.kml || '0', cpo2: 'Pedal', val2: `${data.pedal || '0'}%` },
+      { cpo1: 'Giro', val1: `${data.rpmParCom || '0'}%`, cpo2: 'Freio', val2: `${data.tpoEFr || '0'}%` }
+    ];
+  }
+
+  private getPath(endpoint: string): string {
+    return `${environment.apiUrl}/${endpoint}`;
+  }
+}

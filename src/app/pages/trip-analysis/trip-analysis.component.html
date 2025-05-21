@@ -26,7 +26,7 @@
 </header>
 
 <!-- Main Content -->
-<main class="container mx-auto px-4 md:px-8 pt-24 pb-8">
+<main class="container mx-auto px-4 md:px-8 mt-10 pb-8">
   <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4">
     <h1 class="text-2xl font-bold text-on-surface flex items-center">
       Análise de Viagens
@@ -66,17 +66,15 @@
     <mat-card-content class="p-6">
       <form [formGroup]="filterForm" class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Placa Input -->
-        <mat-form-field appearance="fill" class="w-full rounded-lg">
-          <mat-label class="font-bold text-lg">Número do Veículo</mat-label>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label class="font-medium">Número do Veículo</mat-label>
           <input 
             matInput 
             formControlName="placa" 
             placeholder="48122" 
             maxlength="5"
-            class="rounded-lg"
-            aria-describedby="placaHint">
-          <ng-icon matSuffix name="matDirectionsCarRound"></ng-icon>
-          <mat-hint id="placaHint">Ex: 48122</mat-hint>
+                        class="rounded-lg"            aria-describedby="placaHint">          <div matSuffix class="ml-2">            <ng-icon name="matDirectionsCarRound" class="text-amber-400"></ng-icon>          </div>
+          <mat-hint id="placaHint" class="text-on-surface-variant">Ex: 48122</mat-hint>
           <mat-error *ngIf="filterForm.get('placa')?.hasError('required')">
             Número é obrigatório
           </mat-error>
@@ -86,40 +84,36 @@
         </mat-form-field>
         
         <!-- Data Input -->
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label class="font-bold text-lg">Data</mat-label>
-          <input 
-            matInput 
-            [matDatepicker]="picker" 
-            formControlName="data">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label class="font-medium">Data</mat-label>
+          <!-- Mobile Date Input -->          <input             matInput            type="date"            formControlName="data"            class="md:hidden rounded-lg"            (change)="onDateChange($event, 'data')">          <!-- Desktop Date Input -->          <input             matInput            [matDatepicker]="picker"            formControlName="data"            placeholder="Selecione a data"            class="hidden md:block rounded-lg">          <div matSuffix class="flex items-center">            <mat-datepicker-toggle [for]="picker"></mat-datepicker-toggle>          </div>          <mat-datepicker #picker></mat-datepicker>
           <mat-error *ngIf="filterForm.get('data')?.hasError('required')">
             Data é obrigatória
           </mat-error>
         </mat-form-field>
         
         <!-- Hora Inicial Input -->
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label class="font-bold text-lg">Hora Inicial</mat-label>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label class="font-medium">Hora Inicial</mat-label>
           <input 
             matInput 
-            type="time" 
-            formControlName="horaInicial">
-          <ng-icon matSuffix name="matScheduleRound"></ng-icon>
+            type="time"            
+            formControlName="horaInicial"            
+            class="rounded-lg">          
+            <div matSuffix class="ml-2">            
+              <ng-icon name="matScheduleRound" class="text-amber-400"></ng-icon>          
+            </div>
           <mat-error *ngIf="filterForm.get('horaInicial')?.hasError('required')">
             Hora inicial é obrigatória
           </mat-error>
         </mat-form-field>
         
         <!-- Hora Final Input -->
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label class="font-bold text-lg">Hora Final</mat-label>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label class="font-medium">Hora Final</mat-label>
           <input 
             matInput 
-            type="time" 
-            formControlName="horaFinal">
-          <ng-icon matSuffix name="matAvTimerRound"></ng-icon>
+            type="time"            formControlName="horaFinal"            class="rounded-lg">          <div matSuffix class="ml-2">            <ng-icon name="matAvTimerRound" class="text-amber-400"></ng-icon>          </div>
           <mat-error *ngIf="filterForm.get('horaFinal')?.hasError('required')">
             Hora final é obrigatória
           </mat-error>
@@ -310,58 +304,120 @@
       
       <!-- Desktop Layout -->
       <div *ngIf="!isLoading && dataSource.data.length > 0" class="hidden md:block overflow-x-auto">
-        <table class="min-w-full mt-4">
-          <thead>
-            <tr class="text-left text-on-surface-variant border-b border-gray-100 dark:border-gray-800">
-              <th class="pb-3 pr-4">Data</th>
-              <th class="pb-3 pr-4">Início</th>
-              <th class="pb-3 pr-4">Fim</th>
-              <th class="pb-3 pr-4">Mecânica</th>
-              <th class="pb-3 pr-4">Modelo</th>
-              <th class="pb-3 pr-4">Versão</th>
-              <th class="pb-3 pr-4">Status</th>
-              <th class="pb-3 pr-4">KM</th>
-              <th class="pb-3 pr-4">Distância</th>
-              <th class="pb-3 pr-4">Litros</th>
-              <th class="pb-3 pr-4">L. Parado</th>
-              <th class="pb-3 pr-4">KM/Litro</th>
-              <th class="pb-3 pr-4">Giro</th>
-              <th class="pb-3 pr-4">Freio</th>
-              <th class="pb-3 pr-4">Pedal</th>
-              <th class="pb-3 pr-4">O. Inicial</th>
-              <th class="pb-3 pr-4">O. Final</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of dataSource.data" class="border-b border-gray-100 dark:border-gray-800">
-              <td class="py-3 pr-4 text-on-surface">{{item?.inicio | date:'dd/MM/yyyy'}}</td>
-              <td class="py-3 pr-4 text-on-surface">{{item?.inicio | date:'HH:mm'}}</td>
-              <td class="py-3 pr-4 text-on-surface">{{item?.fim | date:'HH:mm'}}</td>
-              <td class="py-3 pr-4 text-on-surface">{{item?.mecanica}}</td>
-              <td class="py-3 pr-4 text-on-surface">{{item?.modelo || '-'}}</td>
-              <td class="py-3 pr-4 text-on-surface">{{item?.versao}}</td>
-              <td class="py-3 pr-4">
-                <span class="px-3 py-1 rounded-lg text-xs font-medium"
-                      [class.bg-green-100]="item?.status === 'Ok'"
-                      [class.text-green-800]="item?.status === 'Ok'"
-                      [class.bg-amber-100]="item?.status !== 'Ok'"
-                      [class.text-amber-800]="item?.status !== 'Ok'">
-                  {{item?.status}}
-                </span>
-              </td>
-              <td class="py-3 pr-4 text-on-surface">{{item?.km?.toFixed(1)}}</td>
-              <td class="py-3 pr-4 text-on-surface">{{item?.distancia?.toFixed(1)}} km</td>
-              <td class="py-3 pr-4 text-on-surface">{{item?.litros?.toFixed(1)}}</td>
-              <td class="py-3 pr-4 text-on-surface">{{item?.litrosParado}} ({{item?.litrosParado && item?.litros ? ((item.litrosParado / item.litros) * 100).toFixed(0) : 0}}%)</td>
-              <td class="py-3 pr-4 text-on-surface">{{item?.kmPorLitro?.toFixed(2)}}</td>
-              <td class="py-3 pr-4 text-on-surface">{{item?.giro}}%</td>
-              <td class="py-3 pr-4 text-on-surface">{{item?.freio}}%</td>
-              <td class="py-3 pr-4 text-on-surface">{{item?.pedal}}%</td>
-              <td class="py-3 pr-4 text-on-surface">{{item?.odometroInicial?.toFixed(1)}}</td>
-              <td class="py-3 pr-4 text-on-surface">{{item?.odometroFinal?.toFixed(1)}}</td>
-            </tr>
-          </tbody>
-        </table>
+        <mat-table [dataSource]="dataSource" class="min-w-full mt-4">
+          <!-- Data Column -->
+          <ng-container matColumnDef="data">
+            <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Data</mat-header-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.inicio | date:'shortDate'}}</mat-cell>
+          </ng-container>
+
+          <!-- Início Column -->
+          <ng-container matColumnDef="inicio">
+            <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Início</mat-header-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.inicio | date:'HH:mm'}}</mat-cell>
+          </ng-container>
+
+          <!-- Fim Column -->
+          <ng-container matColumnDef="fim">
+            <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Fim</mat-header-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.fim | date:'HH:mm'}}</mat-cell>
+          </ng-container>
+
+          <!-- Mecânica Column -->
+          <ng-container matColumnDef="mecanica">
+            <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Mecânica</mat-header-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.mecanica}}</mat-cell>
+          </ng-container>
+
+          <!-- Modelo Column -->
+          <ng-container matColumnDef="modelo">
+            <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Modelo</mat-header-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.modelo || '-'}}</mat-cell>
+          </ng-container>
+
+          <!-- Versão Column -->
+          <ng-container matColumnDef="versao">
+            <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Versão</mat-header-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.versao}}</mat-cell>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Status</mat-header-cell>
+            <mat-cell *matCellDef="let item">
+              <span class="px-3 py-1 rounded-lg text-xs font-medium"
+                    [class.bg-green-100]="item?.status === 'Ok'"
+                    [class.text-green-800]="item?.status === 'Ok'"
+                    [class.bg-amber-100]="item?.status !== 'Ok'"
+                    [class.text-amber-800]="item?.status !== 'Ok'">
+                {{item?.status}}
+              </span>
+            </mat-cell>
+          </ng-container>
+
+          <!-- KM Column -->
+          <ng-container matColumnDef="km">
+            <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">KM</mat-header-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.km?.toFixed(1)}}</mat-cell>
+          </ng-container>
+
+          <!-- Distância Column -->
+          <ng-container matColumnDef="distancia">
+            <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Distância</mat-header-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.distancia?.toFixed(1)}} km</mat-cell>
+          </ng-container>
+
+          <!-- Litros Column -->
+          <ng-container matColumnDef="litros">
+            <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Litros</mat-header-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.litros?.toFixed(1)}}</mat-cell>
+          </ng-container>
+
+          <!-- Litros Parado Column -->
+          <ng-container matColumnDef="litrosParado">
+            <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">L. Parado</mat-header-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.litrosParado}} ({{item?.litrosParado && item?.litros ? ((item.litrosParado / item.litros) * 100).toFixed(0) : 0}}%)</mat-cell>
+          </ng-container>
+
+          <!-- KM/Litro Column -->
+          <ng-container matColumnDef="kmPorLitro">
+            <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">KM/Litro</mat-header-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.kmPorLitro?.toFixed(2)}}</mat-cell>
+          </ng-container>
+
+          <!-- Giro Column -->
+          <ng-container matColumnDef="giro">
+            <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Giro</mat-header-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.giro}}%</mat-cell>
+          </ng-container>
+
+          <!-- Freio Column -->
+          <ng-container matColumnDef="freio">
+            <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Freio</mat-header-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.freio}}%</mat-cell>
+          </ng-container>
+
+          <!-- Pedal Column -->
+          <ng-container matColumnDef="pedal">
+            <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Pedal</mat-header-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.pedal}}%</mat-cell>
+          </ng-container>
+
+          <!-- Odômetro Inicial Column -->
+          <ng-container matColumnDef="odometroInicial">
+            <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">O. Inicial</mat-header-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.odometroInicial?.toFixed(1)}}</mat-cell>
+          </ng-container>
+
+          <!-- Odômetro Final Column -->
+          <ng-container matColumnDef="odometroFinal">
+            <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">O. Final</mat-header-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.odometroFinal?.toFixed(1)}}</mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
       </div>
       
       <!-- Mobile Layout -->
@@ -403,7 +459,7 @@
           <div class="space-y-4 bg-surface-container-lowest dark:bg-surface-container-low rounded-xl p-4">
             <div class="flex justify-between py-3 border-b border-outline/10">
               <span class="text-on-surface-variant">Data</span>
-              <span class="text-on-surface">{{item?.inicio | date:'dd/MM/yyyy'}}</span>
+              <span class="text-on-surface">{{item?.inicio | date:'shortDate'}}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-outline/10">
               <span class="text-on-surface-variant">Início</span>
@@ -554,6 +610,25 @@
           (mapClick)="onMapClick($event)"
           #googleMap>
         </google-map>
+
+        <!-- Map Legend -->
+        <div class="absolute bottom-4 left-4 bg-white dark:bg-gray-800 p-3 rounded-lg shadow-md z-10">
+          <h4 class="text-sm font-semibold mb-2 text-gray-700 dark:text-gray-200">Legenda</h4>
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 rounded-full bg-[#34D399] border-2 border-white"></div>
+              <span class="text-sm text-gray-600 dark:text-gray-300">Início da Viagem</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 rounded-full bg-[#F59E0B] border-2 border-white"></div>
+              <span class="text-sm text-gray-600 dark:text-gray-300">Ponto de Parada</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 rounded-full bg-[#F43F5E] border-2 border-white"></div>
+              <span class="text-sm text-gray-600 dark:text-gray-300">Destino Final</span>
+            </div>
+          </div>
+        </div>
       </div>
     </mat-card-content>
   </mat-card>
@@ -675,3 +750,59 @@
     color: var(--md-sys-color-on-surface-variant) !important;
   }
 </style>
+
+<!-- Analise de Viagem -->
+<div style="margin-top:10px;margin-bottom:10px;" *ngIf="isAdmin">
+  <h4 class="TitleClass">Analise de Viagem</h4>
+  <div class="form-container">
+    <mat-form-field>
+      <mat-label>Veículo</mat-label>
+      <mat-select [(ngModel)]="veiculoIV">
+        <mat-option *ngFor="let veiculo of veiculos" [value]="veiculo.value">
+          {{veiculo.label}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Período</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input matStartDate [(ngModel)]="dateRangeIV[0]" placeholder="Data inicial">
+        <input matEndDate [(ngModel)]="dateRangeIV[1]" placeholder="Data final">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="getConsumoV4()">
+      Rodar Análise
+    </button>
+  </div>
+
+  <table mat-table [dataSource]="dadosViagem" class="mat-elevation-z8">
+    <ng-container matColumnDef="campo1">
+      <th mat-header-cell *matHeaderCellDef class="HeaderCenter">Campo</th>
+      <td mat-cell *matCellDef="let element" class="BodyCenter">{{element.cpo1}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="valor1">
+      <th mat-header-cell *matHeaderCellDef class="HeaderCenter">Valor</th>
+      <td mat-cell *matCellDef="let element" class="BodyCenter">{{element.val1}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="campo2">
+      <th mat-header-cell *matHeaderCellDef class="HeaderCenter">Campo</th>
+      <td mat-cell *matCellDef="let element" class="BodyCenter">{{element.cpo2}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="valor2">
+      <th mat-header-cell *matHeaderCellDef class="HeaderCenter">Valor</th>
+      <td mat-cell *matCellDef="let element" class="BodyCenter">{{element.val2}}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="analiseColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: analiseColumns;"></tr>
+  </table>
+
+  <div style="width: 100%; align-items: end; font-weight: bold; margin-top: 1rem;">{{lblUltConIV}}</div>
+</div>
