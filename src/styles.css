@@ -5,6 +5,42 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import '@angular/material/prebuilt-themes/pink-bluegrey.css';
 
+/* Material Design 3 System Colors - Light Theme */
+:root {
+  --md-sys-color-background: #FFFFFF;
+  --md-sys-color-on-background: #1D1D1D;
+  --md-sys-color-surface: #F8F9FA;
+  --md-sys-color-on-surface: #1D1D1D;
+  --md-sys-color-surface-variant: #E1E3E6;
+  --md-sys-color-on-surface-variant: #44474E;
+  --md-sys-color-surface-container: #ECEEF0;
+  --md-sys-color-surface-container-low: #F8F9FA;
+  --md-sys-color-surface-container-high: #E1E3E6;
+  --md-sys-color-surface-container-highest: #D5D7DA;
+  --md-sys-color-outline: #74777F;
+  --md-sys-color-outline-variant: #C4C7CC;
+  --md-sys-elevation-1: 0px 1px 3px rgba(0, 0, 0, 0.1);
+  --md-sys-elevation-2: 0px 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Material Design 3 System Colors - Dark Theme */
+.dark, .dark-theme {
+  --md-sys-color-background: #1D1D1D;
+  --md-sys-color-on-background: #E1E3E6;
+  --md-sys-color-surface: #121212;
+  --md-sys-color-on-surface: #E1E3E6;
+  --md-sys-color-surface-variant: #44474E;
+  --md-sys-color-on-surface-variant: #C4C7CC;
+  --md-sys-color-surface-container: #2D2D2D;
+  --md-sys-color-surface-container-low: #1D1D1D;
+  --md-sys-color-surface-container-high: #2D2D2D;
+  --md-sys-color-surface-container-highest: #3D3D3D;
+  --md-sys-color-outline: #8F9299;
+  --md-sys-color-outline-variant: #44474E;
+  --md-sys-elevation-1: 0px 1px 3px rgba(0, 0, 0, 0.5);
+  --md-sys-elevation-2: 0px 2px 6px rgba(0, 0, 0, 0.6);
+}
+
 @layer base {
   :root {
     --font-sans: "Inter";
@@ -66,9 +102,10 @@
 
 /* Apply styles to the entire application */
 body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
+  background-color: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-background);
   transition: background-color 0.2s ease, color 0.2s ease;
+  font-family: 'Inter', sans-serif;
 }
 
 /* Styles for common components */
@@ -86,24 +123,55 @@ body {
 }
 
 /* Customização do datepicker para tema escuro */
-.mat-calendar {
-  background-color: #1a1a1a !important;
-  color: white !important;
+.dark, .dark-theme {
+  .mat-calendar {
+    background-color: var(--md-sys-color-surface-container) !important;
+    color: var(--md-sys-color-on-surface) !important;
+  }
+
+  .mat-calendar-body-selected {
+    background-color: #F59E0B !important;
+    color: black !important;
+  }
+
+  .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+    background-color: rgba(245, 158, 11, 0.3) !important;
+  }
+
+  .mat-calendar-body-today:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+    border-color: #F59E0B !important;
+  }
+
+  .mat-datepicker-toggle {
+    color: #F59E0B !important;
+  }
 }
 
-.mat-calendar-body-selected {
-  background-color: #fbbf24 !important;
-  color: black !important;
-}
+/* Material Design Components Dark Theme Overrides */
+.dark, .dark-theme {
+  .mat-mdc-card {
+    background-color: var(--md-sys-color-surface-container);
+    color: var(--md-sys-color-on-surface);
+  }
 
-.mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
-  background-color: rgba(251, 191, 36, 0.3) !important;
-}
+  .mat-mdc-form-field {
+    --mdc-filled-text-field-container-color: var(--md-sys-color-surface-container);
+    --mdc-filled-text-field-label-text-color: var(--md-sys-color-on-surface-variant);
+    --mdc-filled-text-field-input-text-color: var(--md-sys-color-on-surface);
+  }
 
-.mat-calendar-body-today:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
-  border-color: #fbbf24 !important;
-}
+  .mat-mdc-table {
+    background-color: transparent;
+  }
 
-.mat-datepicker-toggle {
-  color: #fbbf24 !important;
+  .mat-mdc-header-row {
+    background-color: var(--md-sys-color-surface-container-low);
+  }
+
+  .mat-mdc-row {
+    background-color: var(--md-sys-color-surface);
+    &:hover {
+      background-color: var(--md-sys-color-surface-container);
+    }
+  }
 }

@@ -46,14 +46,19 @@ import { AuthService } from '../../../services/auth.service';
               </div>
               <input
                 id="companyCode"
-                type="number"
+                type="text"
                 formControlName="companyCode"
                 class="block w-full pl-11 pr-3 py-2 border border-gray-300 rounded-full dark:border-gray-600 shadow-sm dark:bg-zinc-800 dark:text-white focus:ring-amber-500 focus:border-amber-500"
                 [class.border-red-500]="loginForm.get('companyCode')?.invalid && loginForm.get('companyCode')?.touched"
                 placeholder="Digite o código da empresa"
-                min="0"
-                oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                (keypress)="onlyNumbers($event)"
+                maxlength="4"
               >
+            </div>
+            <div *ngIf="loginForm.get('companyCode')?.invalid && loginForm.get('companyCode')?.touched" 
+                 class="mt-1 text-sm text-red-500 pl-4">
+              <span *ngIf="loginForm.get('companyCode')?.errors?.['required']">Código da empresa é obrigatório</span>
+              <span *ngIf="loginForm.get('companyCode')?.errors?.['pattern']">Código deve ter 4 dígitos</span>
             </div>
           </div>
 
@@ -68,14 +73,19 @@ import { AuthService } from '../../../services/auth.service';
               </div>
               <input
                 id="registration"
-                type="number"
+                type="text"
                 formControlName="registration"
                 class="block w-full pl-11 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-full shadow-sm dark:bg-zinc-800 dark:text-white focus:ring-amber-500 focus:border-amber-500"
                 [class.border-red-500]="loginForm.get('registration')?.invalid && loginForm.get('registration')?.touched"
                 placeholder="Digite sua matrícula"
-                min="0"
-                oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                (keypress)="onlyNumbers($event)"
+                maxlength="6"
               >
+            </div>
+            <div *ngIf="loginForm.get('registration')?.invalid && loginForm.get('registration')?.touched" 
+                 class="mt-1 text-sm text-red-500 pl-4">
+              <span *ngIf="loginForm.get('registration')?.errors?.['required']">Matrícula é obrigatória</span>
+              <span *ngIf="loginForm.get('registration')?.errors?.['pattern']">Matrícula deve ter 6 dígitos</span>
             </div>
           </div>
 
@@ -96,6 +106,11 @@ import { AuthService } from '../../../services/auth.service';
                 [class.border-red-500]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
                 placeholder="Digite sua senha"
               >
+            </div>
+            <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" 
+                 class="mt-1 text-sm text-red-500 pl-4">
+              <span *ngIf="loginForm.get('password')?.errors?.['required']">Senha é obrigatória</span>
+              <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Senha deve ter no mínimo 6 caracteres</span>
             </div>
           </div>
 
@@ -199,15 +214,25 @@ export class LoginComponent implements OnInit {
     this.loginForm = this.fb.group({
       companyCode: ['', [Validators.required, Validators.pattern('^[0-9]{4}$')]],
       registration: ['', [Validators.required, Validators.pattern('^[0-9]{6}$')]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      rememberMe: [false]
     });
   }
 
   ngOnInit(): void {
     // Verificar se já está autenticado
     if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/home']);
     }
+  }
+
+  onlyNumbers(event: KeyboardEvent): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
   }
 
   async onSubmit(): Promise<void> {
@@ -219,11 +244,42 @@ export class LoginComponent implements OnInit {
     this.errorMessage = '';
 
     try {
-      const { companyCode, registration, password } = this.loginForm.value;
-      const success = await this.authService.login(companyCode, registration, password);
+      const formData = this.loginForm.value;
+      
+      // Garante que o código da empresa tenha 4 dígitos com zeros à esquerda
+      const companyCode = formData.companyCode.padStart(4, '0');
+      
+      // Garante que a matrícula tenha 6 dígitos com zeros à esquerda
+      const registration = formData.registration.padStart(6, '0');
+
+      const success = await this.authService.login(companyCode, registration, formData.password);
 
       if (success) {
-        this.router.navigate(['/dashboard']);
+        // Get current user
+        const currentUser = this.authService.getCurrentUserValue();
+        
+        if (!currentUser) {
+          this.errorMessage = 'Erro ao obter dados do usuário';
+          return;
+        }
+
+        // Redirect based on user status
+        switch (currentUser.status) {
+          case 'approved':
+            await this.router.navigate(['/home']);
+            break;
+          case 'pending':
+            await this.router.navigate(['/awaiting-approval']);
+            break;
+          case 'rejected':
+          case 'blocked':
+            this.errorMessage = 'Sua conta foi ' + (currentUser.status === 'rejected' ? 'rejeitada' : 'bloqueada');
+            await this.authService.logout(false);
+            break;
+          default:
+            this.errorMessage = 'Status de usuário inválido';
+            break;
+        }
       } else {
         this.errorMessage = 'Código da empresa, matrícula ou senha inválidos';
       }

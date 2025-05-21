@@ -1,33 +1,47 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { GoogleMap, GoogleMapsModule, MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import {
-  matAvTimerRound,
-  matBatteryAlertRound,
-  matClearRound,
-  matDarkModeRound,
-  matDirectionsCarRound,
-  matDownloadRound,
-  matFilterAltRound,
-  matLightModeRound,
-  matLocalGasStationRound,
-  matPedalBikeRound,
-  matScheduleRound,
-  matSearchOffRound,
-  matSearchRound,
-  matSpeedRound,
-  matTrendingDownRound,
-  matTrendingUpRound
+    matAddRound,
+    matAvTimerRound,
+    matBarChartRound,
+    matBatteryAlertRound,
+    matClearRound,
+    matDarkModeRound,
+    matDirectionsCarRound,
+    matDownloadRound,
+    matFilterAltRound,
+    matGridViewRound,
+    matInsightsRound,
+    matLightModeRound,
+    matLocalGasStationRound,
+    matMapRound,
+    matPedalBikeRound,
+    matRefreshRound,
+    matRemoveRound,
+    matScheduleRound,
+    matSearchOffRound,
+    matSearchRound,
+    matSpeedRound,
+    matTrendingDownRound,
+    matTrendingUpRound
 } from '@ng-icons/material-icons/round';
+import { ChartConfiguration, ChartType } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
 import { TripAnalysisService, TripData } from '../../services/trip-analysis.service';
 
 @Component({
@@ -45,8 +59,14 @@ import { TripAnalysisService, TripData } from '../../services/trip-analysis.serv
     MatTableModule,
     MatCardModule,
     MatChipsModule,
+    MatTooltipModule,
     DatePipe,
-    NgIconComponent
+    NgIconComponent,
+    MatButtonToggleModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    GoogleMapsModule,
+    BaseChartDirective
   ],
   viewProviders: [
     provideIcons({
@@ -65,28 +85,52 @@ import { TripAnalysisService, TripData } from '../../services/trip-analysis.serv
       matSearchOffRound,
       matPedalBikeRound,
       matFilterAltRound,
-      matScheduleRound
-    })
+      matScheduleRound,
+      matMapRound,
+      matAddRound,
+      matRemoveRound,
+      matRefreshRound,
+      matInsightsRound,
+      matGridViewRound,
+      matBarChartRound
+    }),
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }
   ],
   styles: [`
     :host {
       display: block;
       min-height: 100vh;
-      background-color: var(--md-sys-color-background);
+      background-color: rgb(249, 250, 251);
       color: var(--md-sys-color-on-background);
+    }
+
+    .dark :host {
+      background-color: rgb(17, 24, 39);
     }
 
     /* Material Design 3 Card Styles */
     .surface-container-highest {
       background-color: var(--md-sys-color-surface-container-highest);
-      border-radius: 28px;
       box-shadow: var(--md-sys-elevation-2);
+      border-radius: 1rem;
+      overflow: hidden;
     }
 
     .surface-container-high {
       background-color: var(--md-sys-color-surface-container-high);
-      border-radius: 28px;
       box-shadow: var(--md-sys-elevation-1);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+
+    /* Material Design 3 Card Content Styles */
+    .mat-mdc-card {
+      border-radius: 1rem !important;
+      overflow: hidden;
+    }
+
+    .mat-mdc-card-content {
+      padding: 1rem;
     }
 
     /* Material Design 3 Form Field Styles */
@@ -97,36 +141,37 @@ import { TripAnalysisService, TripData } from '../../services/trip-analysis.serv
       --mdc-filled-text-field-focus-label-text-color: #F59E0B;
       --mdc-filled-text-field-label-text-color: var(--md-sys-color-on-surface-variant);
       --mdc-filled-text-field-input-text-color: var(--md-sys-color-on-surface);
-      border-radius: 20px 20px 4px 4px;
+      border-radius: 0.5rem;
     }
 
     ::ng-deep .mat-mdc-form-field-flex {
-      border-radius: 20px 20px 4px 4px;
+      border-radius: 0.5rem 0.5rem 0 0;
       padding: 0 16px !important;
     }
 
     ::ng-deep .mat-mdc-text-field-wrapper {
-      border-radius: 20px 20px 4px 4px;
+      border-radius: 0.5rem 0.5rem 0 0;
     }
 
     /* Material Design 3 Button Styles */
     ::ng-deep .mat-mdc-button.mat-primary {
       --mdc-filled-button-container-color: #F59E0B;
       --mdc-filled-button-label-text-color: #000000;
-      border-radius: 20px;
+      border-radius: 0.5rem;
     }
 
     ::ng-deep .mat-mdc-button.mat-stroked {
       --mdc-outlined-button-outline-color: var(--md-sys-color-outline);
       --mdc-outlined-button-label-text-color: var(--md-sys-color-on-surface);
-      border-radius: 20px;
+      border-radius: 0.5rem;
     }
 
     /* Material Design 3 Table Styles */
     ::ng-deep .mat-mdc-table {
       background: transparent;
       --mat-table-background-color: transparent;
-      border-radius: 0;
+      border-radius: 0.5rem;
+      overflow: hidden;
     }
 
     ::ng-deep .mat-mdc-header-row {
@@ -178,9 +223,177 @@ import { TripAnalysisService, TripData } from '../../services/trip-analysis.serv
       font-size: var(--md-sys-typescale-body-large-font-size);
       line-height: var(--md-sys-typescale-body-large-line-height);
     }
+
+    /* Button Toggle Styles */
+    ::ng-deep .mat-button-toggle-group {
+      border-radius: 9999px;
+      overflow: hidden;
+      position: relative;
+      border: none !important;
+      background-color: var(--md-sys-color-surface-container-highest);
+      padding: 4px;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+    }
+
+    ::ng-deep .mat-button-toggle {
+      border: none !important;
+      background: transparent;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+      margin: 0 2px;
+      border-radius: 9999px;
+    }
+
+    ::ng-deep .mat-button-toggle-button {
+      border-radius: 9999px;
+    }
+
+    ::ng-deep .mat-button-toggle-checked {
+      color: var(--md-sys-color-on-primary) !important;
+      background: transparent !important;
+    }
+
+    ::ng-deep .mat-button-toggle-group .mat-button-toggle-checked::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #F59E0B;
+      z-index: -1;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-origin: left;
+      border-radius: 9999px;
+      box-shadow: 0 2px 4px rgba(245, 158, 11, 0.1);
+    }
+
+    ::ng-deep .mat-button-toggle-group .mat-button-toggle:not(.mat-button-toggle-checked) {
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    ::ng-deep .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+      line-height: 32px;
+      padding: 0 16px;
+      font-weight: 500;
+      border-radius: 9999px;
+    }
+
+    ::ng-deep .mat-button-toggle-group .mat-button-toggle:first-child.mat-button-toggle-checked ~ .mat-button-toggle-checked::before {
+      transform: translateX(-100%);
+    }
+
+    ::ng-deep .mat-button-toggle-group .mat-button-toggle:last-child.mat-button-toggle-checked::before {
+      transform: translateX(0);
+    }
+
+    ::ng-deep .mat-button-toggle-group.mat-button-toggle-group-appearance-standard {
+      border-radius: 9999px;
+      background: var(--md-sys-color-surface-container-low);
+      padding: 4px;
+    }
+
+    ::ng-deep .mat-button-toggle .mat-button-toggle-button::after {
+      display: none !important;
+    }
+
+    ::ng-deep .mat-button-toggle-checked .mat-button-toggle-button::after {
+      display: none !important;
+    }
+
+    ::ng-deep .mat-button-toggle-focus-overlay {
+      display: none;
+    }
+
+    ::ng-deep .mat-button-toggle .mat-ripple {
+      display: none;
+    }
+
+    .dark ::ng-deep .mat-button-toggle-group {
+      background-color: var(--md-sys-color-surface-container-low);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    }
+
+    /* Progress Bar Styles */
+    ::ng-deep .mat-mdc-progress-bar {
+      border-radius: 0.5rem;
+    }
+
+    /* Tooltip Styles */
+    ::ng-deep .mat-mdc-tooltip {
+      border-radius: 0.5rem !important;
+    }
+
+    /* Menu Styles */
+    ::ng-deep .mat-mdc-menu-panel {
+      border-radius: 0.5rem !important;
+    }
+
+    /* Select Styles */
+    ::ng-deep .mat-mdc-select-panel {
+      border-radius: 0.5rem !important;
+    }
+
+    /* Dialog Styles */
+    ::ng-deep .mat-mdc-dialog-container {
+      border-radius: 0.5rem !important;
+    }
+
+    /* Responsive Table Styles */
+    @media (max-width: 767px) {
+      ::ng-deep .mat-mdc-paginator {
+        background: transparent;
+      }
+
+      ::ng-deep .mat-mdc-paginator-page-size {
+        display: none !important;
+      }
+
+      ::ng-deep .mat-mdc-paginator-range-label {
+        margin: 0 12px !important;
+      }
+
+      ::ng-deep .mat-mdc-table {
+        border: none;
+        box-shadow: none;
+      }
+
+      ::ng-deep .mat-mdc-row {
+        padding: 8px;
+        margin-bottom: 8px;
+        border-radius: 8px;
+        background-color: var(--md-sys-color-surface-container-high);
+      }
+
+      ::ng-deep .mat-mdc-header-row {
+        display: none;
+      }
+
+      ::ng-deep .mat-mdc-row {
+        flex-direction: column;
+        align-items: start;
+        padding: 16px;
+      }
+
+      ::ng-deep .mat-mdc-cell {
+        width: 100%;
+        text-align: left;
+        padding: 4px 0;
+        border-bottom: none;
+      }
+
+      ::ng-deep .mat-mdc-cell:before {
+        content: attr(data-label);
+        float: left;
+        font-weight: 500;
+        color: var(--md-sys-color-on-surface-variant);
+        margin-right: 8px;
+      }
+    }
   `]
 })
-export class TripAnalysisComponent implements OnInit {
+export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
   filterForm: FormGroup;
   displayedColumns: string[] = [
     'inicio',
@@ -204,19 +417,235 @@ export class TripAnalysisComponent implements OnInit {
   dataSource = new MatTableDataSource<TripData>();
   previousPeriodData: TripData[] = [];
   isDarkMode = true;
+  isLoading = false;
+  updateAvailable = false;
+  currentYear = new Date().getFullYear();
+  pageIndex = 0;
+  pageSize = 10;
+  pageSizeOptions = [5, 10, 25, 100];
+  totalItems = 0;
+  displayedData: TripData[] = [];
+  metrics = [
+    { 
+      name: 'Giro',
+      value: 0,
+      icon: 'matAvTimerRound',
+      color: '#F472B6', // Pink-400
+      label: ''
+    },
+    { 
+      name: 'Freio',
+      value: 0,
+      icon: 'matBatteryAlertRound',
+      color: '#FB923C', // Orange-400
+      label: ''
+    },
+    { 
+      name: 'Pedal',
+      value: 0,
+      icon: 'matPedalBikeRound',
+      color: '#A78BFA', // Violet-400
+      label: ''
+    }
+  ];
+
+  // Google Maps properties
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MapInfoWindow) infoWindow!: MapInfoWindow;
+  @ViewChild('googleMap') googleMap!: GoogleMap;
+  center: google.maps.LatLngLiteral = { lat: -23.550520, lng: -46.633308 }; // São Paulo
+  zoom = 12;
+  markerOptions: google.maps.MarkerOptions = {
+    draggable: false,
+    animation: google.maps.Animation.DROP
+  };
+  startMarkerOptions: google.maps.MarkerOptions = {
+    ...this.markerOptions,
+    icon: {
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: 8,
+      fillColor: '#34D399',
+      fillOpacity: 1,
+      strokeColor: '#ffffff',
+      strokeWeight: 2,
+    }
+  };
+  endMarkerOptions: google.maps.MarkerOptions = {
+    ...this.markerOptions,
+    icon: {
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: 8,
+      fillColor: '#F43F5E',
+      fillOpacity: 1,
+      strokeColor: '#ffffff',
+      strokeWeight: 2,
+    }
+  };
+  stopMarkerOptions: google.maps.MarkerOptions = {
+    ...this.markerOptions,
+    icon: {
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: 6,
+      fillColor: '#F59E0B',
+      fillOpacity: 1,
+      strokeColor: '#ffffff',
+      strokeWeight: 2,
+    }
+  };
+  routePath: google.maps.LatLngLiteral[] = [];
+  stopPoints: google.maps.LatLngLiteral[] = [];
+  polylineOptions: google.maps.PolylineOptions = {
+    strokeColor: '#F59E0B',
+    strokeOpacity: 1.0,
+    strokeWeight: 3,
+    geodesic: true
+  };
+
+  selectedMarkerContent: string = '';
+  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
+
+  // Chart configuration
+  public lineChartData: ChartConfiguration['data'] = {
+    datasets: [
+      {
+        data: [],
+        label: 'Giro',
+        backgroundColor: '#F472B620',
+        borderColor: '#F472B6',
+        pointBackgroundColor: '#F472B6',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: '#F472B6',
+        fill: 'origin',
+      },
+      {
+        data: [],
+        label: 'Freio',
+        backgroundColor: '#FB923C20',
+        borderColor: '#FB923C',
+        pointBackgroundColor: '#FB923C',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: '#FB923C',
+        fill: 'origin',
+      },
+      {
+        data: [],
+        label: 'Pedal',
+        backgroundColor: '#A78BFA20',
+        borderColor: '#A78BFA',
+        pointBackgroundColor: '#A78BFA',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: '#A78BFA',
+        fill: 'origin',
+      }
+    ],
+    labels: []
+  };
+
+  public lineChartOptions: ChartConfiguration['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
+    elements: {
+      line: {
+        tension: 0.4
+      }
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false
+        },
+        ticks: {
+          font: {
+            family: "'Inter', sans-serif",
+            size: 11
+          }
+        }
+      },
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: 'rgba(156, 163, 175, 0.1)'
+        },
+        ticks: {
+          font: {
+            family: "'Inter', sans-serif",
+            size: 11
+          }
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        display: true,
+        position: 'bottom',
+        labels: {
+          usePointStyle: true,
+          padding: 20,
+          font: {
+            family: "'Inter', sans-serif",
+            size: 12
+          },
+          color: 'rgb(107, 114, 128)'
+        }
+      },
+      tooltip: {
+        backgroundColor: 'rgba(17, 24, 39, 0.8)',
+        titleFont: {
+          family: "'Inter', sans-serif",
+          size: 13
+        },
+        bodyFont: {
+          family: "'Inter', sans-serif",
+          size: 12
+        },
+        padding: 12,
+        cornerRadius: 8
+      }
+    }
+  };
+
+  public lineChartType: ChartType = 'line';
+
+  directionsRenderer: google.maps.DirectionsRenderer | null = null;
+  mapOptions: google.maps.MapOptions = {
+    zoom: 13,
+    center: { lat: -23.5505, lng: -46.6333 }, // Praça da Sé
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    disableDefaultUI: false,
+    zoomControl: true,
+    mapTypeControl: false,
+    scaleControl: true,
+    streetViewControl: false,
+    rotateControl: false,
+    fullscreenControl: true,
+    styles: [
+      {
+        featureType: "poi",
+        elementType: "labels",
+        stylers: [{ visibility: "off" }]
+      }
+    ]
+  };
+
+  private markers: google.maps.Marker[] = [];
 
   constructor(
     private fb: FormBuilder,
     private tripAnalysisService: TripAnalysisService
   ) {
     this.filterForm = this.fb.group({
-      placa: ['48122', [Validators.required, Validators.pattern(/^\d{5}$/)]],
-      horaInicial: ['09:00', Validators.required],
-      horaFinal: ['11:35', [Validators.required, this.horaFinalValidator()]]
+      placa: ['', [Validators.required, Validators.pattern('^[0-9]{5}$')]],
+      data: [new Date(), Validators.required],
+      horaInicial: ['00:00', Validators.required],
+      horaFinal: ['23:59', [Validators.required, this.horaFinalValidator()]]
     });
 
-    // Default to dark mode
-    this.isDarkMode = true;
+    // Verifica se há preferência de tema salva
+    const savedTheme = localStorage.getItem('theme');
+    this.isDarkMode = savedTheme === 'dark';
     this.updateTheme();
   }
 
@@ -248,25 +677,88 @@ export class TripAnalysisComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Carrega os dados iniciais
     this.loadData();
-    this.loadPreviousPeriodData();
+    // Adiciona listener para mudanças no tamanho da tela
+    this.handleScreenSize();
+    window.addEventListener('resize', () => this.handleScreenSize());
+  }
+
+  ngAfterViewInit() {
+    this.updateChartData();
+    if (this.paginator) {
+      this.dataSource.paginator = this.paginator;
+    }
+    // Aguarda um momento para garantir que o mapa foi inicializado
+    setTimeout(() => {
+      this.initializeDirectionsRenderer();
+      this.updateMapRoute();
+    }, 1000);
+  }
+
+  ngOnDestroy(): void {
+    // Remove o listener quando o componente é destruído
+    window.removeEventListener('resize', () => this.handleScreenSize());
+  }
+
+  private handleScreenSize(): void {
+    if (window.innerWidth < 768) { // Mobile breakpoint
+      this.pageSize = 1;
+      this.pageSizeOptions = [1];
+    } else {
+      this.pageSize = 10;
+      this.pageSizeOptions = [5, 10, 25, 100];
+    }
+    
+    if (this.paginator) {
+      this.paginator.pageSize = this.pageSize;
+      this.paginator.pageSizeOptions = this.pageSizeOptions;
+      // Não recarrega os dados aqui para evitar chamadas desnecessárias
+      this.updateDisplayedData();
+    }
   }
 
   toggleTheme(): void {
     this.isDarkMode = !this.isDarkMode;
+    // Salva a preferência do tema
+    localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
     this.updateTheme();
   }
 
   private updateTheme(): void {
-    document.documentElement.classList.toggle('dark', this.isDarkMode);
+    // Remove ambas as classes primeiro
+    document.body.classList.remove('dark', 'dark-theme');
+    // Adiciona a classe correta
+    if (this.isDarkMode) {
+      document.body.classList.add('dark', 'dark-theme');
+    }
   }
 
   loadData(): void {
-    this.tripAnalysisService.getTripData(this.filterForm.value).subscribe(
-      data => {
-        this.dataSource.data = data;
+    this.isLoading = true;
+    const filters = this.filterForm.value;
+    
+    this.tripAnalysisService.getTripData(filters).subscribe({
+      next: (data) => {
+        this.dataSource = new MatTableDataSource<TripData>(data);
+        this.totalItems = data.length;
+        this.dataSource.paginator = this.paginator;
+        this.pageIndex = 0; // Reset to first page when loading new data
+        this.isLoading = false;
+        this.updateMetrics();
+        this.updateChartData();
+        this.updateMapRoute(); // Atualiza a rota no mapa
+      },
+      error: (error) => {
+        console.error('Error loading trip data:', error);
+        this.isLoading = false;
       }
-    );
+    });
+  }
+
+  private updateDisplayedData(): void {
+    const startIndex = this.pageIndex * this.pageSize;
+    this.displayedData = this.dataSource.data.slice(startIndex, startIndex + this.pageSize);
   }
 
   loadPreviousPeriodData(): void {
@@ -415,5 +907,325 @@ export class TripAnalysisComponent implements OnInit {
     const previousAvg = this.previousPeriodData.length ? 
       this.previousPeriodData.reduce((total, trip) => total + trip.pedal, 0) / this.previousPeriodData.length : 0;
     return previousAvg ? Math.round(((currentAvg - previousAvg) / previousAvg) * 100) : 0;
+  }
+
+  refreshData(): void {
+    this.loadData();
+    this.loadPreviousPeriodData();
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updateDisplayedData();
+    // Atualizar o mapa quando mudar de página
+    setTimeout(() => {
+      this.updateMapRoute();
+    }, 100);
+  }
+
+  getPaginationText(): string {
+    if (this.totalItems === 0) return '0-0 de 0';
+    
+    const startIndex = this.pageIndex * this.pageSize + 1;
+    const endIndex = Math.min(startIndex + this.pageSize - 1, this.totalItems);
+    return `${startIndex}-${endIndex} de ${this.totalItems}`;
+  }
+
+  getDriverScore(): number {
+    return Math.round((
+      this.getFuelEconomyScore() +
+      this.getSmoothDrivingScore() +
+      this.getBrakeEfficiencyScore() +
+      this.getRPMControlScore()
+    ) / 4);
+  }
+
+  getScoreChange(): number {
+    return 5; // Example value, implement actual calculation
+  }
+
+  getScoreChangeClass(): string {
+    const change = this.getScoreChange();
+    return change > 0 ? 'text-green-500' : change < 0 ? 'text-red-500' : 'text-gray-500';
+  }
+
+  getFuelEconomyScore(): number {
+    return 85; // Example value, implement actual calculation
+  }
+
+  getSmoothDrivingScore(): number {
+    return 78; // Example value, implement actual calculation
+  }
+
+  getBrakeEfficiencyScore(): number {
+    return 92; // Example value, implement actual calculation
+  }
+
+  getRPMControlScore(): number {
+    return 88; // Example value, implement actual calculation
+  }
+
+  viewDetailedReport(): void {
+    // Implement detailed report view
+  }
+
+  dismissUpdate(): void {
+    this.updateAvailable = false;
+  }
+
+  updateApp(): void {
+    // Implement app update logic
+  }
+
+  onMapClick(event: google.maps.MapMouseEvent): void {
+    if (event.latLng) {
+      console.log('Map clicked:', event.latLng.toJSON());
+    }
+  }
+
+  onMarkerClick(marker: MapMarker, content: string): void {
+    this.selectedMarkerContent = content;
+    this.infoWindow.open(marker);
+  }
+
+  zoomIn(): void {
+    if (this.googleMap?.googleMap) {
+      const currentZoom = this.googleMap.googleMap.getZoom() || 0;
+      this.googleMap.googleMap.setZoom(currentZoom + 1);
+    }
+  }
+
+  zoomOut(): void {
+    if (this.googleMap?.googleMap) {
+      const currentZoom = this.googleMap.googleMap.getZoom() || 0;
+      this.googleMap.googleMap.setZoom(currentZoom - 1);
+    }
+  }
+
+  resetView(): void {
+    if (this.googleMap?.googleMap) {
+      const currentTrip = this.getCurrentPageData();
+      if (currentTrip && currentTrip.rota && currentTrip.rota.length > 0) {
+        // Recalcular a rota
+        this.updateMapRoute();
+      }
+    }
+  }
+
+  getMarkerIcon(type: 'start' | 'end' | 'stop'): google.maps.Icon {
+    const baseSize = type === 'stop' ? 24 : 32;
+    return {
+      url: `assets/icons/${type}-marker.svg`,
+      scaledSize: new google.maps.Size(baseSize, baseSize)
+    };
+  }
+
+  private updateChartData(): void {
+    if (this.dataSource.data.length === 0) return;
+
+    this.lineChartData.labels = this.dataSource.data.map(trip => 
+      new Date(trip.inicio).toLocaleDateString('pt-BR')
+    );
+
+    this.lineChartData.datasets[0].data = this.dataSource.data.map(trip => trip.giro);
+    this.lineChartData.datasets[1].data = this.dataSource.data.map(trip => trip.freio);
+    this.lineChartData.datasets[2].data = this.dataSource.data.map(trip => trip.pedal);
+
+    this.chart?.update();
+  }
+
+  updateMetrics(): void {
+    if (this.dataSource.data.length === 0) return;
+
+    // Update metrics values based on current data
+    this.metrics = [
+      { 
+        name: 'Giro',
+        value: this.getAverageRPM(),
+        icon: 'matAvTimerRound',
+        color: '#F472B6', // Pink-400
+        label: ''
+      },
+      { 
+        name: 'Freio',
+        value: this.getAverageBrakeUsage(),
+        icon: 'matBatteryAlertRound',
+        color: '#FB923C', // Orange-400
+        label: ''
+      },
+      { 
+        name: 'Pedal',
+        value: this.getAveragePedalUsage(),
+        icon: 'matPedalBikeRound',
+        color: '#A78BFA', // Violet-400
+        label: ''
+      }
+    ];
+  }
+
+  nextDay(): void {
+    if (this.pageIndex < this.dataSource.data.length - 1) {
+      this.pageIndex++;
+      this.paginator.pageIndex = this.pageIndex;
+      this.updateMapRoute();
+    }
+  }
+
+  previousDay(): void {
+    if (this.pageIndex > 0) {
+      this.pageIndex--;
+      this.paginator.pageIndex = this.pageIndex;
+      this.updateMapRoute();
+    }
+  }
+
+  getCurrentPageData(): any {
+    return this.dataSource.data[this.pageIndex];
+  }
+
+  getCurrentDayInfo(): string {
+    const currentData = this.getCurrentPageData();
+    if (currentData) {
+      return new Date(currentData.inicio).toLocaleDateString('pt-BR', {
+        weekday: 'long',
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      });
+    }
+    return '';
+  }
+
+  updateMapRoute(): void {
+    const currentTrip = this.getCurrentPageData();
+    if (currentTrip && currentTrip.rota && currentTrip.rota.length > 1 && this.googleMap?.googleMap) {
+      const origin = currentTrip.rota[0];
+      const destination = currentTrip.rota[currentTrip.rota.length - 1];
+      
+      // Limpar marcadores existentes
+      this.clearCustomMarkers();
+
+      // Calcular a rota usando o serviço de Directions
+      this.tripAnalysisService.calculateRouteWithWaypoints(origin, destination, currentTrip.paradas)
+        .then((result) => {
+          if (this.directionsRenderer && this.googleMap?.googleMap) {
+            this.directionsRenderer.setDirections(result);
+
+            // Adicionar marcadores personalizados
+            this.addCustomMarkers(this.googleMap.googleMap, origin, destination, currentTrip.paradas);
+
+            // Ajustar o zoom para mostrar toda a rota
+            const bounds = new google.maps.LatLngBounds();
+            result.routes[0].legs.forEach(leg => {
+              leg.steps.forEach(step => {
+                step.path.forEach(point => bounds.extend(point));
+              });
+            });
+            this.googleMap.googleMap.fitBounds(bounds);
+
+            // Adicionar um pequeno padding ao bounds
+            const padding = { top: 50, right: 50, bottom: 50, left: 50 };
+            this.googleMap.googleMap.fitBounds(bounds, padding);
+          }
+        })
+        .catch((error) => {
+          console.error('Erro ao calcular a rota:', error);
+          // Em caso de erro, pelo menos mostrar os pontos no mapa
+          this.showMarkersWithoutRoute(currentTrip);
+        });
+    }
+  }
+
+  private showMarkersWithoutRoute(trip: TripData) {
+    if (this.googleMap?.googleMap) {
+      const bounds = new google.maps.LatLngBounds();
+      
+      // Adicionar todos os pontos ao bounds
+      trip.rota.forEach(point => bounds.extend(point));
+      trip.paradas.forEach(point => bounds.extend(point));
+      
+      // Adicionar marcadores
+      this.addCustomMarkers(this.googleMap.googleMap, trip.rota[0], trip.rota[trip.rota.length - 1], trip.paradas);
+      
+      // Ajustar o mapa para mostrar todos os pontos
+      this.googleMap.googleMap.fitBounds(bounds);
+    }
+  }
+
+  private addCustomMarkers(map: google.maps.Map, origin: google.maps.LatLngLiteral, destination: google.maps.LatLngLiteral, stops: Array<{lat: number, lng: number, tempo: number}>) {
+    // Adicionar marcador de início
+    const startMarker = new google.maps.Marker({
+      position: origin,
+      map: map,
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 8,
+        fillColor: '#34D399',
+        fillOpacity: 1,
+        strokeColor: '#ffffff',
+        strokeWeight: 2,
+      },
+      title: 'Início da Viagem'
+    });
+    this.markers.push(startMarker);
+
+    // Adicionar marcadores de parada
+    stops.forEach((stop, index) => {
+      const stopMarker = new google.maps.Marker({
+        position: { lat: stop.lat, lng: stop.lng },
+        map: map,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 6,
+          fillColor: '#F59E0B',
+          fillOpacity: 1,
+          strokeColor: '#ffffff',
+          strokeWeight: 2,
+        },
+        title: `Parada ${index + 1} - ${stop.tempo} minutos`
+      });
+      this.markers.push(stopMarker);
+    });
+
+    // Adicionar marcador de destino
+    const endMarker = new google.maps.Marker({
+      position: destination,
+      map: map,
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 8,
+        fillColor: '#F43F5E',
+        fillOpacity: 1,
+        strokeColor: '#ffffff',
+        strokeWeight: 2,
+      },
+      title: 'Destino'
+    });
+    this.markers.push(endMarker);
+  }
+
+  private clearCustomMarkers() {
+    // Limpar marcadores existentes
+    this.markers.forEach(marker => marker.setMap(null));
+    this.markers = [];
+  }
+
+  private initializeDirectionsRenderer() {
+    if (this.googleMap?.googleMap) {
+      if (this.directionsRenderer) {
+        this.directionsRenderer.setMap(null);
+        this.directionsRenderer = null;
+      }
+      this.directionsRenderer = new google.maps.DirectionsRenderer({
+        suppressMarkers: true,
+        polylineOptions: {
+          strokeColor: '#F59E0B',
+          strokeOpacity: 1.0,
+          strokeWeight: 4
+        }
+      });
+      this.directionsRenderer.setMap(this.googleMap.googleMap);
+    }
   }
 } 

@@ -6,7 +6,7 @@ import { catchError, retry } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { User } from '../interfaces/user.interface';
 
-const API_URL = `${environment.apiURL}/auth`;
+const API_URL = `${environment.apiUrl}/auth`;
 
 interface LoginResponse {
   token: string;
@@ -17,42 +17,12 @@ interface LoginResponse {
   providedIn: 'root'
 })
 export class AuthService implements OnDestroy {
-  private readonly MOCK_USERS: User[] = [
-    {
-      id: '1',
-      name: 'Administrador',
-      email: 'admin@example.com',
-      phone: '11999999999',
-      companyCode: '0123',
-      registration: '000000',
-      status: 'approved',
-      createdAt: new Date(),
-      isAdmin: true,
-      username: 'admin',
-      password: 'admin123',
-      role: 'admin'
-    },
-    {
-      id: '2',
-      name: 'Usuário',
-      email: 'user@example.com',
-      phone: '11988888888',
-      companyCode: '0123',
-      registration: '000001',
-      status: 'approved',
-      createdAt: new Date(),
-      isAdmin: false,
-      username: 'user',
-      password: 'user123',
-      role: 'user'
-    }
-  ];
-
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   private token: string | null = null;
   private currentUser: User | null = null;
   private statusCheckInterval: Subscription | null = null;
+  private isAdminSubject = new BehaviorSubject<boolean>(false);
 
   constructor(
     private http: HttpClient,
@@ -100,7 +70,7 @@ export class AuthService implements OnDestroy {
   private updateAdminStatus(): void {
     if (!this.currentUser) {
       console.log('=== Atualizando status de admin: Nenhum usuário logado ===');
-      this.isAuthenticatedSubject.next(false);
+      this.isAdminSubject.next(false);
       return;
     }
 
@@ -111,11 +81,10 @@ export class AuthService implements OnDestroy {
       currentValue: this.isAuthenticatedSubject.value
     });
     
-    this.isAuthenticatedSubject.next(isAdmin);
+    this.isAdminSubject.next(isAdmin);
     
-    // Verificar se o estado foi atualizado corretamente
     console.log('=== Status de admin após atualização ===', {
-      newValue: this.isAuthenticatedSubject.value
+      newValue: isAdmin
     });
   }
 
@@ -146,26 +115,6 @@ export class AuthService implements OnDestroy {
     if (this.statusCheckInterval) {
       this.statusCheckInterval.unsubscribe();
       this.statusCheckInterval = null;
-    }
-  }
-
-  private async createAdminIfNotExists() {
-    try {
-      const response = await this.http.post<LoginResponse>(
-        `${API_URL}/login`,
-        {
-          companyCode: '0123',
-          registration: '000000',
-          password: 'admin123'
-        },
-        { headers: new HttpHeaders().set('Content-Type', 'application/json') }
-      ).toPromise();
-
-      if (response && response.token) {
-        console.log('Admin user exists');
-      }
-    } catch (error) {
-      console.log('Admin não existe ou já está logado');
     }
   }
 
@@ -275,35 +224,44 @@ export class AuthService implements OnDestroy {
   }
 
   async login(companyCode: string, registration: string, password: string): Promise<boolean> {
-    const user = this.MOCK_USERS.find(
-      u => u.companyCode === companyCode && 
-           u.registration === registration && 
-           u.password === password
-    );
+    console.log('=== Iniciando login ===', { companyCode, registration, passwordLength: password.length });
 
-    if (user) {
-      this.currentUser = user;
-      this.isAuthenticatedSubject.next(true);
-      this.currentUserSubject.next(this.currentUser);
-      localStorage.setItem('user', JSON.stringify(this.currentUser));
-      localStorage.setItem('token', 'mock-token');
+    try {
+      const response = await this.http.post<LoginResponse>(`${API_URL}/login`, {
+        companyCode,
+        registration,
+        password
+      }).pipe(
+        catchError(this.handleError)
+      ).toPromise();
 
-      console.log('=== Login bem-sucedido ===', {
-        username: this.currentUser.username,
-        role: this.currentUser.role
-      });
-
-      // Atualiza estados
-      this.updateAdminStatus();
+      if (response && response.token && response.user) {
+        console.log('=== Login bem-sucedido ===');
+        
+        // Salva o token e usuário
+        this.token = response.token;
+        this.currentUser = response.user;
+        
+        // Persiste os dados na localStorage
+        localStorage.setItem('token', this.token);
+        localStorage.setItem('user', JSON.stringify(this.currentUser));
+        
+        // Atualiza os subjects
+        this.isAuthenticatedSubject.next(true);
+        this.currentUserSubject.next(this.currentUser);
+        
+        // Inicia verificação periódica de status
+        this.startStatusCheck();
+        
+        return true;
+      }
       
-      // Inicia verificação periódica de status
-      this.startStatusCheck();
-
-      return true;
+      return false;
+    } catch (error) {
+      console.error('Erro no login:', error);
+      this.logout(false);
+      throw error;
     }
-
-    console.error('Usuário ou senha inválidos');
-    return false;
   }
 
   logout(redirect: boolean = true): void {
@@ -322,6 +280,23 @@ export class AuthService implements OnDestroy {
   }
 
   isAuthenticated(): Observable<boolean> {
+    // Verifica se há token e usuário no localStorage
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
+    
+    // Se não houver token ou usuário, retorna false
+    if (!token || !user) {
+      this.isAuthenticatedSubject.next(false);
+      return this.isAuthenticatedSubject.asObservable();
+    }
+    
+    // Se o subject já estiver com valor true, mantém
+    if (this.isAuthenticatedSubject.value) {
+      return this.isAuthenticatedSubject.asObservable();
+    }
+    
+    // Se houver token e usuário mas o subject estiver false, atualiza para true
+    this.isAuthenticatedSubject.next(true);
     return this.isAuthenticatedSubject.asObservable();
   }
 
@@ -577,7 +552,7 @@ export class AuthService implements OnDestroy {
   }
 
   onAdminStateChanged(): Observable<boolean> {
-    return this.isAuthenticatedSubject.asObservable();
+    return this.isAdminSubject.asObservable();
   }
 
   isLoggedIn(): boolean {
