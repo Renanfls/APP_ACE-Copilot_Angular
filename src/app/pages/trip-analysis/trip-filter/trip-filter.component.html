@@ -1,0 +1,199 @@
+<div class="bg-gray-100 dark:bg-gray-900 p-4 md:p-8">
+    <div class="max-w-6xl mx-auto">
+        <!-- Filter Card -->
+        <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl overflow-hidden card-shadow transition-all">
+            <!-- Card Header -->
+            <div class="border-b border-gray-200 dark:border-gray-700 p-6">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-full bg-amber-400/10 flex items-center justify-center mr-4">
+                        <ng-icon name="matFilterAltRound" class="text-amber-400 text-xl"></ng-icon>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Filtros Avançados</h2>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Preencha os campos abaixo para filtrar os resultados</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card Content -->
+            <div class="p-6">
+                <form [formGroup]="filterForm" class="space-y-8" (ngSubmit)="onSubmit()">
+                    <!-- Two Column Layout -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Left Column - Vehicle Information -->
+                        <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 transition-all">
+                            <div class="flex items-center mb-6">
+                                <div class="w-10 h-10 rounded-full bg-amber-400/10 flex items-center justify-center mr-3">
+                                    <ng-icon name="matDirectionsCarRound" class="text-amber-400"></ng-icon>
+                                </div>
+                                <h3 class="text-lg font-medium text-gray-800 dark:text-white">Informações do Veículo</h3>
+                            </div>
+                            
+                            <div class="space-y-5">
+                                <!-- Empresa -->
+                                <div>
+                                    <label for="empresa" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        Código Empresa
+                                    </label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <ng-icon name="matBusinessRound" class="text-gray-400"></ng-icon>
+                                        </div>
+                                        <input type="number" 
+                                               id="empresa" 
+                                               formControlName="empresa"
+                                               min="1"
+                                               class="w-full pl-10 pr-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all"
+                                               placeholder="Digite o código">
+                                    </div>
+                                    <p *ngIf="filterForm.get('empresa')?.errors?.['required'] && filterForm.get('empresa')?.touched" 
+                                       class="mt-1 text-sm text-red-600">
+                                        Empresa é obrigatória
+                                    </p>
+                                    <p *ngIf="filterForm.get('empresa')?.errors?.['min'] && filterForm.get('empresa')?.touched" 
+                                       class="mt-1 text-sm text-red-600">
+                                        Empresa deve ser maior que 0
+                                    </p>
+                                </div>
+                                
+                                <!-- Veículo -->
+                                <div>
+                                    <label for="placa" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        Veículo
+                                    </label>
+                                    <div class="relative">
+                                        <select id="placa" 
+                                                formControlName="placa"
+                                                class="w-full pl-3 pr-10 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 appearance-none transition-all">
+                                            <option value="" disabled>Selecione o veículo</option>
+                                            <option *ngFor="let vehicle of vehicles" [value]="vehicle.placa">
+                                                {{vehicle.placa}}
+                                            </option>
+                                        </select>
+                                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                            <ng-icon name="matExpandMoreRound" class="text-gray-400"></ng-icon>
+                                        </div>
+                                    </div>
+                                    <p *ngIf="filterForm.get('placa')?.errors?.['required'] && filterForm.get('placa')?.touched" 
+                                       class="mt-1 text-sm text-red-600">
+                                        Veículo é obrigatório
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Column - Date and Time -->
+                        <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 transition-all">
+                            <div class="flex items-center mb-6">
+                                <div class="w-10 h-10 rounded-full bg-amber-400/10 flex items-center justify-center mr-3">
+                                    <ng-icon name="matCalendarTodayRound" class="text-amber-400"></ng-icon>
+                                </div>
+                                <h3 class="text-lg font-medium text-gray-800 dark:text-white">Período</h3>
+                            </div>
+                            
+                            <div class="space-y-5">
+                                <!-- Dates Row -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <!-- Data Inicial -->
+                                    <div>
+                                        <label for="dataInicial" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Data Inicial
+                                        </label>
+                                        <div class="relative">
+                                            <input type="date" 
+                                                   id="dataInicial" 
+                                                   formControlName="dataInicial"
+                                                   class="w-full pr-10 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all">
+                                        </div>
+                                        <p *ngIf="filterForm.get('dataInicial')?.errors?.['required'] && filterForm.get('dataInicial')?.touched" 
+                                           class="mt-1 text-sm text-red-600">
+                                            Data inicial é obrigatória
+                                        </p>
+                                    </div>
+                                    
+                                    <!-- Data Final -->
+                                    <div>
+                                        <label for="dataFinal" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Data Final
+                                        </label>
+                                        <div class="relative">
+                                            <input type="date" 
+                                                   id="dataFinal" 
+                                                   formControlName="dataFinal"
+                                                   class="w-full pr-10 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all">
+                                        </div>
+                                        <p *ngIf="filterForm.get('dataFinal')?.errors?.['required'] && filterForm.get('dataFinal')?.touched" 
+                                           class="mt-1 text-sm text-red-600">
+                                            Data final é obrigatória
+                                        </p>
+                                        <p *ngIf="filterForm.errors?.['dateRange']" 
+                                           class="mt-1 text-sm text-red-600">
+                                            Data final deve ser maior que a data inicial
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Times Row -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <!-- Hora Inicial -->
+                                    <div>
+                                        <label for="horaInicial" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Hora Inicial
+                                        </label>
+                                        <div class="relative">
+                                            <input type="time" 
+                                                   id="horaInicial" 
+                                                   formControlName="horaInicial"
+                                                   class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all">
+                                        </div>
+                                        <p *ngIf="filterForm.get('horaInicial')?.errors?.['required'] && filterForm.get('horaInicial')?.touched" 
+                                           class="mt-1 text-sm text-red-600">
+                                            Hora inicial é obrigatória
+                                        </p>
+                                    </div>
+                                    
+                                    <!-- Hora Final -->
+                                    <div>
+                                        <label for="horaFinal" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Hora Final
+                                        </label>
+                                        <div class="relative">
+                                            <input type="time" 
+                                                   id="horaFinal" 
+                                                   formControlName="horaFinal"
+                                                   class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all">
+                                        </div>
+                                        <p *ngIf="filterForm.get('horaFinal')?.errors?.['required'] && filterForm.get('horaFinal')?.touched" 
+                                           class="mt-1 text-sm text-red-600">
+                                            Hora final é obrigatória
+                                        </p>
+                                        <p *ngIf="filterForm.errors?.['timeRange']" 
+                                           class="mt-1 text-sm text-red-600">
+                                            Hora final deve ser maior que a hora inicial
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row justify-center gap-4 pt-4">
+                        <button type="button" 
+                                (click)="resetFilters()"
+                                class="flex items-center justify-center px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-full font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
+                            <ng-icon name="matCancelRound" class="mr-2"></ng-icon>
+                            Limpar Filtros
+                        </button>
+                        <button type="submit" 
+                                [disabled]="!filterForm.valid || isLoadingVehicles"
+                                class="flex items-center justify-center px-6 py-3 border border-transparent rounded-full font-medium text-white bg-amber-500 hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                            <ng-icon name="matSearchRound" class="mr-2"></ng-icon>
+                            {{ isLoadingVehicles ? 'Processando...' : 'Pesquisar' }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 

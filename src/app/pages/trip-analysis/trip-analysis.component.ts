@@ -1,4 +1,4 @@
-import { CommonModule, DatePipe, formatDate } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
@@ -7,8 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
-import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
-import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -22,6 +22,7 @@ import {
   matAvTimerRound,
   matBarChartRound,
   matBatteryAlertRound,
+  matBusinessRound,
   matCalendarTodayRound,
   matClearRound,
   matDarkModeRound,
@@ -45,16 +46,25 @@ import {
 } from '@ng-icons/material-icons/round';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
-import { environment } from '../../../environments/environment';
+import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import { Metric, TripAnalysisData, TripData } from '../../models/trip-analysis.model';
 import { AuthService } from '../../services/auth.service';
-import { TripAnalysisService, TripData } from '../../services/trip-analysis.service';
+import { CacheService } from '../../services/cache.service';
+import { GraphQLService } from '../../services/graphql.service';
+import { TripAnalysisService } from '../../services/trip-analysis.service';
+import { TripDataMapperService } from '../../services/trip-data-mapper.service';
 
-interface TripAnalysisData {
-  cpo1: string;
-  val1: string;
-  cpo2: string;
-  val2: string;
-}
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'dd/MM/yyyy',
+  },
+  display: {
+    dateInput: 'dd/MM/yyyy',
+    monthYearLabel: 'MMM yyyy',
+    dateA11yLabel: 'dd/MM/yyyy',
+    monthYearA11yLabel: 'MMMM yyyy',
+  },
+};
 
 @Component({
   selector: 'app-trip-analysis',
@@ -107,20 +117,22 @@ interface TripAnalysisData {
       matInsightsRound,
       matGridViewRound,
       matBarChartRound,
-      matCalendarTodayRound
+      matCalendarTodayRound,
+      matBusinessRound
     }),
-    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ],
   styles: [`
     :host {
       display: block;
       min-height: 100vh;
-      background-color: rgb(249, 250, 251);
+      background-color: #1d1d1d;
       color: var(--md-sys-color-on-background);
     }
 
     .dark :host {
-      background-color: rgb(17, 24, 39);
+      background-color: #1d1d1d;
     }
 
     /* Material Design 3 Card Styles */
@@ -151,23 +163,23 @@ interface TripAnalysisData {
     /* Material Design 3 Form Field Styles */
     ::ng-deep .mat-mdc-form-field {
       --mdc-outlined-text-field-container-shape: 1rem;
-      --mdc-outlined-text-field-outline-color: var(--md-sys-color-outline);
-      --mdc-outlined-text-field-focus-outline-color: #F59E0B;
-      --mdc-outlined-text-field-hover-outline-color: #F59E0B;
+      --mdc-outlined-text-field-outline-color: transparent;
+      --mdc-outlined-text-field-focus-outline-color: transparent;
+      --mdc-outlined-text-field-hover-outline-color: transparent;
       --mdc-outlined-text-field-focus-label-text-color: #F59E0B;
       --mdc-outlined-text-field-label-text-color: var(--md-sys-color-on-surface-variant);
       --mdc-outlined-text-field-input-text-color: var(--md-sys-color-on-surface);
-      --mdc-outlined-text-field-disabled-outline-color: var(--md-sys-color-outline);
+      --mdc-outlined-text-field-disabled-outline-color: transparent;
       --mdc-outlined-text-field-disabled-label-text-color: var(--md-sys-color-on-surface-variant);
     }
 
-    ::ng-deep .mat-mdc-form-field.mat-mdc-form-field-type-mat-input .mdc-notched-outline__notch {
-      border-right: none;
+    ::ng-deep .mat-mdc-form-field.mat-mdc-form-field-type-mat-input .mdc-notched-outline__notch,
+    ::ng-deep .mat-mdc-form-field.mat-mdc-form-field-type-mat-select .mdc-notched-outline__notch {
+      border: none;
     }
 
-    ::ng-deep .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-outline-start,
-    ::ng-deep .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-outline-end {
-      border-radius: 1rem !important;
+    ::ng-deep .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-outline {
+      display: none;
     }
 
     ::ng-deep .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-flex {
@@ -181,52 +193,22 @@ interface TripAnalysisData {
 
     ::ng-deep .mat-mdc-text-field-wrapper {
       padding: 0 !important;
+      background-color: var(--md-sys-color-surface-container-low);
+      border-radius: 1rem;
     }
 
     ::ng-deep .mat-mdc-form-field-infix {
-      padding: 8px 0 !important;
+      padding: 8px 16px !important;
       min-height: 48px !important;
     }
 
-    ::ng-deep .mdc-text-field--outlined {
-      padding: 0 16px !important;
+    /* Select Field Specific Styles */
+    ::ng-deep .mat-mdc-select-trigger {
+      padding: 0 16px;
     }
 
-    ::ng-deep .mat-mdc-form-field-icon-suffix {
-      padding: 0 !important;
-      margin-right: -8px !important;
-    }
-
-    ::ng-deep .mat-mdc-form-field-icon-suffix > .mat-icon {
-      padding: 0 !important;
-      margin: 0 !important;
-    }
-
-    ::ng-deep .mat-datepicker-toggle {
-      margin-right: -12px !important;
-    }
-
-    ::ng-deep .mat-mdc-form-field input.mat-mdc-input-element {
-      padding: 8px 16px !important;
-    }
-
-    ::ng-deep .mat-mdc-form-field-subscript-wrapper {
-      padding: 0 16px !important;
-    }
-
-    ::ng-deep .mat-mdc-form-field-hint-wrapper, 
-    ::ng-deep .mat-mdc-form-field-error-wrapper {
-      padding: 0 16px !important;
-    }
-
-    ::ng-deep .mat-mdc-form-field-label {
-      padding-left: 16px !important;
-      margin-top: -4px !important;
-    }
-
-    ::ng-deep .mat-mdc-form-field-appearance-outline .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
-      --mat-mdc-form-field-label-transform: translateY(-34px) scale(0.75);
-      transform: var(--mat-mdc-form-field-label-transform);
+    ::ng-deep .mat-mdc-form-field-type-mat-select .mat-mdc-form-field-flex {
+      background-color: var(--md-sys-color-surface-container-low);
     }
 
     /* Material Design 3 Button Styles */
@@ -529,29 +511,7 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
   pageSizeOptions = [5, 10, 25, 100];
   totalItems = 0;
   displayedData: TripData[] = [];
-  metrics = [
-    { 
-      name: 'Giro',
-      value: 0,
-      icon: 'matAvTimerRound',
-      color: '#F472B6', // Pink-400
-      label: ''
-    },
-    { 
-      name: 'Freio',
-      value: 0,
-      icon: 'matBatteryAlertRound',
-      color: '#FB923C', // Orange-400
-      label: ''
-    },
-    { 
-      name: 'Pedal',
-      value: 0,
-      icon: 'matPedalBikeRound',
-      color: '#A78BFA', // Violet-400
-      label: ''
-    }
-  ];
+  metrics: Metric[] = [];
 
   // Google Maps properties
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -713,7 +673,7 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public lineChartType: ChartType = 'line';
 
-  directionsRenderer: google.maps.DirectionsRenderer | null = null;
+  directionsRenderer?: google.maps.DirectionsRenderer;
   mapOptions: google.maps.MapOptions = {
     zoom: 13,
     center: { lat: -23.5505, lng: -46.6333 }, // Praça da Sé
@@ -741,25 +701,63 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
   dateRangeIV: Date[] = [];
   dadosViagem: TripAnalysisData[] = [];
   lblUltConIV: string = '';
-  empresa: number = 165; // Empresa fixa como 165
   veiculos: Array<{value: string, label: string}> = [];
+
+  // Add new property for companies
+  companies: Array<{value: number, label: string}> = [
+    { value: 165, label: 'Empresa Principal' }
+  ];
+
+  vehicles: Array<{
+    placa: string;
+    modelo: string;
+    data: string;
+    hinisql: string;
+    hfimsql: string;
+    nmmodelo: string;
+    nmmodonibus: string;
+    versao: string;
+    stsprob: string;
+    km: number;
+    dst: number;
+    litros: number;
+    litpar: number;
+    kml: number;
+    tfp: number;
+    efal: number;
+    pedal: number;
+    odoini: number;
+    odofim: number;
+  }> = [];
+  isLoadingVehicles = false;
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private readonly fb: FormBuilder,
     private readonly tripAnalysisService: TripAnalysisService,
+    private readonly graphQLService: GraphQLService,
+    private readonly tripDataMapper: TripDataMapperService,
+    private readonly cacheService: CacheService,
     private http: HttpClient,
-    private authSrv: AuthService
+    private authSrv: AuthService,
+    private dateAdapter: DateAdapter<Date>
   ) {
     this.filterForm = this.fb.group({
-      placa: ['47457', [Validators.required, Validators.pattern('^[0-9]{5}$')]],
-      data: [new Date('2024-05-20'), Validators.required],
+      empresa: [165, [Validators.required, Validators.min(1)]],
+      placa: ['', Validators.required],
+      dataInicial: [new Date(), Validators.required],
+      dataFinal: [new Date(), Validators.required],
       horaInicial: ['06:00', Validators.required],
       horaFinal: ['12:00', [Validators.required, this.horaFinalValidator()]]
-    });
+    }, { validators: this.dateRangeValidator });
 
     const savedTheme = localStorage.getItem('theme');
     this.isDarkMode = savedTheme === 'dark';
     this.updateTheme();
+
+    // Set locale for date adapter
+    this.dateAdapter.setLocale('pt-BR');
   }
 
   private horaFinalValidator() {
@@ -789,13 +787,50 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
     };
   }
 
+  private dateRangeValidator(group: AbstractControl): ValidationErrors | null {
+    const dataInicial = group.get('dataInicial')?.value;
+    const dataFinal = group.get('dataFinal')?.value;
+    
+    if (!dataInicial || !dataFinal) {
+      return null;
+    }
+
+    const hoje = new Date();
+    hoje.setHours(23, 59, 59, 999);
+
+    if (dataFinal < dataInicial) {
+      return { dateRange: true };
+    }
+
+    if (dataInicial > hoje) {
+      return { futureStartDate: true };
+    }
+
+    if (dataFinal > hoje) {
+      return { futureEndDate: true };
+    }
+
+    return null;
+  }
+
   ngOnInit(): void {
     // Carrega os dados iniciais
-    this.loadData();
+    this.loadVehicles();
+    
     // Adiciona listener para mudanças no tamanho da tela
     this.handleScreenSize();
     window.addEventListener('resize', () => this.handleScreenSize());
-    this.loadVeiculos();
+
+    // Subscribe to company changes with debounce
+    this.filterForm.get('empresa')?.valueChanges.pipe(
+      takeUntil(this.destroy$),
+      debounceTime(500), // Wait 500ms after the user stops typing
+      distinctUntilChanged()
+    ).subscribe(value => {
+      if (value) {
+        this.loadVehicles();
+      }
+    });
   }
 
   ngAfterViewInit() {
@@ -811,6 +846,8 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
     // Remove o listener quando o componente é destruído
     window.removeEventListener('resize', () => this.handleScreenSize());
   }
@@ -849,25 +886,178 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   loadData(): void {
+    if (!this.filterForm.valid) {
+      if (this.filterForm.errors?.['dateRange']) {
+        alert('A data final não pode ser menor que a data inicial');
+        return;
+      }
+      if (this.filterForm.errors?.['futureStartDate']) {
+        alert('A data inicial não pode ser uma data futura');
+        return;
+      }
+      if (this.filterForm.errors?.['futureEndDate']) {
+        alert('A data final não pode ser uma data futura');
+        return;
+      }
+      alert('Por favor, preencha todos os campos obrigatórios');
+      return;
+    }
+
     this.isLoading = true;
     const filters = this.filterForm.value;
     
-    this.tripAnalysisService.getTripData(filters).subscribe({
-      next: (data) => {
-        this.dataSource = new MatTableDataSource<TripData>(data);
-        this.totalItems = data.length;
-        this.dataSource.paginator = this.paginator;
-        this.pageIndex = 0; // Reset to first page when loading new data
-        this.isLoading = false;
-        this.updateMetrics();
-        this.updateChartData();
-        this.updateMapRoute(); // Atualiza a rota no mapa
-      },
-      error: (error) => {
-        console.error('Error loading trip data:', error);
-        this.isLoading = false;
-      }
+    // Gerar chave de cache baseada nos parâmetros da empresa e datas
+    const cacheKey = this.cacheService.generateCacheKey({
+      empresa: filters.empresa,
+      dataInicial: filters.dataInicial,
+      dataFinal: filters.dataFinal
     });
+
+    // Tentar obter dados do cache
+    const cachedData = this.cacheService.get<any[]>(cacheKey);
+    if (cachedData) {
+      console.log('Usando dados do cache');
+      this.processData(cachedData, filters);
+      return;
+    }
+
+    try {
+      this.graphQLService.getConsumoV4({
+        empresa: filters.empresa,
+        dataInicial: filters.dataInicial,
+        dataFinal: filters.dataFinal
+      }).subscribe({
+        next: (response: any) => {
+          console.log('Resposta completa da API:', response);
+          // Garantir que temos um array de dados para processar
+          const consumoList = Array.isArray(response) ? response : [];
+          
+          // Armazenar dados no cache
+          this.cacheService.set<any[]>(cacheKey, consumoList);
+          this.processData(consumoList, filters);
+        },
+        error: (error) => {
+          console.error('Erro na requisição:', error);
+          this.isLoading = false;
+          
+          let errorMessage = 'Erro ao carregar dados da viagem.';
+          
+          if (error.message) {
+            errorMessage += ` ${error.message}`;
+          }
+          
+          if (error.status === 0) {
+            errorMessage = 'Erro de conexão com o servidor. Verifique sua conexão com a internet.';
+          } else if (error.status === 401) {
+            errorMessage = 'Sessão expirada. Por favor, faça login novamente.';
+          } else if (error.status === 403) {
+            errorMessage = 'Você não tem permissão para acessar estes dados.';
+          }
+          
+          alert(errorMessage + ' Por favor, tente novamente.');
+        }
+      });
+    } catch (error) {
+      console.error('Erro ao preparar requisição:', error);
+      this.isLoading = false;
+      alert(error instanceof Error ? error.message : 'Erro ao preparar a requisição. Por favor, verifique os dados informados.');
+    }
+  }
+
+  private processData(consumoList: any[], filters: any): void {
+    // Log para debug inicial
+    console.log('Processando dados:', {
+      totalRegistros: consumoList.length,
+      primeiroRegistro: consumoList[0],
+      filtros: filters
+    });
+
+    // Filtrar por veículo
+    const filteredData = consumoList.filter(consumo => {
+      // Verificar se o registro é válido
+      if (!consumo || typeof consumo !== 'object') {
+        console.log('Registro inválido:', consumo);
+        return false;
+      }
+
+      // Filtro por veículo
+      const matchesVehicle = consumo.placa?.toString() === filters.placa?.toString();
+      if (!matchesVehicle) {
+        return false;
+      }
+
+      // Se chegou aqui, o veículo corresponde
+      console.log('Dados do veículo encontrado:', {
+        placa: consumo.placa,
+        modelo: consumo.nmmodelo,
+        data: consumo.data,
+        hora: consumo.hinisql
+      });
+      return true;
+    });
+
+    // Log dos dados filtrados
+    console.log('Resultados da filtragem:', {
+      totalFiltrados: filteredData.length,
+      primeiroFiltrado: filteredData[0]
+    });
+
+    if (filteredData.length === 0) {
+      this.isLoading = false;
+      alert('Nenhum dado encontrado para os filtros selecionados');
+      return;
+    }
+
+    try {
+      // Mapear todos os dados filtrados para TripData
+      const tripDataList = filteredData.map(data => this.tripDataMapper.mapConsumoToTripData(data));
+      console.log('Dados mapeados:', tripDataList);
+
+      // Atualizar o dataSource com os dados filtrados
+      this.dataSource = new MatTableDataSource<TripData>(tripDataList);
+      
+      // Usar o primeiro item para a análise detalhada
+      const selectedData = filteredData[0];
+      console.log('Item selecionado para análise:', selectedData);
+
+      // Mapear dados para análise
+      this.dadosViagem = this.tripDataMapper.mapConsumoToAnalysisData(selectedData);
+      console.log('Dados de análise:', this.dadosViagem);
+
+      // Atualizar informações da tabela
+      this.totalItems = filteredData.length;
+      this.dataSource.paginator = this.paginator;
+      this.pageIndex = 0;
+
+      // Atualizar métricas e visualizações
+      this.updateMetrics();
+      this.updateChartData();
+      this.updateMapRoute();
+      
+      // Atualizar a lista de veículos com apenas o veículo filtrado
+      this.veiculos = [{
+        value: filters.placa,
+        label: `${filters.placa} - ${selectedData.nmmodelo || ''}`
+      }];
+    } catch (error) {
+      console.error('Erro ao processar dados:', error);
+      alert('Erro ao processar os dados do veículo. Por favor, tente novamente.');
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  resetFilters(): void {
+    const today = new Date();
+    this.filterForm.patchValue({
+      empresa: 165,
+      placa: '47457',
+      dataInicial: today,
+      dataFinal: today,
+      horaInicial: '06:00',
+      horaFinal: '12:00'
+    });
+    this.applyFilter();
   }
 
   private updateDisplayedData(): void {
@@ -876,57 +1066,38 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   loadPreviousPeriodData(): void {
-    // Get data from previous period for comparison
     const currentFilters = this.filterForm.value;
     const previousPeriodFilters = this.calculatePreviousPeriodFilters(currentFilters);
     
-    this.tripAnalysisService.getTripData(previousPeriodFilters).subscribe(
-      data => {
+    this.tripAnalysisService.getTripData(previousPeriodFilters).subscribe({
+      next: (data) => {
         this.previousPeriodData = data;
+        this.updateMetrics(); // Atualizar métricas com os dados do período anterior
+      },
+      error: (error) => {
+        console.error('Error loading previous period data:', error);
       }
-    );
+    });
   }
 
   calculatePreviousPeriodFilters(currentFilters: any): any {
-    // Calculate the previous period based on current filters
-    const previousFilters = { ...currentFilters };
-    
-    if (currentFilters.horaInicial && currentFilters.horaFinal) {
-      // Convert time strings to minutes for calculation
-      const getMinutes = (timeStr: string) => {
-        const [hours, minutes] = timeStr.split(':').map(Number);
-        return hours * 60 + minutes;
-      };
+    const { placa, data, horaInicial, horaFinal } = currentFilters;
+    const previousDate = new Date(data);
+    previousDate.setDate(previousDate.getDate() - 1); // Pega o dia anterior
 
-      const startMinutes = getMinutes(currentFilters.horaInicial);
-      const endMinutes = getMinutes(currentFilters.horaFinal);
-      const periodMinutes = endMinutes - startMinutes;
-
-      // Calculate previous period times
-      const previousEndMinutes = startMinutes;
-      const previousStartMinutes = previousEndMinutes - periodMinutes;
-
-      // Convert back to time strings
-      const minutesToTime = (minutes: number) => {
-        const hours = Math.floor(minutes / 60);
-        const mins = minutes % 60;
-        return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
-      };
-
-      previousFilters.horaFinal = minutesToTime(previousEndMinutes);
-      previousFilters.horaInicial = minutesToTime(previousStartMinutes);
-    }
-
-    return previousFilters;
+    return {
+      placa,
+      data: previousDate,
+      horaInicial,
+      horaFinal
+    };
   }
 
-  onDateChange(event: any, field: string): void {
-    if (event instanceof MatDatepickerInputEvent) {
-      this.filterForm.get(field)?.setValue(event.value);
-    } else {
-      // Handle native date input event
-      const date = new Date(event.target.value);
-      this.filterForm.get(field)?.setValue(date);
+  onDateChange(event: any, controlName: string): void {
+    const control = this.filterForm.get(controlName);
+    if (control) {
+      control.setValue(event.value);
+      control.markAsTouched();
     }
   }
 
@@ -936,19 +1107,10 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   applyFilter(): void {
-    this.loadData();
-    this.loadPreviousPeriodData();
-  }
-
-  resetFilters(): void {
-    this.filterForm.reset({
-      placa: '47457',
-      data: new Date('2024-05-20'),
-      horaInicial: '06:00',
-      horaFinal: '12:00'
-    });
-    this.loadData();
-    this.loadPreviousPeriodData();
+    if (this.filterForm.valid) {
+      this.loadData();
+      this.loadPreviousPeriodData(); // Carrega dados do período anterior para comparação
+    }
   }
 
   exportToExcel(): void {
@@ -983,9 +1145,56 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getDistanceChange(): number {
-    const currentTotal = this.getTotalDistance();
-    const previousTotal = this.previousPeriodData.reduce((total, trip) => total + (trip.distancia || 0), 0);
-    return previousTotal ? Math.round(((currentTotal - previousTotal) / previousTotal) * 100) : 0;
+    if (!this.previousPeriodData?.[0]) return 0;
+    const currentDistance = this.dataSource.data[0]?.distancia || 0;
+    const previousDistance = this.previousPeriodData[0].distancia;
+    return this.calculatePercentageChange(currentDistance, previousDistance);
+  }
+
+  getFuelConsumptionChange(): number {
+    if (!this.previousPeriodData?.[0]) return 0;
+    const currentConsumption = this.dataSource.data[0]?.litros || 0;
+    const previousConsumption = this.previousPeriodData[0].litros;
+    return this.calculatePercentageChange(currentConsumption, previousConsumption);
+  }
+
+  getSpeedChange(): number {
+    if (!this.previousPeriodData?.[0]) return 0;
+    const currentSpeed = this.dataSource.data[0]?.velocidadeMedia || 0;
+    const previousSpeed = this.previousPeriodData[0].velocidadeMedia;
+    return this.calculatePercentageChange(currentSpeed, previousSpeed);
+  }
+
+  getBrakeUsageChange(): number {
+    if (!this.dataSource.data || this.dataSource.data.length === 0) {
+      return 0;
+    }
+    const currentBrake = this.dataSource.data[0].freio;
+    const previousBrake = this.dataSource.data[1]?.freio || currentBrake;
+    return this.calculatePercentageChange(currentBrake, previousBrake);
+  }
+
+  getRPMChange(): number {
+    if (!this.dataSource.data || this.dataSource.data.length === 0) {
+      return 0;
+    }
+    const currentRPM = this.dataSource.data[0].giro;
+    const previousRPM = this.dataSource.data[1]?.giro || currentRPM;
+    return this.calculatePercentageChange(currentRPM, previousRPM);
+  }
+
+  getPedalChange(): number {
+    if (!this.dataSource.data || this.dataSource.data.length === 0) {
+      return 0;
+    }
+    const currentPedal = this.dataSource.data[0].pedal;
+    const previousPedal = this.dataSource.data[1]?.pedal || currentPedal;
+    return this.calculatePercentageChange(currentPedal, previousPedal);
+  }
+
+  private calculatePercentageChange(current: number, previous: number): number {
+    if (previous === 0) return 0;
+    return Number(((current - previous) / previous * 100).toFixed(1));
   }
 
   getAverageFuelConsumption(): number {
@@ -994,24 +1203,10 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
     return Math.round(trips.reduce((total, trip) => total + (trip.kmPorLitro || 0), 0) / trips.length * 100) / 100;
   }
 
-  getFuelConsumptionChange(): number {
-    const currentAvg = this.getAverageFuelConsumption();
-    const previousAvg = this.previousPeriodData.length ?
-      this.previousPeriodData.reduce((total, trip) => total + (trip.kmPorLitro || 0), 0) / this.previousPeriodData.length : 0;
-    return previousAvg ? Math.round(((currentAvg - previousAvg) / previousAvg) * 100) : 0;
-  }
-
   getAverageSpeed(): number {
     const trips = this.dataSource.data;
     if (!trips.length) return 0;
     return Math.round(trips.reduce((total, trip) => total + (trip.velocidadeMedia || 0), 0) / trips.length);
-  }
-
-  getSpeedChange(): number {
-    const currentAvg = this.getAverageSpeed();
-    const previousAvg = this.previousPeriodData.length ?
-      this.previousPeriodData.reduce((total, trip) => total + (trip.velocidadeMedia || 0), 0) / this.previousPeriodData.length : 0;
-    return previousAvg ? Math.round(((currentAvg - previousAvg) / previousAvg) * 100) : 0;
   }
 
   getAverageBrakeUsage(): number {
@@ -1020,37 +1215,16 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
     return Math.round(trips.reduce((total, trip) => total + (trip.freio || 0), 0) / trips.length);
   }
 
-  getBrakeUsageChange(): number {
-    const currentAvg = this.getAverageBrakeUsage();
-    const previousAvg = this.previousPeriodData.length ?
-      this.previousPeriodData.reduce((total, trip) => total + (trip.freio || 0), 0) / this.previousPeriodData.length : 0;
-    return previousAvg ? Math.round(((currentAvg - previousAvg) / previousAvg) * 100) : 0;
-  }
-
   getAverageRPM(): number {
     const trips = this.dataSource.data;
     if (!trips.length) return 0;
     return Math.round(trips.reduce((total, trip) => total + (trip.giro || 0), 0) / trips.length);
   }
 
-  getRPMChange(): number {
-    const currentAvg = this.getAverageRPM();
-    const previousAvg = this.previousPeriodData.length ?
-      this.previousPeriodData.reduce((total, trip) => total + (trip.giro || 0), 0) / this.previousPeriodData.length : 0;
-    return previousAvg ? Math.round(((currentAvg - previousAvg) / previousAvg) * 100) : 0;
-  }
-
   getAveragePedalUsage(): number {
     const trips = this.dataSource.data;
     if (!trips.length) return 0;
     return Math.round(trips.reduce((total, trip) => total + (trip.pedal || 0), 0) / trips.length);
-  }
-
-  getPedalChange(): number {
-    const currentAvg = this.getAveragePedalUsage();
-    const previousAvg = this.previousPeriodData.length ?
-      this.previousPeriodData.reduce((total, trip) => total + (trip.pedal || 0), 0) / this.previousPeriodData.length : 0;
-    return previousAvg ? Math.round(((currentAvg - previousAvg) / previousAvg) * 100) : 0;
   }
 
   refreshData(): void {
@@ -1165,46 +1339,55 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private updateChartData(): void {
-    if (this.dataSource.data.length === 0) return;
-
-    this.lineChartData.labels = this.dataSource.data.map(trip => 
-      new Date(trip.inicio).toLocaleDateString('pt-BR')
-    );
-
-    this.lineChartData.datasets[0].data = this.dataSource.data.map(trip => trip.giro);
-    this.lineChartData.datasets[1].data = this.dataSource.data.map(trip => trip.freio);
-    this.lineChartData.datasets[2].data = this.dataSource.data.map(trip => trip.pedal);
-
-    this.chart?.update();
+    if (this.dataSource.data.length > 0) {
+      const data = this.dataSource.data[0];
+      
+      this.lineChartData = {
+        labels: ['Giro', 'Freio', 'Pedal'],
+        datasets: [
+          {
+            data: [
+              data.tfp || 0,
+              data.efal || 0,
+              data.pedal || 0
+            ],
+            label: 'Desempenho',
+            backgroundColor: ['#34D399', '#F59E0B', '#F43F5E'],
+            borderColor: '#F59E0B',
+            fill: false
+          }
+        ]
+      };
+    }
   }
 
   updateMetrics(): void {
-    if (this.dataSource.data.length === 0) return;
+    if (this.dataSource.data.length > 0) {
+      const currentData = this.dataSource.data[0];
+      const previousData = this.previousPeriodData?.[0];
 
-    // Update metrics values based on current data
-    this.metrics = [
-      { 
-        name: 'Giro',
-        value: this.getAverageRPM(),
-        icon: 'matAvTimerRound',
-        color: '#F472B6', // Pink-400
-        label: ''
-      },
-      { 
-        name: 'Freio',
-        value: this.getAverageBrakeUsage(),
-        icon: 'matBatteryAlertRound',
-        color: '#FB923C', // Orange-400
-        label: ''
-      },
-      { 
-        name: 'Pedal',
-        value: this.getAveragePedalUsage(),
-        icon: 'matPedalBikeRound',
-        color: '#A78BFA', // Violet-400
-        label: ''
-      }
-    ];
+      // Atualizar métricas com comparação ao período anterior
+      this.metrics = [
+        {
+          label: 'Distância',
+          value: currentData.distancia,
+          previousValue: previousData?.distancia || 0,
+          color: '#34D399'
+        },
+        {
+          label: 'Consumo',
+          value: currentData.litros,
+          previousValue: previousData?.litros || 0,
+          color: '#F59E0B'
+        },
+        {
+          label: 'Velocidade',
+          value: currentData.velocidadeMedia,
+          previousValue: previousData?.velocidadeMedia || 0,
+          color: '#F43F5E'
+        }
+      ];
+    }
   }
 
   nextDay(): void {
@@ -1242,42 +1425,25 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateMapRoute(): void {
-    const currentTrip = this.getCurrentPageData();
-    if (currentTrip && currentTrip.rota && currentTrip.rota.length > 1 && this.googleMap?.googleMap) {
-      const origin = currentTrip.rota[0];
-      const destination = currentTrip.rota[currentTrip.rota.length - 1];
-      
-      // Limpar marcadores existentes
-      this.clearCustomMarkers();
+    if (this.dataSource.data.length > 0 && this.googleMap && this.directionsRenderer) {
+      const tripData = this.dataSource.data[0];
+      const { rota, paradas } = tripData;
 
-      // Calcular a rota usando o serviço de Directions
-      this.tripAnalysisService.calculateRouteWithWaypoints(origin, destination, currentTrip.paradas)
-        .then((result) => {
-          if (this.directionsRenderer && this.googleMap?.googleMap) {
-            this.directionsRenderer.setDirections(result);
+      if (rota.length >= 2) {
+        const origin = rota[0];
+        const destination = rota[rota.length - 1];
+        const waypoints = paradas.map(parada => ({
+          lat: parada.lat,
+          lng: parada.lng
+        }));
 
-            // Adicionar marcadores personalizados
-            this.addCustomMarkers(this.googleMap.googleMap, origin, destination, currentTrip.paradas);
-
-            // Ajustar o zoom para mostrar toda a rota
-            const bounds = new google.maps.LatLngBounds();
-            result.routes[0].legs.forEach(leg => {
-              leg.steps.forEach(step => {
-                step.path.forEach(point => bounds.extend(point));
-              });
-            });
-            this.googleMap.googleMap.fitBounds(bounds);
-
-            // Adicionar um pequeno padding ao bounds
-            const padding = { top: 50, right: 50, bottom: 50, left: 50 };
-            this.googleMap.googleMap.fitBounds(bounds, padding);
-          }
-        })
-        .catch((error) => {
-          console.error('Erro ao calcular a rota:', error);
-          // Em caso de erro, pelo menos mostrar os pontos no mapa
-          this.showMarkersWithoutRoute(currentTrip);
-        });
+        this.tripAnalysisService.calculateRouteWithWaypoints(origin, destination, waypoints)
+          .then(result => {
+            if (result && this.directionsRenderer) {
+              this.directionsRenderer.setDirections(result);
+            }
+          });
+      }
     }
   }
 
@@ -1356,121 +1522,93 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private initializeDirectionsRenderer() {
-    if (this.googleMap?.googleMap) {
-      if (this.directionsRenderer) {
-        this.directionsRenderer.setMap(null);
-        this.directionsRenderer = null;
-      }
+    if (this.googleMap) {
       this.directionsRenderer = new google.maps.DirectionsRenderer({
+        map: this.googleMap.googleMap,
         suppressMarkers: true,
         polylineOptions: {
           strokeColor: '#F59E0B',
-          strokeOpacity: 1.0,
-          strokeWeight: 4
+          strokeWeight: 5
         }
       });
-      this.directionsRenderer.setMap(this.googleMap.googleMap);
     }
   }
 
-  loadVeiculos() {
-    const graphqlQuery = {
-      query: `
-        {
-          getVeiculos(token:"TKNAPI2100", sEmpresaId:${this.empresa}) {
-            placa
-          }
-        }
-      `
-    };
+  loadVehicles(): void {
+    this.isLoadingVehicles = true;
+    const filters = this.filterForm.value;
 
-    this.http.post(this.getPath('graphql'), graphqlQuery).subscribe({
-      next: (response: any) => {
-        if (response?.data?.getVeiculos) {
-          this.veiculos = response.data.getVeiculos.map((v: any) => ({
-            value: v.placa,
-            label: v.placa
-          }));
+    // Reset vehicle selection when company changes
+    this.filterForm.patchValue({
+      placa: ''
+    }, { emitEvent: false });
+
+    this.graphQLService.getVehicles({
+      empresa: filters.empresa,
+      dataInicial: filters.dataInicial,
+      dataFinal: filters.dataFinal
+    }).subscribe({
+      next: (vehicles) => {
+        // Update vehicles array
+        this.vehicles = vehicles;
+        
+        // Update vehicle options for the select
+        this.veiculos = vehicles.map(vehicle => ({
+          value: vehicle.placa,
+          label: `${vehicle.placa} - ${vehicle.nmmodelo || ''}`
+        }));
+        
+        this.isLoadingVehicles = false;
+        
+        // If there are vehicles, select the first one
+        if (vehicles.length > 0) {
+          this.filterForm.patchValue({
+            placa: vehicles[0].placa
+          });
         }
       },
       error: (error) => {
         console.error('Erro ao carregar veículos:', error);
-        alert('Erro ao carregar lista de veículos');
+        this.isLoadingVehicles = false;
+        alert('Erro ao carregar lista de veículos. Por favor, tente novamente.');
       }
     });
   }
 
-  getConsumoV4() {
-    if (!this.veiculoIV) {
-      alert("Selecione o veiculo");
-      return;
-    }
-    
-    if (!this.dateRangeIV || this.dateRangeIV.length !== 2) {
-      alert("Selecione o periodo");
-      return;
-    }
-
-    const firstDate = new Date(this.dateRangeIV[0]);
-    const secondDate = new Date(this.dateRangeIV[1]);
-    const agora = new Date();
-
-    if ((agora.getTime() - firstDate.getTime()) > 24 * 60 * 60 * 1000) {
-      alert("Inicio nao pode ser anterior a 24 horas");
-      return;
-    }
-
-    const dtIni = formatDate(firstDate, "yyyy/MM/dd HH:mm", "en-US");
-    const dtFim = formatDate(secondDate, "yyyy/MM/dd HH:mm", "en-US");
-
-    this.dadosViagem = [];
-    const graphqlQuery = {
-      query: `{ 
-        getConsumoV4(
-          token: "TKNAPI2100",
-          tipo: 1,
-          periodo: 1,
-          sEmpresaId: ${this.empresa},
-          strVei: "${this.veiculoIV}",
-          dtIni: "${dtIni}",
-          dtFim: "${dtFim}",
-          sUsrLog: ${this.authSrv.getUserId()}
-        ) { 
-          placa nmmodelo nmmodonibus nmEqpto dia hinisml hfimsml hinisql hfimsql
-          km dst litros litpar kml kmldst tfp efal efaldst mdf pedal pedalo500
-          vma vme dinisml dfimsml tpotor600 tpotor700 tpoEPP tpoMov tpoLig versao
-          versao_subst corretor dt_corretor idveiculo odoini odofim tpotor400
-          tpotor500 faixaspedal idmodelo tpoEFr rpmParCom rpmSemCon idEqpto
-          stsprob idhistprob id_wftd_tipo problema reserva13 modo_ope comar ultCon
+  getConsumoV4(): void {
+    if (this.veiculoIV && this.dateRangeIV[0] && this.dateRangeIV[1]) {
+      this.graphQLService.getConsumoV4({
+        empresa: 165,
+        dataInicial: this.dateRangeIV[0],
+        dataFinal: this.dateRangeIV[1]
+      }).subscribe({
+        next: (response) => {
+          this.dadosViagem = this.tripDataMapper.mapConsumoToAnalysisData(response[0]);
+        },
+        error: (error) => {
+          console.error('Erro ao carregar dados:', error);
+          alert('Erro ao carregar dados da análise');
         }
-      }`
-    };
-
-    this.http.post(this.getPath('graphql'), graphqlQuery).subscribe({
-      next: (response: any) => {
-        if (response?.data?.getConsumoV4) {
-          const data = response.data.getConsumoV4;
-          this.formatTripData(data);
-          this.lblUltConIV = data.ultCon || '';
-        }
-      },
-      error: (error) => {
-        console.error('Erro na consulta:', error);
-        alert('Erro ao buscar dados da viagem');
-      }
-    });
+      });
+    } else {
+      alert('Por favor, selecione o veículo e o período');
+    }
   }
 
-  private formatTripData(data: any) {
-    this.dadosViagem = [
-      { cpo1: 'Placa', val1: data.placa || '-', cpo2: 'Modelo', val2: data.nmmodelo || '-' },
-      { cpo1: 'Distância', val1: `${data.dst || '0'} km`, cpo2: 'Consumo', val2: `${data.litros || '0'} L` },
-      { cpo1: 'KM/L', val1: data.kml || '0', cpo2: 'Pedal', val2: `${data.pedal || '0'}%` },
-      { cpo1: 'Giro', val1: `${data.rpmParCom || '0'}%`, cpo2: 'Freio', val2: `${data.tpoEFr || '0'}%` }
+  private getStatus(response: any): string {
+    return response.stsprob ? 'Problema' : 'Ok';
+  }
+
+  private generateDummyRoute(): Array<{lat: number, lng: number}> {
+    return [
+      { lat: -23.550520, lng: -46.633308 },
+      { lat: -23.555520, lng: -46.638308 }
     ];
   }
 
-  private getPath(endpoint: string): string {
-    return `${environment.apiUrl}/${endpoint}`;
+  private generateDummyStops(): Array<{lat: number, lng: number, tempo: number}> {
+    return [
+      { lat: -23.552520, lng: -46.635308, tempo: 5 }
+    ];
   }
 }

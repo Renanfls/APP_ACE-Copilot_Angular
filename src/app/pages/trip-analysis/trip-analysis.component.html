@@ -1,18 +1,10 @@
 <!-- Header -->
-<header class="sticky top-0 left-0 right-0 z-50 py-2 shadow-md bg-primary">
+<header class="sticky top-0 left-0 right-0 z-50 py-2 px-4 shadow-md bg-[#141416]">
   <div class="container mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
     <div class="flex items-center gap-4">
       <img [src]="'assets/Logo_AceCopilot_branco.png'" alt="ACE Copilot" class="h-8">
     </div>
     <div class="flex items-center gap-4">
-      <button 
-        mat-icon-button 
-        (click)="exportToExcel()" 
-        class="text-on-surface-variant hover:text-amber-400 transition-colors rounded-lg"
-        aria-label="Exportar para Excel"
-        matTooltip="Exportar para Excel">
-        <ng-icon name="matDownloadRound"></ng-icon>
-      </button>
       <button 
         mat-icon-button 
         (click)="toggleTheme()" 
@@ -26,35 +18,16 @@
 </header>
 
 <!-- Main Content -->
-<main class="container mx-auto px-4 md:px-8 mt-10 pb-8">
+<main class="container mx-auto px-4 md:px-8 mt-8 pb-8 bg-[#1d1d1d]">
   <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4">
     <h1 class="text-2xl font-bold text-on-surface flex items-center">
       Análise de Viagens
     </h1>
-    <div class="flex items-center gap-2">
-      <button 
-        mat-stroked-button 
-        (click)="refreshData()" 
-        class="!h-10 !px-4 !rounded-full border !border-outline hover:!bg-surface-container-highest"
-        type="button">
-        <ng-icon name="matRefreshRound" class="mr-2 text-on-surface-variant"></ng-icon>
-        <span class="text-on-surface-variant font-medium">Atualizar</span>
-      </button>
-      <button 
-        mat-flat-button 
-        color="accent" 
-        (click)="exportToExcel()" 
-        class="!h-10 !px-4 !rounded-full !bg-amber-400 hover:!bg-amber-500"
-        type="button">
-        <ng-icon name="matDownloadRound" class="mr-2 text-black"></ng-icon>
-        <span class="text-black font-medium">Exportar</span>
-      </button>
-    </div>
   </div>
-  
+
   <!-- Filter Section -->
-  <mat-card class="mb-8 bg-white/60 dark:bg-gray-800/60 shadow-sm rounded-lg">
-    <mat-card-header class="mb-6 flex items-center p-6 border-b border-outline-variant">
+  <mat-card class="bg-white/60 dark:bg-[#141416] shadow-sm rounded-lg">
+    <mat-card-header class="flex items-center p-2 border-b border-outline-variant">
       <div class="flex items-center pb-4">
         <div class="w-10 h-10 rounded-full bg-amber-400 bg-opacity-10 flex items-center justify-center mr-4">
           <ng-icon name="matFilterAltRound" class="text-amber-400 text-xl"></ng-icon>
@@ -63,84 +36,184 @@
       </div>
     </mat-card-header>
     
-    <mat-card-content class="p-6">
-      <form [formGroup]="filterForm" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Placa Input -->
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label class="font-medium">Número do Veículo</mat-label>
-          <input 
-            matInput 
-            formControlName="placa" 
-            placeholder="48122" 
-            maxlength="5"
-                        class="rounded-lg"            aria-describedby="placaHint">          <div matSuffix class="ml-2">            <ng-icon name="matDirectionsCarRound" class="text-amber-400"></ng-icon>          </div>
-          <mat-hint id="placaHint" class="text-on-surface-variant">Ex: 48122</mat-hint>
-          <mat-error *ngIf="filterForm.get('placa')?.hasError('required')">
-            Número é obrigatório
-          </mat-error>
-          <mat-error *ngIf="filterForm.get('placa')?.hasError('pattern')">
-            Formato inválido (48122)
-          </mat-error>
-        </mat-form-field>
-        
-        <!-- Data Input -->
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label class="font-medium">Data</mat-label>
-          <!-- Mobile Date Input -->          <input             matInput            type="date"            formControlName="data"            class="md:hidden rounded-lg"            (change)="onDateChange($event, 'data')">          <!-- Desktop Date Input -->          <input             matInput            [matDatepicker]="picker"            formControlName="data"            placeholder="Selecione a data"            class="hidden md:block rounded-lg">          <div matSuffix class="flex items-center">            <mat-datepicker-toggle [for]="picker"></mat-datepicker-toggle>          </div>          <mat-datepicker #picker></mat-datepicker>
-          <mat-error *ngIf="filterForm.get('data')?.hasError('required')">
-            Data é obrigatória
-          </mat-error>
-        </mat-form-field>
-        
-        <!-- Hora Inicial Input -->
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label class="font-medium">Hora Inicial</mat-label>
-          <input 
-            matInput 
-            type="time"            
-            formControlName="horaInicial"            
-            class="rounded-lg">          
-            <div matSuffix class="ml-2">            
-              <ng-icon name="matScheduleRound" class="text-amber-400"></ng-icon>          
+    <mat-card-content>
+      <form [formGroup]="filterForm" class="space-y-6">
+        <!-- Two Column Layout -->
+        <div class="grid grid-cols-1 md:grid-cols-2">
+          <!-- Left Column - Vehicle Information -->
+          <div class="bg-surface-container-lowest dark:bg-surface-container-low rounded-xl p-6">
+            <h3 class="text-on-surface font-medium flex items-center gap-2 mb-6">
+              <ng-icon name="matDirectionsCarRound" class="text-amber-400"></ng-icon>
+              Informações do Veículo
+            </h3>
+            
+            <div class="grid grid-cols-2 gap-6">
+              <!-- Empresa -->
+              <div>
+                <label class="block text-sm font-medium dark:text-gray-300 mb-2 pl-4">
+                  Código Empresa
+                </label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 right-4 pl-4 flex items-center pointer-events-none">
+                    <ng-icon name="matBusinessRound" class="h-5 w-5 text-gray-400"/>
+                  </div>
+                  <input type="number"
+                        formControlName="empresa"
+                        min="1"
+                        class="block w-full pl-4 py-2 border border-gray-300 rounded-full dark:border-gray-400 shadow-sm dark:bg-[#141416] dark:text-white focus:ring-amber-500 focus:border-amber-500"
+                        [class.border-red-500]="filterForm.get('empresa')?.invalid && filterForm.get('empresa')?.touched"
+                        placeholder="Digite o código da empresa">
+                </div>
+                <div *ngIf="filterForm.get('empresa')?.invalid && filterForm.get('empresa')?.touched" 
+                    class="mt-1 text-sm text-red-500 pl-4">
+                  <span *ngIf="filterForm.get('empresa')?.errors?.['required']">Empresa é obrigatória</span>
+                  <span *ngIf="filterForm.get('empresa')?.errors?.['min']">Empresa deve ser maior que 0</span>
+                </div>
+              </div>
+
+              <!-- Veículo -->
+              <div>
+                <label class="block text-sm font-medium dark:text-gray-300 mb-2 pl-4">
+                  Veículo
+                </label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 right-4 pl-4 flex items-center pointer-events-none">
+                    <ng-icon name="matDirectionsCarRound" class="h-5 w-5 text-gray-400"/>
+                  </div>
+                  <select formControlName="placa"
+                          class="block w-full pl-4 py-2 border border-gray-300 rounded-full dark:border-gray-400 shadow-sm dark:bg-[#141416] dark:text-white focus:ring-amber-500 focus:border-amber-500 appearance-none"
+                          [class.border-red-500]="filterForm.get('placa')?.invalid && filterForm.get('placa')?.touched">
+                    <option value="" disabled selected>Selecione o veículo</option>
+                    <option *ngFor="let vehicle of vehicles" [value]="vehicle.placa">
+                      {{ vehicle.placa }}
+                    </option>
+                  </select>
+                  <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <ng-icon name="matExpandMoreRound" class="h-5 w-5 text-gray-400"/>
+                  </div>
+                </div>
+                <div *ngIf="filterForm.get('placa')?.invalid && filterForm.get('placa')?.touched" 
+                    class="mt-1 text-sm text-red-500 pl-4">
+                  <span *ngIf="filterForm.get('placa')?.errors?.['required']">Veículo é obrigatório</span>
+                </div>
+              </div>
             </div>
-          <mat-error *ngIf="filterForm.get('horaInicial')?.hasError('required')">
-            Hora inicial é obrigatória
-          </mat-error>
-        </mat-form-field>
-        
-        <!-- Hora Final Input -->
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label class="font-medium">Hora Final</mat-label>
-          <input 
-            matInput 
-            type="time"            formControlName="horaFinal"            class="rounded-lg">          <div matSuffix class="ml-2">            <ng-icon name="matAvTimerRound" class="text-amber-400"></ng-icon>          </div>
-          <mat-error *ngIf="filterForm.get('horaFinal')?.hasError('required')">
-            Hora final é obrigatória
-          </mat-error>
-          <mat-error *ngIf="filterForm.get('horaFinal')?.hasError('horaFinalInvalida')">
-            Hora final deve ser maior que a inicial
-          </mat-error>
-        </mat-form-field>
-        
-        <div class="flex items-center gap-2 pb-4">
+          </div>
+
+          <!-- Right Column - Date and Time -->
+          <div class="bg-surface-container-lowest dark:bg-surface-container-low rounded-xl p-6">
+            <h3 class="text-on-surface font-medium flex items-center gap-2 mb-6">
+              <ng-icon name="matCalendarTodayRound" class="text-amber-400"></ng-icon>
+              Período
+            </h3>
+            
+            <div class="grid grid-cols-2 gap-6">
+              <!-- Dates Row -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <!-- Data Inicial -->
+                <div>
+                  <label class="block text-sm font-medium dark:text-gray-300 mb-2 pl-4">
+                    Data Inicial
+                  </label>
+                  <div class="relative">
+                    <input [matDatepicker]="pickerInicial"
+                          formControlName="dataInicial"
+                          class="block w-full pl-4 pr-10 py-2 border border-gray-300 rounded-full dark:border-gray-400 shadow-sm dark:bg-[#141416] dark:text-white focus:ring-amber-500 focus:border-amber-500"
+                          [class.border-red-500]="filterForm.get('dataInicial')?.invalid && filterForm.get('dataInicial')?.touched"
+                          placeholder="Selecione a data inicial">
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                      <mat-datepicker-toggle [for]="pickerInicial"></mat-datepicker-toggle>
+                    </div>
+                  </div>
+                  <mat-datepicker #pickerInicial></mat-datepicker>
+                  <div *ngIf="filterForm.get('dataInicial')?.invalid && filterForm.get('dataInicial')?.touched" 
+                      class="mt-1 text-sm text-red-500 pl-4">
+                    <span *ngIf="filterForm.get('dataInicial')?.errors?.['required']">Data inicial é obrigatória</span>
+                  </div>
+                </div>
+
+                <!-- Data Final -->
+                <div>
+                  <label class="block text-sm font-medium dark:text-gray-300 mb-2 pl-4">
+                    Data Final
+                  </label>
+                  <div class="relative">
+                    <input [matDatepicker]="pickerFinal"
+                          formControlName="dataFinal"
+                          class="block w-full pl-4 pr-10 py-2 border border-gray-300 rounded-full dark:border-gray-400 shadow-sm dark:bg-[#141416] dark:text-white focus:ring-amber-500 focus:border-amber-500"
+                          [class.border-red-500]="filterForm.get('dataFinal')?.invalid && filterForm.get('dataFinal')?.touched"
+                          placeholder="Selecione a data final">
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                      <mat-datepicker-toggle [for]="pickerFinal"></mat-datepicker-toggle>
+                    </div>
+                  </div>
+                  <mat-datepicker #pickerFinal></mat-datepicker>
+                  <div *ngIf="filterForm.get('dataFinal')?.invalid && filterForm.get('dataFinal')?.touched" 
+                      class="mt-1 text-sm text-red-500 pl-4">
+                    <span *ngIf="filterForm.get('dataFinal')?.errors?.['required']">Data final é obrigatória</span>
+                    <span *ngIf="filterForm.errors?.['dateRange']">Data final deve ser maior que a data inicial</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Times Row -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Hora Inicial -->
+                <div>
+                  <label class="block text-sm font-medium dark:text-gray-300 mb-2 pl-4">
+                    Hora Inicial
+                  </label>
+                  <div class="relative">
+                    <input type="time"
+                          formControlName="horaInicial"
+                          class="block w-full px-4 py-2 border border-gray-300 rounded-full dark:border-gray-400 shadow-sm dark:bg-[#141416] dark:text-white focus:ring-amber-500 focus:border-amber-500"
+                          [class.border-red-500]="filterForm.get('horaInicial')?.invalid && filterForm.get('horaInicial')?.touched">
+                  </div>
+                  <div *ngIf="filterForm.get('horaInicial')?.invalid && filterForm.get('horaInicial')?.touched" 
+                      class="mt-1 text-sm text-red-500 pl-4">
+                    <span *ngIf="filterForm.get('horaInicial')?.errors?.['required']">Hora inicial é obrigatória</span>
+                  </div>
+                </div>
+
+                <!-- Hora Final -->
+                <div>
+                  <label class="block text-sm font-medium dark:text-gray-300 mb-2 pl-4">
+                    Hora Final
+                  </label>
+                  <div class="relative">
+                    <input type="time"
+                          formControlName="horaFinal"
+                          class="block w-full pl-4 py-2 border border-gray-300 rounded-full dark:border-gray-400 shadow-sm dark:bg-[#141416] dark:text-white focus:ring-amber-500 focus:border-amber-500"
+                          [class.border-red-500]="filterForm.get('horaFinal')?.invalid && filterForm.get('horaFinal')?.touched">
+                  </div>
+                  <div *ngIf="filterForm.get('horaFinal')?.invalid && filterForm.get('horaFinal')?.touched" 
+                      class="mt-1 text-sm text-red-500 pl-4">
+                    <span *ngIf="filterForm.get('horaFinal')?.errors?.['required']">Hora final é obrigatória</span>
+                    <span *ngIf="filterForm.get('horaFinal')?.errors?.['horaFinalInvalida']">Hora final deve ser maior que a hora inicial</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-center pb-16 gap-4">
           <button 
-            mat-button 
+            mat-stroked-button 
             (click)="resetFilters()" 
-            class="!h-10 !px-6 !rounded-full border !border-outline hover:!bg-surface-container-highest"
-            type="button">
+            class="!h-10 !px-6 !rounded-full border !border-outline hover:!bg-surface-container-highest">
             <ng-icon name="matClearRound" class="mr-2 text-on-surface-variant"></ng-icon>
             <span class="text-on-surface-variant font-medium">Limpar</span>
           </button>
           <button 
             mat-flat-button 
-            color="accent" 
-            [disabled]="!filterForm.valid || isLoading" 
+            color="primary" 
             (click)="applyFilter()" 
-            class="!h-10 !px-6 !rounded-full !bg-amber-400 hover:!bg-amber-500"
-            type="submit">
-            <ng-icon *ngIf="!isLoading" name="matSearchRound" class="mr-2"></ng-icon>
-            <mat-spinner *ngIf="isLoading" [diameter]="20" class="mr-2"></mat-spinner>
-            <span class="text-black font-medium">{{ isLoading ? 'Buscando...' : 'Buscar' }}</span>
+            [disabled]="filterForm.invalid || isLoading"
+            class="!h-10 !px-6 !rounded-full !bg-primary hover:!bg-amber-500">
+            <ng-icon name="matSearchRound" class="mr-2 text-white"></ng-icon>
+            <span class="text-white font-medium">Pesquisar</span>
           </button>
         </div>
       </form>
@@ -148,7 +221,7 @@
   </mat-card>
   
   <!-- Analytics Section -->
-  <div *ngIf="dataSource.data.length > 0">
+  <div *ngIf="dataSource.data.length > 0" class="mt-10">
     <!-- Analytics Toggle -->
     <div class="flex items-center justify-between mb-6">
       <h2 class="text-xl font-semibold text-on-surface flex items-center">
@@ -169,7 +242,7 @@
     
     <!-- Chart View -->
     <div *ngIf="viewMode.value === 'chart'" class="mb-8">
-      <mat-card class="bg-white/60 dark:bg-gray-800/60 shadow-sm rounded-lg">
+      <mat-card class="bg-white/60 dark:bg-[#141416] shadow-sm rounded-lg">
         <mat-card-content class="p-6">
           <div class="h-64 mb-4 rounded-lg overflow-hidden">
             <canvas baseChart
@@ -190,7 +263,7 @@
     </div>
     
     <!-- Summary Cards -->
-    <div *ngIf="viewMode.value === 'cards'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <div *ngIf="viewMode.value === 'cards'" class="grid grid-cols-2 md:grid-cols-6 gap-6 mb-8">
       <!-- Distância Total -->
       <mat-card class="bg-white/60 dark:bg-gray-800/60 hover:-translate-y-1 transition-all duration-300 hover:shadow-lg bg-gradient-to-br from-amber-400/10 via-amber-400/5 to-transparent rounded-lg">
         <mat-card-content class="p-6">
@@ -201,7 +274,7 @@
           <p class="text-2xl font-bold text-on-surface mt-1">{{ getTotalDistance() }} km</p>
           <div class="flex items-center mt-3 text-sm" [class.text-green-500]="getDistanceChange() > 0" [class.text-red-500]="getDistanceChange() < 0">
             <ng-icon [name]="getDistanceChange() > 0 ? 'matTrendingUpRound' : 'matTrendingDownRound'" class="text-base mr-1"></ng-icon>
-            {{ getDistanceChange() }}% vs mês anterior
+            {{ getDistanceChange() }}% vs dia anterior
           </div>
         </mat-card-content>
       </mat-card>
@@ -216,7 +289,7 @@
           <p class="text-2xl font-bold text-on-surface mt-1">{{ getAverageFuelConsumption() }} km/l</p>
           <div class="flex items-center mt-3 text-sm" [class.text-green-500]="getFuelConsumptionChange() > 0" [class.text-red-500]="getFuelConsumptionChange() < 0">
             <ng-icon [name]="getFuelConsumptionChange() > 0 ? 'matTrendingUpRound' : 'matTrendingDownRound'" class="text-base mr-1"></ng-icon>
-            {{ getFuelConsumptionChange() }}% vs mês anterior
+            {{ getFuelConsumptionChange() }}% vs dia anterior
           </div>
         </mat-card-content>
       </mat-card>
@@ -231,7 +304,7 @@
           <p class="text-2xl font-bold text-on-surface mt-1">{{ getAverageSpeed() }} km/h</p>
           <div class="flex items-center mt-3 text-sm" [class.text-green-500]="getSpeedChange() > 0" [class.text-red-500]="getSpeedChange() < 0">
             <ng-icon [name]="getSpeedChange() > 0 ? 'matTrendingUpRound' : 'matTrendingDownRound'" class="text-base mr-1"></ng-icon>
-            {{ getSpeedChange() }}% vs mês anterior
+            {{ getSpeedChange() }}% vs dia anterior
           </div>
         </mat-card-content>
       </mat-card>
@@ -246,7 +319,7 @@
           <p class="text-2xl font-bold text-on-surface mt-1">{{ getAverageBrakeUsage() }} %</p>
           <div class="flex items-center mt-3 text-sm" [class.text-green-500]="getBrakeUsageChange() < 0" [class.text-red-500]="getBrakeUsageChange() > 0">
             <ng-icon [name]="getBrakeUsageChange() > 0 ? 'matTrendingUpRound' : 'matTrendingDownRound'" class="text-base mr-1"></ng-icon>
-            {{ getBrakeUsageChange() }}% vs mês anterior
+            {{ getBrakeUsageChange() }}% vs dia anterior
           </div>
         </mat-card-content>
       </mat-card>
@@ -258,10 +331,10 @@
             <ng-icon name="matSpeedRound" class="text-amber-400 text-2xl"></ng-icon>
           </div>
           <h3 class="text-sm font-medium text-on-surface-variant">Média de Giro</h3>
-          <p class="text-2xl font-bold text-on-surface mt-1">{{ getAverageRPM() }} %</p>
+          <p class="text-2xl font-bold text-on-surface mt-1">{{ getAverageRPM() }}{{ getAverageRPM() }} %</p>
           <div class="flex items-center mt-3 text-sm" [class.text-green-500]="getRPMChange() < 0" [class.text-red-500]="getRPMChange() > 0">
             <ng-icon [name]="getRPMChange() > 0 ? 'matTrendingUpRound' : 'matTrendingDownRound'" class="text-base mr-1"></ng-icon>
-            {{ getRPMChange() }}% vs mês anterior
+            {{ getRPMChange() }}% vs dia anterior
           </div>
         </mat-card-content>
       </mat-card>
@@ -276,7 +349,7 @@
           <p class="text-2xl font-bold text-on-surface mt-1">{{ getAveragePedalUsage() }} %</p>
           <div class="flex items-center mt-3 text-sm" [class.text-green-500]="getPedalChange() < 0" [class.text-red-500]="getPedalChange() > 0">
             <ng-icon [name]="getPedalChange() > 0 ? 'matTrendingUpRound' : 'matTrendingDownRound'" class="text-base mr-1"></ng-icon>
-            {{ getPedalChange() }}% vs mês anterior
+            {{ getPedalChange() }}% vs dia anterior
           </div>
         </mat-card-content>
       </mat-card>
@@ -284,7 +357,7 @@
   </div>
   
   <!-- Table Section -->
-  <mat-card class="mb-8 bg-white/60 dark:bg-gray-800/60 shadow-sm overflow-hidden rounded-lg">
+  <mat-card class="mb-8 bg-white dark:bg-[#141416] shadow-sm overflow-hidden rounded-lg" *ngIf="dataSource.data.length > 0">
     <mat-card-header class="p-6 border-b border-gray-100 dark:border-gray-800">
       <div class="flex items-center pb-4">
         <div class="w-10 h-10 rounded-full bg-amber-400 bg-opacity-10 flex items-center justify-center mr-4">
@@ -308,37 +381,37 @@
           <!-- Data Column -->
           <ng-container matColumnDef="data">
             <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Data</mat-header-cell>
-            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.inicio | date:'shortDate'}}</mat-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{ item.data }}</mat-cell>
           </ng-container>
 
           <!-- Início Column -->
           <ng-container matColumnDef="inicio">
             <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Início</mat-header-cell>
-            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.inicio | date:'HH:mm'}}</mat-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{ item.hinisql }}</mat-cell>
           </ng-container>
 
           <!-- Fim Column -->
           <ng-container matColumnDef="fim">
             <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Fim</mat-header-cell>
-            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.fim | date:'HH:mm'}}</mat-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{ item.hfimsql }}</mat-cell>
           </ng-container>
 
           <!-- Mecânica Column -->
           <ng-container matColumnDef="mecanica">
             <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Mecânica</mat-header-cell>
-            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.mecanica}}</mat-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{ item.nmmodelo }}</mat-cell>
           </ng-container>
 
           <!-- Modelo Column -->
           <ng-container matColumnDef="modelo">
             <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Modelo</mat-header-cell>
-            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.modelo || '-'}}</mat-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{ item.nmmodonibus }}</mat-cell>
           </ng-container>
 
           <!-- Versão Column -->
           <ng-container matColumnDef="versao">
             <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Versão</mat-header-cell>
-            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.versao}}</mat-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{ item.versao }}</mat-cell>
           </ng-container>
 
           <!-- Status Column -->
@@ -350,7 +423,7 @@
                     [class.text-green-800]="item?.status === 'Ok'"
                     [class.bg-amber-100]="item?.status !== 'Ok'"
                     [class.text-amber-800]="item?.status !== 'Ok'">
-                {{item?.status}}
+                {{ item.stsprob }}
               </span>
             </mat-cell>
           </ng-container>
@@ -358,61 +431,61 @@
           <!-- KM Column -->
           <ng-container matColumnDef="km">
             <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">KM</mat-header-cell>
-            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.km?.toFixed(1)}}</mat-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{ item.km.toFixed(1) }}</mat-cell>
           </ng-container>
 
           <!-- Distância Column -->
           <ng-container matColumnDef="distancia">
             <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Distância</mat-header-cell>
-            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.distancia?.toFixed(1)}} km</mat-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{ item.dst.toFixed(1) }} km</mat-cell>
           </ng-container>
 
           <!-- Litros Column -->
           <ng-container matColumnDef="litros">
             <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Litros</mat-header-cell>
-            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.litros?.toFixed(1)}}</mat-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{ item.litros.toFixed(1) }}</mat-cell>
           </ng-container>
 
           <!-- Litros Parado Column -->
           <ng-container matColumnDef="litrosParado">
             <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">L. Parado</mat-header-cell>
-            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.litrosParado}} ({{item?.litrosParado && item?.litros ? ((item.litrosParado / item.litros) * 100).toFixed(0) : 0}}%)</mat-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{ item.litpar }} ({{ item.litpar && item.litros ? ((item.litpar / item.litros) * 100).toFixed(0) : 0}}%)</mat-cell>
           </ng-container>
 
           <!-- KM/Litro Column -->
           <ng-container matColumnDef="kmPorLitro">
             <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">KM/Litro</mat-header-cell>
-            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.kmPorLitro?.toFixed(2)}}</mat-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{ item.kml.toFixed(2)}}</mat-cell>
           </ng-container>
 
           <!-- Giro Column -->
           <ng-container matColumnDef="giro">
             <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Giro</mat-header-cell>
-            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.giro}}%</mat-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{ item.tfp }}%</mat-cell>
           </ng-container>
 
           <!-- Freio Column -->
           <ng-container matColumnDef="freio">
             <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Freio</mat-header-cell>
-            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.freio}}%</mat-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{ item.efal }}%</mat-cell>
           </ng-container>
 
           <!-- Pedal Column -->
           <ng-container matColumnDef="pedal">
             <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">Pedal</mat-header-cell>
-            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.pedal}}%</mat-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{ item.pedal }}%</mat-cell>
           </ng-container>
 
           <!-- Odômetro Inicial Column -->
           <ng-container matColumnDef="odometroInicial">
             <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">O. Inicial</mat-header-cell>
-            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.odometroInicial?.toFixed(1)}}</mat-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{ item.odoini.toFixed(1)}}</mat-cell>
           </ng-container>
 
           <!-- Odômetro Final Column -->
           <ng-container matColumnDef="odometroFinal">
             <mat-header-cell *matHeaderCellDef class="text-on-surface-variant">O. Final</mat-header-cell>
-            <mat-cell *matCellDef="let item" class="text-on-surface">{{item?.odometroFinal?.toFixed(1)}}</mat-cell>
+            <mat-cell *matCellDef="let item" class="text-on-surface">{{ item.odofim.toFixed(1)}}</mat-cell>
           </ng-container>
 
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -463,23 +536,23 @@
             </div>
             <div class="flex justify-between py-3 border-b border-outline/10">
               <span class="text-on-surface-variant">Início</span>
-              <span class="text-on-surface">{{item?.inicio | date:'HH:mm'}}</span>
+              <span class="text-on-surface">{{ item.hinisql }}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-outline/10">
               <span class="text-on-surface-variant">Fim</span>
-              <span class="text-on-surface">{{item?.fim | date:'HH:mm'}}</span>
+              <span class="text-on-surface">{{ item.hfimsql }}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-outline/10">
               <span class="text-on-surface-variant">Mecânica</span>
-              <span class="text-on-surface">{{item?.mecanica}}</span>
+              <span class="text-on-surface">{{ item.nmmodelo }}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-outline/10">
               <span class="text-on-surface-variant">Modelo</span>
-              <span class="text-on-surface">{{item?.modelo || '-'}}</span>
+              <span class="text-on-surface">{{ item.nmmodonibus }}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-outline/10">
               <span class="text-on-surface-variant">Versão</span>
-              <span class="text-on-surface">{{item?.versao}}</span>
+              <span class="text-on-surface">{{ item.versao }}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-outline/10">
               <span class="text-on-surface-variant">Status</span>
@@ -488,48 +561,48 @@
                     [class.text-green-800]="item?.status === 'Ok'"
                     [class.bg-amber-100]="item?.status !== 'Ok'"
                     [class.text-amber-800]="item?.status !== 'Ok'">
-                {{item?.status}}
+                {{ item.stsprob }}
               </span>
             </div>
             <div class="flex justify-between py-3 border-b border-outline/10">
               <span class="text-on-surface-variant">O. Inicial</span>
-              <span class="text-on-surface">{{item?.odometroInicial?.toFixed(1)}}</span>
+              <span class="text-on-surface">{{ item.odoini.toFixed(1)}}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-outline/10">
               <span class="text-on-surface-variant">O. Final</span>
-              <span class="text-on-surface">{{item?.odometroFinal?.toFixed(1)}}</span>
+              <span class="text-on-surface">{{ item.odofim.toFixed(1)}}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-outline/10">
               <span class="text-on-surface-variant">KM</span>
-              <span class="text-on-surface">{{item?.km?.toFixed(1)}}</span>
+              <span class="text-on-surface">{{ item.km.toFixed(1)}}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-outline/10">
               <span class="text-on-surface-variant">Distância</span>
-              <span class="text-on-surface">{{item?.distancia?.toFixed(1)}} km</span>
+              <span class="text-on-surface">{{ item.dst.toFixed(1)}} km</span>
             </div>
             <div class="flex justify-between py-3 border-b border-outline/10">
               <span class="text-on-surface-variant">Litros</span>
-              <span class="text-on-surface">{{item?.litros?.toFixed(1)}}</span>
+              <span class="text-on-surface">{{ item.litros.toFixed(1)}}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-outline/10">
               <span class="text-on-surface-variant">L. Parado</span>
-              <span class="text-on-surface">{{item?.litrosParado}} ({{item?.litrosParado && item?.litros ? ((item.litrosParado / item.litros) * 100).toFixed(0) : 0}}%)</span>
+              <span class="text-on-surface">{{ item.litpar }} ({{ item.litpar && item.litros ? ((item.litpar / item.litros) * 100).toFixed(0) : 0}}%)</span>
             </div>
             <div class="flex justify-between py-3 border-b border-outline/10">
               <span class="text-on-surface-variant">KM/Litro</span>
-              <span class="text-on-surface">{{item?.kmPorLitro?.toFixed(2)}}</span>
+              <span class="text-on-surface">{{ item.kml.toFixed(2)}}</span>
             </div>
             <div class="flex justify-between py-3 border-b border-outline/10">
               <span class="text-on-surface-variant">Giro</span>
-              <span class="text-on-surface">{{item?.giro}}%</span>
+              <span class="text-on-surface">{{ item.tfp }}%</span>
             </div>
             <div class="flex justify-between py-3 border-b border-outline/10">
               <span class="text-on-surface-variant">Freio</span>
-              <span class="text-on-surface">{{item?.freio}}%</span>
+              <span class="text-on-surface">{{ item.efal }}%</span>
             </div>
             <div class="flex justify-between py-3 border-b border-outline/10">
               <span class="text-on-surface-variant">Pedal</span>
-              <span class="text-on-surface">{{item?.pedal}}%</span>
+              <span class="text-on-surface">{{ item.pedal }}%</span>
             </div>
           </div>
         </ng-container>
@@ -577,7 +650,7 @@
   </mat-card>
   
   <!-- Map Section -->
-  <mat-card class="mb-8 bg-white/60 dark:bg-gray-800/60 shadow-sm rounded-lg" *ngIf="dataSource.data.length > 0">
+  <mat-card class="mb-8 bg-white/60 dark:bg-[#141416] shadow-sm rounded-lg" *ngIf="dataSource.data.length > 0">
     <mat-card-header class="mb-6 flex items-center p-6 border-b border-outline-variant">
       <div class="flex items-center pb-4">
         <div class="w-10 h-10 rounded-full bg-amber-400 bg-opacity-10 flex items-center justify-center mr-4">
@@ -632,17 +705,17 @@
       </div>
     </mat-card-content>
   </mat-card>
-  
-  <!-- Footer -->
-  <footer class="text-center py-6 text-on-surface-variant text-sm">
-    <p>&copy; {{ currentYear }} ACE Copilot. Todos os direitos reservados.</p>
-    <div class="mt-2 flex justify-center gap-4">
-      <a href="#" class="hover:text-amber-400 transition-colors">Termos de Uso</a>
-      <a href="#" class="hover:text-amber-400 transition-colors">Política de Privacidade</a>
-      <a href="#" class="hover:text-amber-400 transition-colors">Suporte</a>
-    </div>
-  </footer>
 </main>
+
+<!-- Footer -->
+<footer class="text-center py-6 text-on-surface-variant text-sm">
+  <p>&copy; {{ currentYear }} ACE Copilot. Todos os direitos reservados.</p>
+  <div class="mt-2 flex justify-center gap-4">
+    <a href="#" class="hover:text-amber-400 transition-colors">Termos de Uso</a>
+    <a href="#" class="hover:text-amber-400 transition-colors">Política de Privacidade</a>
+    <a href="#" class="hover:text-amber-400 transition-colors">Suporte</a>
+  </div>
+</footer>
 
 <!-- Loading Overlay -->
 <div *ngIf="isLoading" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
@@ -750,59 +823,3 @@
     color: var(--md-sys-color-on-surface-variant) !important;
   }
 </style>
-
-<!-- Analise de Viagem -->
-<div style="margin-top:10px;margin-bottom:10px;" *ngIf="isAdmin">
-  <h4 class="TitleClass">Analise de Viagem</h4>
-  <div class="form-container">
-    <mat-form-field>
-      <mat-label>Veículo</mat-label>
-      <mat-select [(ngModel)]="veiculoIV">
-        <mat-option *ngFor="let veiculo of veiculos" [value]="veiculo.value">
-          {{veiculo.label}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-label>Período</mat-label>
-      <mat-date-range-input [rangePicker]="picker">
-        <input matStartDate [(ngModel)]="dateRangeIV[0]" placeholder="Data inicial">
-        <input matEndDate [(ngModel)]="dateRangeIV[1]" placeholder="Data final">
-      </mat-date-range-input>
-      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-date-range-picker #picker></mat-date-range-picker>
-    </mat-form-field>
-
-    <button mat-raised-button color="primary" (click)="getConsumoV4()">
-      Rodar Análise
-    </button>
-  </div>
-
-  <table mat-table [dataSource]="dadosViagem" class="mat-elevation-z8">
-    <ng-container matColumnDef="campo1">
-      <th mat-header-cell *matHeaderCellDef class="HeaderCenter">Campo</th>
-      <td mat-cell *matCellDef="let element" class="BodyCenter">{{element.cpo1}}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="valor1">
-      <th mat-header-cell *matHeaderCellDef class="HeaderCenter">Valor</th>
-      <td mat-cell *matCellDef="let element" class="BodyCenter">{{element.val1}}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="campo2">
-      <th mat-header-cell *matHeaderCellDef class="HeaderCenter">Campo</th>
-      <td mat-cell *matCellDef="let element" class="BodyCenter">{{element.cpo2}}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="valor2">
-      <th mat-header-cell *matHeaderCellDef class="HeaderCenter">Valor</th>
-      <td mat-cell *matCellDef="let element" class="BodyCenter">{{element.val2}}</td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="analiseColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: analiseColumns;"></tr>
-  </table>
-
-  <div style="width: 100%; align-items: end; font-weight: bold; margin-top: 1rem;">{{lblUltConIV}}</div>
-</div>

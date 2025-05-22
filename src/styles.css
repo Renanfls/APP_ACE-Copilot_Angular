@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import '@angular/material/prebuilt-themes/pink-bluegrey.css';
 
@@ -14,7 +15,7 @@
   --md-sys-color-surface-variant: #E1E3E6;
   --md-sys-color-on-surface-variant: #44474E;
   --md-sys-color-surface-container: #ECEEF0;
-  --md-sys-color-surface-container-low: #F8F9FA;
+  --md-sys-color-surface-container-low: #f8f9fa;
   --md-sys-color-surface-container-high: #E1E3E6;
   --md-sys-color-surface-container-highest: #D5D7DA;
   --md-sys-color-outline: #74777F;
@@ -27,14 +28,14 @@
 .dark, .dark-theme {
   --md-sys-color-background: #1D1D1D;
   --md-sys-color-on-background: #E1E3E6;
-  --md-sys-color-surface: #121212;
+  --md-sys-color-surface: #E1E3E6;
   --md-sys-color-on-surface: #E1E3E6;
   --md-sys-color-surface-variant: #44474E;
   --md-sys-color-on-surface-variant: #C4C7CC;
-  --md-sys-color-surface-container: #2D2D2D;
-  --md-sys-color-surface-container-low: #1D1D1D;
-  --md-sys-color-surface-container-high: #2D2D2D;
-  --md-sys-color-surface-container-highest: #3D3D3D;
+  --md-sys-color-surface-container: #ECEEF0;
+  --md-sys-color-surface-container-low: #F8F9FA;
+  --md-sys-color-surface-container-high: #E1E3E6;
+  --md-sys-color-surface-container-highest: #D5D7DA;
   --md-sys-color-outline: #8F9299;
   --md-sys-color-outline-variant: #44474E;
   --md-sys-elevation-1: 0px 1px 3px rgba(0, 0, 0, 0.5);
@@ -44,7 +45,7 @@
 @layer base {
   :root {
     --font-sans: "Inter";
-    --background: #09090B;
+    --background: #1d1d1d;
     --foreground: 210 20% 98%;
     --card: 224 71.4% 4.1%;
     --card-foreground: 210 20% 98%;
@@ -174,4 +175,9 @@ body {
       background-color: var(--md-sys-color-surface-container);
     }
   }
+}
+
+/* Card Shadow */
+.card-shadow {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
 }

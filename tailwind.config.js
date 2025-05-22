@@ -3,13 +3,10 @@ const { join } = require('path');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: ["class"],
-  presets: [require('@spartan-ng/ui-core/hlm-tailwind-preset')],
-  content: [
-    join(__dirname, 'src/**/!(*.stories|*.spec).{ts,html}'),
-    ...createGlobPatternsForDependencies(__dirname),
-  ],
   darkMode: 'class',
+  content: [
+    "./src/**/*.{html,ts}",
+  ],
   theme: {
     container: {
       center: true,
@@ -29,8 +26,8 @@ module.exports = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#F59E0B",
-          foreground: "#000000",
+          DEFAULT: '#F59E0B',
+          foreground: '#000000',
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -45,8 +42,8 @@ module.exports = {
           foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "#F59E0B",
-          foreground: "#000000",
+          DEFAULT: '#F59E0B',
+          foreground: '#000000',
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -71,6 +68,9 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
+      },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
       },
     },
     screens: {
