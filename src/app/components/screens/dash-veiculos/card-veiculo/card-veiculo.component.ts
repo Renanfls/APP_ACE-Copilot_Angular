@@ -7,12 +7,13 @@ import { CarouselStateService } from 'src/app/services/carousel-state.service';
 import { ComponentRegistryService } from 'src/app/services/component-registry.service';
 import { FooterDashVeiculosComponent } from '../footer/footer.component';
 import { HeaderDashVeiculosComponent } from '../header/header.component';
+import { LoadingScreenComponent } from '../loading-screen/loading-screen.component';
 import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-card-veiculo',
   standalone: true, 
-  imports: [CommonModule, FormsModule, ModalComponent, HeaderDashVeiculosComponent, FooterDashVeiculosComponent],
+  imports: [CommonModule, FormsModule, ModalComponent, HeaderDashVeiculosComponent, FooterDashVeiculosComponent, LoadingScreenComponent],
   templateUrl: './card-veiculo.component.html',
   styleUrls: ['./card-veiculo.component.css'],
   animations: [
@@ -34,6 +35,7 @@ export class CardVeiculoComponent implements OnInit, OnDestroy {
   isHelpDialogOpen = false;
   originalData: any = null; // Para armazenar os dados JSON originais
   originalVehicleState: any = null; // Para armazenar o estado original do veículo selecionado
+  isLoading = true;
   
   // Variáveis para o acordeão de comentários
   showComments = false;
@@ -94,59 +96,69 @@ export class CardVeiculoComponent implements OnInit, OnDestroy {
   }
 
   loadVehicleData() {
-    this.http.get<any>('assets/mocks/veiculos_mock.json').subscribe({
-      next: (data) => {
-        console.log('Data loaded:', data);
-        // Armazenar os dados originais
-        this.originalData = JSON.parse(JSON.stringify(data));
-        
-        // Processar os dados para exibição
-        this.veiculos = data.veiculos.map((v: any) => ({
-          ...v,
-          atributos: v.cores.map((cor: string, index: number) => ({
-            cor,
-            icone: this.icones[index] || ''
-          })),
-          // Inicializar comentários para cada veículo
-          comentarios: v.comentarios || [],
-          // Inicializar propriedades de troca de óleo, se não existirem
-          odoAtual: v.odoAtual || 0,
-          ultimaTrocaOleo: v.ultimaTrocaOleo || null,
-          odoNaUltimaTroca: v.odoNaUltimaTroca || 0,
-          // Inicializar array de registros de troca de óleo
-          trocasOleo: v.trocasOleo || []
-        }));
-        
-        // Assegurar que todas as cores estejam no formato esperado
-        this.veiculos.forEach(veiculo => {
-          veiculo.atributos.forEach((atributo: any, index: number) => {
-            // Garantir que as cores correspondam às opções disponíveis
-            atributo.cor = this.getClosestColorMatch(atributo.cor);
-          });
+    console.log('🔄 Starting to load vehicle data');
+    this.isLoading = true;
+    
+    setTimeout(() => {
+      this.http.get<any>('assets/mocks/veiculos_mock.json').subscribe({
+        next: (data) => {
+          console.log('✅ Data received from server:', data);
+          // Armazenar os dados originais
+          this.originalData = JSON.parse(JSON.stringify(data));
           
-          // Calcular odo desde a última troca de óleo
-          this.calcularodoDesdeUltimaTroca(veiculo);
-        });
+          // Processar os dados para exibição
+          this.veiculos = data.veiculos.map((v: any) => ({
+            ...v,
+            atributos: v.cores.map((cor: string, index: number) => ({
+              cor,
+              icone: this.icones[index] || ''
+            })),
+            comentarios: v.comentarios || [],
+            odoAtual: v.odoAtual || 0,
+            ultimaTrocaOleo: v.ultimaTrocaOleo || null,
+            odoNaUltimaTroca: v.odoNaUltimaTroca || 0,
+            trocasOleo: v.trocasOleo || []
+          }));
+          
+          console.log('✅ Processed vehicles:', this.veiculos.length);
+          
+          // Assegurar que todas as cores estejam no formato esperado
+          this.veiculos.forEach(veiculo => {
+            veiculo.atributos.forEach((atributo: any, index: number) => {
+              atributo.cor = this.getClosestColorMatch(atributo.cor);
+            });
+            
+            this.calcularodoDesdeUltimaTroca(veiculo);
+          });
 
-        // Ordenar veículos por prioridade de status
-        this.veiculos.sort((a, b) => {
-          const priorityA = this.getStatusPriority(a.status);
-          const priorityB = this.getStatusPriority(b.status);
-          return priorityA - priorityB;
-        });
+          // Ordenar veículos por prioridade de status
+          this.veiculos.sort((a, b) => {
+            const priorityA = this.getStatusPriority(a.status);
+            const priorityB = this.getStatusPriority(b.status);
+            return priorityA - priorityB;
+          });
 
-        console.log('Processed vehicles:', this.veiculos.length);
-        this.initializeCarousel();
-        this.startAutoSlide();
-      },
-      error: (err) => {
-        console.error('Erro ao carregar o JSON:', err);
-      }
-    });
+          // Inicializar o carrossel
+          this.initializeCarousel();
+          
+          // Aguardar 10 segundos antes de esconder o loading
+          setTimeout(() => {
+            this.isLoading = false;
+            this.startAutoSlide();
+            this.cdRef.detectChanges();
+          }, 10000);
+        },
+        error: (err) => {
+          console.error('❌ Erro ao carregar o JSON:', err);
+          this.isLoading = false;
+          this.cdRef.detectChanges();
+        }
+      });
+    }, 0);
   }
 
   private initializeCarousel() {
-    console.log('Initializing carousel with vehicles:', this.veiculos.length);
+    console.log('🎠 Initializing carousel with vehicles:', this.veiculos.length);
     this.vehicleGroups = [];
     for (let i = 0; i < this.veiculos.length; i += this.itemsPerSlide) {
       const group = this.veiculos.slice(i, Math.min(i + this.itemsPerSlide, this.veiculos.length));
@@ -155,7 +167,10 @@ export class CardVeiculoComponent implements OnInit, OnDestroy {
       }
       this.vehicleGroups.push(group);
     }
-    console.log('Created vehicle groups:', this.vehicleGroups.length);
+    console.log('🎠 Created vehicle groups:', this.vehicleGroups.length);
+    
+    // Forçar detecção de mudanças após criar os grupos
+    this.cdRef.detectChanges();
   }
 
   @HostListener('window:resize')
@@ -195,7 +210,7 @@ export class CardVeiculoComponent implements OnInit, OnDestroy {
         this.carouselStateService.notifyCarouselComplete();
         this.currentSlide = 0; // Reset to first slide
       }
-    }, 5000); // 5 segundos por slide
+    }, 10000); // 10 segundos por slide
   }
 
   private stopAutoSlide() {
@@ -362,6 +377,9 @@ export class CardVeiculoComponent implements OnInit, OnDestroy {
   }
 
   openHelpDialog(veiculo: any) {
+    // Stop the auto-slide when modal is opened
+    this.stopAutoSlide();
+
     // Criar uma cópia profunda para edição e para restaurar depois se necessário
     this.selectedVehicle = JSON.parse(JSON.stringify(veiculo));
     this.originalVehicleState = JSON.parse(JSON.stringify(veiculo));
@@ -408,6 +426,9 @@ export class CardVeiculoComponent implements OnInit, OnDestroy {
     this.showOilChangeForm = false;
     this.showOilChangeRecords = false;
     this.newComment = '';
+
+    // Resume the auto-slide when modal is closed
+    this.startAutoSlide();
   }
 
   // Método para alternar a exibição do acordeão de comentários

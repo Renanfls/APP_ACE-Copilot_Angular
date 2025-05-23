@@ -27,7 +27,7 @@ export class TripDataMapperService {
       kml: parseFloat(data.kml) || 0,
       odometroInicial: parseFloat(data.odoini) || 0,
       odometroFinal: parseFloat(data.odofim) || 0,
-      velocidadeMedia: parseFloat(data.vma) || 0,
+      velocidadeMedia: parseFloat(data.vme) || 0,
       tfp: parseFloat(data.tfp) || 0,
       efal: parseFloat(data.efal) || 0,
       pedal: parseFloat(data.pedal) || 0,

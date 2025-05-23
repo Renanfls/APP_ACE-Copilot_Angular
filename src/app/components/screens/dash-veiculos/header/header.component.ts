@@ -196,6 +196,7 @@ export class HeaderDashVeiculosComponent implements OnInit, OnDestroy {
   private isTransitioning = false;
   private transitionTimeoutId: any = null;
   private loadingTimeoutId: any = null;
+  private checkInterval: any = null;
 
   // Array de rotas disponíveis para rotação
   private routes = [
@@ -213,10 +214,10 @@ export class HeaderDashVeiculosComponent implements OnInit, OnDestroy {
     '/dsbcarros': 'Home',
     '/dsb-carros-temp': 'Temperatura',
     '/dsb-carros-torque': 'Torque',
-    '/dsb-carros-turbina': 'Turbina',
+    '/dsb-carros-turbina': 'Pressão Turbina',
     '/dsb-carros-pedal': 'Pedal',
     '/dsb-carros-ar-comprimido': 'Ar Comprimido',
-    '/dsb-carros-velocidade': 'Velocidade'
+    '/dsb-carros-velocidade': 'Máx. Velocidade'
   };
 
   // Sequência forçada de rotas
@@ -281,6 +282,9 @@ export class HeaderDashVeiculosComponent implements OnInit, OnDestroy {
     if (this.loadingTimeoutId) {
       clearTimeout(this.loadingTimeoutId);
     }
+    if (this.checkInterval) {
+      clearInterval(this.checkInterval);
+    }
   }
 
   private updateTitle(url: string) {
@@ -318,23 +322,20 @@ export class HeaderDashVeiculosComponent implements OnInit, OnDestroy {
     // Mostrar tela de loading imediatamente
     this.nextPageTitle = this.routeTitles[nextRoute];
     this.showLoading = true;
-    console.log('🔄 Loading screen shown:', this.showLoading);
-    console.log('🔄 Next page title set:', this.nextPageTitle);
+
+    // Clear any existing intervals
+    if (this.checkInterval) {
+      clearInterval(this.checkInterval);
+    }
 
     // Aguardar um momento para garantir que a tela de loading seja exibida
     setTimeout(() => {
       console.log('🔄 Navigating to:', nextRoute);
       this.router.navigate([nextRoute]).then(success => {
         console.log('🔄 Navigation result:', success);
-        
-        // Aguardar a navegação completar antes de esconder a tela de loading
-        setTimeout(() => {
-          console.log('🔄 Hiding loading screen');
-          this.showLoading = false;
-          this.isTransitioning = false;
-        }, 1000);
+        this.isTransitioning = false;
       });
-    }, 1500);
+    }, 5000); // 5 segundos
   }
 
   // Método auxiliar para obter o componente atual
@@ -356,11 +357,65 @@ export class HeaderDashVeiculosComponent implements OnInit, OnDestroy {
   }
 
   // Adicionar método para gerenciar eventos de navegação
-  private handleNavigation(event: any) {
-    if (event instanceof NavigationEnd) {
-      this.currentUrl = event.url;
-      this.updateTitle(event.url);
-      this.scrollToTop();
+  private handleNavigation(event: NavigationEnd) {
+    console.log('🔄 Navigation event received:', event.url);
+    this.currentUrl = event.url;
+    this.updateTitle(event.url);
+    
+    // Show loading screen on navigation
+    this.showLoading = true;
+    this.nextPageTitle = this.routeTitles[event.url] || '';
+    
+    // Clear any existing intervals
+    if (this.checkInterval) {
+      clearInterval(this.checkInterval);
+    }
+    
+    // Wait for carousel to be ready
+    this.waitForCarouselInitialization();
+  }
+
+  private waitForCarouselInitialization() {
+    // Get the current component instance
+    const currentComponent = this.componentRegistry.getCurrentComponent();
+    
+    if (!currentComponent) {
+      console.log('❌ No component registered, hiding loading screen');
+      setTimeout(() => {
+        this.showLoading = false;
+      }, 5000); // 5 segundos
+      return;
+    }
+
+    // Check if the component has vehicles loaded
+    if (currentComponent.veiculos && currentComponent.veiculos.length > 0) {
+      console.log('✅ Vehicles already loaded, waiting minimum display time');
+      setTimeout(() => {
+        this.showLoading = false;
+      }, 5000); // 5 segundos
+    } else {
+      // Wait for vehicles to be loaded
+      let attempts = 0;
+      const maxAttempts = 50; // 5 seconds (50 * 100ms)
+      
+      this.checkInterval = setInterval(() => {
+        attempts++;
+        const component = this.componentRegistry.getCurrentComponent();
+        
+        if (component?.veiculos && component.veiculos.length > 0) {
+          console.log('✅ Vehicles loaded after ' + attempts + ' attempts, ensuring minimum display time');
+          clearInterval(this.checkInterval);
+          setTimeout(() => {
+            this.showLoading = false;
+          }, 5000); // 5 segundos
+        } else if (attempts >= maxAttempts) {
+          console.log('⚠️ Loading timeout reached after ' + attempts + ' attempts, ensuring minimum display time');
+          clearInterval(this.checkInterval);
+          setTimeout(() => {
+            this.showLoading = false;
+          }, 5000); // 5 segundos
+        }
+      }, 100); // Check every 100ms
     }
   }
 }

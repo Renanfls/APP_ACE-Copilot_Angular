@@ -7,12 +7,13 @@ import { CarouselStateService } from 'src/app/services/carousel-state.service';
 import { ComponentRegistryService } from 'src/app/services/component-registry.service';
 import { FooterDashVeiculosComponent } from '../footer/footer.component';
 import { HeaderDashVeiculosComponent } from '../header/header.component';
+import { LoadingScreenComponent } from '../loading-screen/loading-screen.component';
 import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-card-veiculo-p-turbina',
   standalone: true, 
-  imports: [CommonModule, FormsModule, ModalComponent, HeaderDashVeiculosComponent, FooterDashVeiculosComponent],
+  imports: [CommonModule, FormsModule, ModalComponent, HeaderDashVeiculosComponent, FooterDashVeiculosComponent, LoadingScreenComponent],
   templateUrl: './card-veiculo.component.html',
   styleUrls: ['./card-veiculo.component.css'],
   animations: [
@@ -34,6 +35,7 @@ export class CardVeiculoPTurbinaComponent implements OnInit, OnDestroy {
   isHelpDialogOpen = false;
   originalData: any = null;
   originalVehicleState: any = null;
+  isLoading = true;
   
   showComments = false;
   newComment = '';
@@ -91,60 +93,77 @@ export class CardVeiculoPTurbinaComponent implements OnInit, OnDestroy {
   getAttributePriority(veiculo: any): number {
     if (!veiculo.atributos || veiculo.atributos.length === 0) return 6;
     // Considera apenas o atributo de pressão da turbina (índice 2)
-    const turbinePressureColor = veiculo.atributos[2].cor;
-    console.log('Turbine pressure color for vehicle', veiculo.id, ':', turbinePressureColor);
-    return this.getColorPriority(turbinePressureColor);
+    return this.getColorPriority(veiculo.atributos[2].cor);
   }
 
   loadVehicles() {
-    this.http.get<any>('assets/mocks/veiculos_mock.json').subscribe({
-      next: (data) => {
-        console.log('Data loaded:', data);
-        this.originalData = JSON.parse(JSON.stringify(data));
-        
-        this.veiculos = data.veiculos.map((v: any) => ({
-          ...v,
-          atributos: v.cores.map((cor: string, index: number) => ({
-            cor,
-            icone: this.icones[index] || ''
-          })),
-          comentarios: v.comentarios || [],
-          odoAtual: v.odoAtual || 0,
-          ultimaTrocaOleo: v.ultimaTrocaOleo || null,
-          odoNaUltimaTroca: v.odoNaUltimaTroca || 0,
-          trocasOleo: v.trocasOleo || []
-        }));
-        
-        this.veiculos.forEach(veiculo => {
-          veiculo.atributos.forEach((atributo: any, index: number) => {
-            atributo.cor = this.getClosestColorMatch(atributo.cor);
+    console.log('🔄 Starting to load vehicle data');
+    this.isLoading = true;
+    
+    setTimeout(() => {
+      this.http.get<any>('assets/mocks/veiculos_mock.json').subscribe({
+        next: (data) => {
+          console.log('✅ Data received from server:', data);
+          // Armazenar os dados originais
+          this.originalData = JSON.parse(JSON.stringify(data));
+          
+          // Processar os dados para exibição
+          this.veiculos = data.veiculos.map((v: any) => ({
+            ...v,
+            atributos: v.cores.map((cor: string, index: number) => ({
+              cor,
+              icone: this.icones[index] || ''
+            })),
+            comentarios: v.comentarios || [],
+            odoAtual: v.odoAtual || 0,
+            ultimaTrocaOleo: v.ultimaTrocaOleo || null,
+            odoNaUltimaTroca: v.odoNaUltimaTroca || 0,
+            trocasOleo: v.trocasOleo || []
+          }));
+          
+          console.log('✅ Processed vehicles:', this.veiculos.length);
+          
+          // Assegurar que todas as cores estejam no formato esperado
+          this.veiculos.forEach(veiculo => {
+            veiculo.atributos.forEach((atributo: any, index: number) => {
+              atributo.cor = this.getClosestColorMatch(atributo.cor);
+            });
+            
+            this.calcularodoDesdeUltimaTroca(veiculo);
           });
-          this.calcularodoDesdeUltimaTroca(veiculo);
-        });
 
-        // Ordenar veículos pela prioridade do atributo de pressão da turbina
-        console.log('Ordenando veículos por prioridade de pressão da turbina...');
-        this.veiculos.sort((a, b) => {
-          const priorityA = this.getAttributePriority(a);
-          const priorityB = this.getAttributePriority(b);
-          console.log('Vehicle A:', a.id, 'Priority:', priorityA, 'Color:', a.atributos[2].cor);
-          console.log('Vehicle B:', b.id, 'Priority:', priorityB, 'Color:', b.atributos[2].cor);
-          return priorityA - priorityB;
-        });
-        console.log('Veículos ordenados:', this.veiculos.map(v => ({
-          id: v.id,
-          priority: this.getAttributePriority(v),
-          color: v.atributos[2].cor
-        })));
+          // Ordenar veículos por prioridade de pressão da turbina
+          console.log('Ordenando veículos por prioridade de pressão da turbina...');
+          this.veiculos.sort((a, b) => {
+            const priorityA = this.getAttributePriority(a);
+            const priorityB = this.getAttributePriority(b);
+            console.log('Vehicle A:', a.id, 'Priority:', priorityA, 'Color:', a.atributos[2].cor);
+            console.log('Vehicle B:', b.id, 'Priority:', priorityB, 'Color:', b.atributos[2].cor);
+            return priorityA - priorityB;
+          });
+          console.log('Veículos ordenados:', this.veiculos.map(v => ({
+            id: v.id,
+            priority: this.getAttributePriority(v),
+            color: v.atributos[2].cor
+          })));
 
-        console.log('Processed vehicles:', this.veiculos.length);
-        this.initializeCarousel();
-        this.startAutoSlide();
-      },
-      error: (err) => {
-        console.error('Erro ao carregar o JSON:', err);
-      }
-    });
+          // Inicializar o carrossel
+          this.initializeCarousel();
+          
+          // Aguardar 10 segundos antes de esconder o loading
+          setTimeout(() => {
+            this.isLoading = false;
+            this.startAutoSlide();
+            this.cdRef.detectChanges();
+          }, 10000);
+        },
+        error: (err) => {
+          console.error('❌ Erro ao carregar o JSON:', err);
+          this.isLoading = false;
+          this.cdRef.detectChanges();
+        }
+      });
+    }, 0);
   }
 
   private stopAutoSlide() {
@@ -231,5 +250,60 @@ export class CardVeiculoPTurbinaComponent implements OnInit, OnDestroy {
       this.stopAutoSlide();
       this.startAutoSlide();
     }
+  }
+
+  openHelpDialog(veiculo: any) {
+    // Stop the auto-slide when modal is opened
+    this.stopAutoSlide();
+
+    // Criar uma cópia profunda para edição e para restaurar depois se necessário
+    this.selectedVehicle = JSON.parse(JSON.stringify(veiculo));
+    this.originalVehicleState = JSON.parse(JSON.stringify(veiculo));
+    
+    // Garantir que todas as cores correspondam às opções disponíveis
+    this.selectedVehicle.atributos.forEach((atributo: any) => {
+      atributo.cor = this.getClosestColorMatch(atributo.cor);
+    });
+    
+    // Garantir que arrays existam para evitar erros
+    if (!this.selectedVehicle.comentarios) {
+      this.selectedVehicle.comentarios = [];
+    }
+    if (!this.selectedVehicle.trocasOleo) {
+      this.selectedVehicle.trocasOleo = [];
+    }
+    
+    this.isHelpDialogOpen = true;
+    this.renderer.addClass(document.body, 'overflow-hidden');
+    
+    // Reseta os estados dos painéis
+    this.showComments = false;
+    this.showOilChangeRecords = false;
+    this.showOilChangeForm = false;
+    
+    // Limpar campos de texto
+    this.newComment = '';
+    
+    // Foco no modal para acessibilidade
+    setTimeout(() => {
+      const closeButton = document.querySelector('#modal-close-button');
+      if (closeButton) {
+        (closeButton as HTMLElement).focus();
+      }
+    }, 100);
+  }
+
+  closeHelpDialog() {
+    this.isHelpDialogOpen = false;
+    this.renderer.removeClass(document.body, 'overflow-hidden');
+    this.selectedVehicle = null;
+    this.originalVehicleState = null;
+    this.showComments = false;
+    this.showOilChangeForm = false;
+    this.showOilChangeRecords = false;
+    this.newComment = '';
+
+    // Resume the auto-slide when modal is closed
+    this.startAutoSlide();
   }
 } 

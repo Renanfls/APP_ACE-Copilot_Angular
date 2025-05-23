@@ -7,12 +7,13 @@ import { CarouselStateService } from 'src/app/services/carousel-state.service';
 import { ComponentRegistryService } from 'src/app/services/component-registry.service';
 import { FooterDashVeiculosComponent } from '../footer/footer.component';
 import { HeaderDashVeiculosComponent } from '../header/header.component';
+import { LoadingScreenComponent } from '../loading-screen/loading-screen.component';
 import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-card-veiculo-ar-comprimido',
   standalone: true, 
-  imports: [CommonModule, FormsModule, ModalComponent, HeaderDashVeiculosComponent, FooterDashVeiculosComponent],
+  imports: [CommonModule, FormsModule, ModalComponent, HeaderDashVeiculosComponent, FooterDashVeiculosComponent, LoadingScreenComponent],
   templateUrl: './card-veiculo.component.html',
   styleUrls: ['./card-veiculo.component.css'],
   animations: [
@@ -34,6 +35,7 @@ export class CardVeiculoArComponent implements OnInit, OnDestroy {
   isHelpDialogOpen = false;
   originalData: any = null; // Para armazenar os dados JSON originais
   originalVehicleState: any = null; // Para armazenar o estado original do veículo selecionado
+  isLoading = true;
   
   // Variáveis para o acordeão de comentários
   showComments = false;
@@ -111,50 +113,56 @@ export class CardVeiculoArComponent implements OnInit, OnDestroy {
   }
 
   loadVehicles() {
-    this.http.get<any>('assets/mocks/veiculos_mock.json').subscribe({
-      next: (data) => {
-        console.log('Data loaded:', data);
-        // Armazenar os dados originais
-        this.originalData = JSON.parse(JSON.stringify(data));
-        
-        // Processar os dados para exibição
-        this.veiculos = data.veiculos.map((v: any) => ({
-          ...v,
-          atributos: v.cores.map((cor: string, index: number) => ({
-            cor,
-            icone: this.icones[index] || ''
-          })),
-          comentarios: v.comentarios || [],
-          odoAtual: v.odoAtual || 0,
-          ultimaTrocaOleo: v.ultimaTrocaOleo || null,
-          odoNaUltimaTroca: v.odoNaUltimaTroca || 0,
-          trocasOleo: v.trocasOleo || []
-        }));
-        
-        // Assegurar que todas as cores estejam no formato esperado
-        this.veiculos.forEach(veiculo => {
-          veiculo.atributos.forEach((atributo: any, index: number) => {
-            atributo.cor = this.getClosestColorMatch(atributo.cor);
-          });
+    this.isLoading = true;
+    setTimeout(() => {
+      this.http.get<any>('assets/mocks/veiculos_mock.json').subscribe({
+        next: (data) => {
+          console.log('Data loaded:', data);
+          this.originalData = JSON.parse(JSON.stringify(data));
           
-          this.calcularodoDesdeUltimaTroca(veiculo);
-        });
+          this.veiculos = data.veiculos.map((v: any) => ({
+            ...v,
+            atributos: v.cores.map((cor: string, index: number) => ({
+              cor,
+              icone: this.icones[index] || ''
+            })),
+            comentarios: v.comentarios || [],
+            odoAtual: v.odoAtual || 0,
+            ultimaTrocaOleo: v.ultimaTrocaOleo || null,
+            odoNaUltimaTroca: v.odoNaUltimaTroca || 0,
+            trocasOleo: v.trocasOleo || []
+          }));
+          
+          this.veiculos.forEach(veiculo => {
+            veiculo.atributos.forEach((atributo: any, index: number) => {
+              atributo.cor = this.getClosestColorMatch(atributo.cor);
+            });
+            this.calcularodoDesdeUltimaTroca(veiculo);
+          });
 
-        // Ordenar veículos pela prioridade do atributo de ar comprimido
-        this.veiculos.sort((a, b) => {
-          const priorityA = this.getAttributePriority(a);
-          const priorityB = this.getAttributePriority(b);
-          return priorityA - priorityB;
-        });
+          // Ordenar veículos pela prioridade do atributo de ar comprimido
+          this.veiculos.sort((a, b) => {
+            const priorityA = this.getAttributePriority(a);
+            const priorityB = this.getAttributePriority(b);
+            return priorityA - priorityB;
+          });
 
-        console.log('Processed vehicles:', this.veiculos.length);
-        this.initializeCarousel();
-        this.startAutoSlide();
-      },
-      error: (err) => {
-        console.error('Erro ao carregar o JSON:', err);
-      }
-    });
+          console.log('Processed vehicles:', this.veiculos.length);
+          this.initializeCarousel();
+          
+          setTimeout(() => {
+            this.isLoading = false;
+            this.startAutoSlide();
+            this.cdRef.detectChanges();
+          }, 10000);
+        },
+        error: (err) => {
+          console.error('Erro ao carregar o JSON:', err);
+          this.isLoading = false;
+          this.cdRef.detectChanges();
+        }
+      });
+    }, 0);
   }
 
   // Calcular quilometragem desde a última troca de óleo
@@ -284,6 +292,9 @@ export class CardVeiculoArComponent implements OnInit, OnDestroy {
   }
 
   openHelpDialog(veiculo: any) {
+    // Stop the auto-slide when modal is opened
+    this.stopAutoSlide();
+
     // Criar uma cópia profunda para edição e para restaurar depois se necessário
     this.selectedVehicle = JSON.parse(JSON.stringify(veiculo));
     this.originalVehicleState = JSON.parse(JSON.stringify(veiculo));
@@ -330,6 +341,9 @@ export class CardVeiculoArComponent implements OnInit, OnDestroy {
     this.showOilChangeForm = false;
     this.showOilChangeRecords = false;
     this.newComment = '';
+
+    // Resume the auto-slide when modal is closed
+    this.startAutoSlide();
   }
 
   // Método para alternar a exibição do acordeão de comentários

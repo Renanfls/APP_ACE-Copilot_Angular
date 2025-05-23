@@ -1,8 +1,10 @@
 <app-header-dsveiculos/>
 
-<section class="pb-28 pt-44">
+<section class="pb-28 pt-44 bg-white">
+  <app-loading-screen [showLoading]="isLoading" nextPageTitle="Temperatura"></app-loading-screen>
+
   <!-- Carousel container -->
-  <div *ngIf="veiculos.length > 0" class="relative w-full overflow-hidden">
+  <div *ngIf="!isLoading && veiculos.length > 0" class="relative w-full overflow-hidden">
     <!-- Navigation buttons -->
     <button 
       (click)="previousSlide()"

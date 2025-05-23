@@ -964,8 +964,8 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
       placa: ['', Validators.required],
       dataInicial: [new Date(), Validators.required],
       dataFinal: [new Date(), Validators.required],
-      horaInicial: ['06:00', Validators.required],
-      horaFinal: ['12:00', [Validators.required, this.horaFinalValidator()]]
+      horaInicial: ['04:00', Validators.required],
+      horaFinal: ['23:59', [Validators.required, this.horaFinalValidator()]]
     }, { validators: this.dateRangeValidator });
 
     const savedTheme = localStorage.getItem('theme');
