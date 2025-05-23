@@ -8,6 +8,7 @@ import { ConsumoV4Response } from '../models/consumo-v4.model';
 interface GraphQLResponse<T> {
   data: {
     getConsumoV4: T[];
+    getPreviousDay?: T[];
   };
 }
 
@@ -67,7 +68,6 @@ export class GraphQLService {
           maxRes: 0
         ) { 
           placa
-          nmmodelo
         } 
       }`
     };
@@ -112,6 +112,8 @@ export class GraphQLService {
     empresa: number;
     dataInicial: Date;
     dataFinal: Date;
+    horaInicial?: string;
+    horaFinal?: string;
   }): Observable<ConsumoV4Response[]> {
     // Validação das datas
     if (!params.dataInicial || !params.dataFinal) {
@@ -133,11 +135,22 @@ export class GraphQLService {
     const dtIni = this.formatDateToAmerican(params.dataInicial);
     const dtFim = this.formatDateToAmerican(params.dataFinal);
 
+    // Concatenate date with time if provided
+    const dtIniCompleto = params.horaInicial ? `${dtIni} ${params.horaInicial}` : dtIni;
+    const dtFimCompleto = params.horaFinal ? `${dtFim} ${params.horaFinal}` : dtFim;
+
+    // Calcular data do dia anterior
+    const previousDay = new Date(params.dataInicial);
+    previousDay.setDate(previousDay.getDate() - 1);
+    const dtIniPrevious = this.formatDateToAmerican(previousDay);
+    const dtIniPreviousCompleto = params.horaInicial ? `${dtIniPrevious} ${params.horaInicial}` : dtIniPrevious;
+    const dtFimPreviousCompleto = params.horaFinal ? `${dtIniPrevious} ${params.horaFinal}` : dtIniPrevious;
+
     // Log dos parâmetros formatados
     console.log('Parâmetros da consulta GraphQL:', {
       empresa: params.empresa,
-      dtIni,
-      dtFim
+      dtIni: dtIniCompleto,
+      dtFim: dtFimCompleto
     });
 
     const query = {
@@ -147,8 +160,8 @@ export class GraphQLService {
           sEmpresaId: ${params.empresa},
           strVei: "",
           strGrpVei: "",
-          dtIni: "${dtIni}",
-          dtFim: "${dtFim}",
+          dtIni: "${dtIniCompleto}",
+          dtFim: "${dtFimCompleto}",
           tipo: 1,
           versao: -1,
           filtro: 1,
@@ -157,14 +170,27 @@ export class GraphQLService {
           mecanica: -1,
           maxRes: 0
         ) { 
-          placa sgaragemsigla nmmodelo nmmodonibus nmEqpto dia hinisml hfimsml 
-          hinisql hfimsql km dst litros litpar kml kmldst tfp efal efaldst mdf 
-          pedal pedalo500 vma vme dinisml dfimsml tpotor600 tpotor700 tpoEPP tpoMov 
-          tpoLig versao versao_subst remap corretor dt_corretor idveiculo odoini odofim 
-          tpotor400 tpotor500 faixaspedal idmodelo tpoEFr rpmParCom rpmSemCon idEqpto 
-          stsprob idhistprob id_wftd_tipo problema reserva11 maxturbo pedDes reserva12 
-          reserva13 modo_ope comar dinstsml dativsml
-        } 
+          placa nmmodelo nmmodonibus nmEqpto dia hinisql hfimsql km dst 
+          litros litpar kml tfp efal pedal vme dinisml dfimsml versao 
+          odoini odofim stsprob modo_ope
+        }
+        getPreviousDay: getConsumoV4(
+          token: "TKNAPI2100",
+          sEmpresaId: ${params.empresa},
+          strVei: "",
+          strGrpVei: "",
+          dtIni: "${dtIniPreviousCompleto}",
+          dtFim: "${dtFimPreviousCompleto}",
+          tipo: 1,
+          versao: -1,
+          filtro: 1,
+          sUsrLog: 1,
+          periodo: 0,
+          mecanica: -1,
+          maxRes: 0
+        ) {
+          placa dia tfp efal pedal dst kml vme
+        }
       }`
     };
 
@@ -179,11 +205,26 @@ export class GraphQLService {
             throw new Error('Resposta inválida da API');
           }
 
-          if (!response.data.getConsumoV4.length) {
+          const currentDayData = response.data.getConsumoV4;
+          const previousDayData = response.data.getPreviousDay || [];
+
+          if (!currentDayData.length && !previousDayData.length) {
             throw new Error('Nenhum dado encontrado para os parâmetros informados');
           }
 
-          return response.data.getConsumoV4;
+          // Combinar os dados do dia atual com os dados do dia anterior
+          return currentDayData.map(current => {
+            const previous = previousDayData.find((prev: ConsumoV4Response) => prev.placa === current.placa);
+            if (previous) {
+              return {
+                ...current,
+                previousTfp: previous.tfp,
+                previousEfal: previous.efal,
+                previousPedal: previous.pedal
+              };
+            }
+            return current;
+          });
         })
       );
   }

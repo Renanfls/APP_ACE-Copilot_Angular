@@ -6,43 +6,44 @@ import { TripAnalysisData, TripData } from '../models/trip-analysis.model';
   providedIn: 'root'
 })
 export class TripDataMapperService {
-  mapConsumoToTripData(consumo: ConsumoV4Response): TripData {
-    if (!consumo) {
-      throw new Error('Dados de consumo inválidos');
-    }
-
+  mapConsumoToTripData(data: any): TripData {
     return {
-      inicio: consumo.hinisql || '',
-      fim: consumo.hfimsql || '',
-      mecanica: consumo.nmmodelo || '-',
-      modelo: consumo.nmmodonibus || '-',
-      versao: consumo.versao || '-',
-      status: this.getStatus(consumo),
-      km: parseFloat(consumo.km) || 0,
-      distancia: parseFloat(consumo.dst) || 0,
-      litros: parseFloat(consumo.litros) || 0,
-      litrosParado: parseFloat(consumo.litpar) || 0,
-      kmPorLitro: parseFloat(consumo.kml) || 0,
-      tfp: parseFloat((consumo.tfp || '0%').replace('%', '')) || 0,
-      efal: parseFloat(consumo.efal?.toString() || '0') || 0,
-      pedal: parseFloat((consumo.pedal || '0%').replace('%', '')) || 0,
-      giro: parseFloat(consumo.rpmParCom) || 0,
-      freio: parseFloat(consumo.tpoEFr) || 0,
-      velocidadeMedia: parseFloat(consumo.vma) || 0,
+      inicio: new Date(`${data.dia} ${data.hinisql}`),
+      fim: new Date(`${data.dia} ${data.hfimsql}`),
+      mecanica: data.nmmodelo || '-',
+      modelo: data.nmmodelo || '-',
+      versao: data.versao || '-',
+      status: data.stsprob || '-',
+      stsprob: data.stsprob || '-',
+      placa: data.placa || '-',
+      dia: data.dia || '-',
+      km: parseFloat(data.km) || 0,
+      distancia: parseFloat(data.dst) || 0,
+      dst: parseFloat(data.dst) || 0,
+      litros: parseFloat(data.litros) || 0,
+      litrosParado: parseFloat(data.litpar) || 0,
+      litpar: parseFloat(data.litpar) || 0,
+      kmPorLitro: parseFloat(data.kml) || 0,
+      kml: parseFloat(data.kml) || 0,
+      odometroInicial: parseFloat(data.odoini) || 0,
+      odometroFinal: parseFloat(data.odofim) || 0,
+      velocidadeMedia: parseFloat(data.vma) || 0,
+      tfp: parseFloat(data.tfp) || 0,
+      efal: parseFloat(data.efal) || 0,
+      pedal: parseFloat(data.pedal) || 0,
+      giro: parseFloat(data.tfp) || 0,
+      freio: parseFloat(data.efal) || 0,
+      previousTfp: data.previousTfp ? parseFloat(data.previousTfp) : undefined,
+      previousEfal: data.previousEfal ? parseFloat(data.previousEfal) : undefined,
+      previousPedal: data.previousPedal ? parseFloat(data.previousPedal) : undefined,
       rota: this.generateDummyRoute(),
       paradas: this.generateDummyStops(),
-      odometroInicial: parseFloat(consumo.odoini) || 0,
-      odometroFinal: parseFloat(consumo.odofim) || 0,
-      hinisql: consumo.hinisql || '',
-      hfimsql: consumo.hfimsql || '',
-      nmmodelo: consumo.nmmodelo || '',
-      nmmodonibus: consumo.nmmodonibus || '',
-      stsprob: consumo.stsprob || '',
-      dst: parseFloat(consumo.dst) || 0,
-      litpar: parseFloat(consumo.litpar) || 0,
-      kml: parseFloat(consumo.kml) || 0,
-      odoini: parseFloat(consumo.odoini) || 0,
-      odofim: parseFloat(consumo.odofim) || 0
+      hinisql: data.hinisql || '',
+      hfimsql: data.hfimsql || '',
+      nmmodelo: data.nmmodelo || '',
+      nmmodonibus: data.nmmodonibus || '',
+      odoini: parseFloat(data.odoini) || 0,
+      odofim: parseFloat(data.odofim) || 0
     };
   }
 

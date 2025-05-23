@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { GoogleMap, GoogleMapsModule, MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,10 +24,13 @@ import {
   matBatteryAlertRound,
   matBusinessRound,
   matCalendarTodayRound,
+  matCallSplitRound,
   matClearRound,
   matDarkModeRound,
   matDirectionsCarRound,
+  matDoNotStepRound,
   matDownloadRound,
+  matErrorRound,
   matFilterAltRound,
   matGridViewRound,
   matInsightsRound,
@@ -94,6 +97,9 @@ export const MY_DATE_FORMATS = {
   ],
   viewProviders: [
     provideIcons({
+      matErrorRound,
+      matDoNotStepRound,
+      matCallSplitRound,
       matSpeedRound,
       matLocalGasStationRound,
       matAvTimerRound,
@@ -127,12 +133,71 @@ export const MY_DATE_FORMATS = {
     :host {
       display: block;
       min-height: 100vh;
-      background-color: #1d1d1d;
+      background-color: #ffffff;
       color: var(--md-sys-color-on-background);
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .dark :host {
+    :host-context(.dark) {
       background-color: #1d1d1d;
+    }
+
+    /* Estilos globais para o body */
+    ::ng-deep body {
+      background-color: #ffffff !important;
+      transition: background-color 0.3s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    ::ng-deep body.dark {
+      background-color: #1d1d1d !important;
+    }
+
+    /* Estilos específicos para mobile */
+    @media (max-width: 768px) {
+      ::ng-deep body {
+        overflow-x: hidden;
+      }
+
+      ::ng-deep .mat-mdc-icon-button {
+        width: 48px !important;
+        height: 48px !important;
+        padding: 12px !important;
+      }
+
+      ::ng-deep .mat-mdc-icon-button .mat-mdc-button-touch-target {
+        width: 48px !important;
+        height: 48px !important;
+      }
+
+      ::ng-deep .mat-mdc-tooltip {
+        font-size: 14px !important;
+      }
+    }
+
+    /* Estilos para evitar flash branco durante a troca de tema */
+    ::ng-deep html {
+      transition: background-color 0.3s ease;
+    }
+
+    ::ng-deep html.dark {
+      background-color: #1d1d1d;
+    }
+
+    /* Estilos para o botão de tema */
+    ::ng-deep .mat-mdc-icon-button {
+      transition: all 0.2s ease;
+    }
+
+    ::ng-deep .mat-mdc-icon-button:active {
+      transform: scale(0.95);
+    }
+
+    /* Estilos para o tooltip no mobile */
+    @media (max-width: 768px) {
+      ::ng-deep .mat-mdc-tooltip {
+        margin: 8px 0 !important;
+      }
     }
 
     /* Material Design 3 Card Styles */
@@ -415,13 +480,8 @@ export const MY_DATE_FORMATS = {
       ::ng-deep .mat-mdc-table {
         border: none;
         box-shadow: none;
-      }
-
-      ::ng-deep .mat-mdc-row {
-        padding: 8px;
-        margin-bottom: 8px;
-        border-radius: 8px;
-        background-color: var(--md-sys-color-surface-container-high);
+        width: 100%;
+        outline: none !important;
       }
 
       ::ng-deep .mat-mdc-header-row {
@@ -429,24 +489,75 @@ export const MY_DATE_FORMATS = {
       }
 
       ::ng-deep .mat-mdc-row {
+        display: flex;
         flex-direction: column;
         align-items: start;
         padding: 16px;
+        margin-bottom: 8px;
+        border-radius: 8px;
+        background-color: var(--md-sys-color-surface-container-high);
+        width: 100%;
+        outline: none !important;
+      }
+
+      ::ng-deep .mat-mdc-row:hover {
+        background-color: var(--md-sys-color-surface-container-high) !important;
+      }
+
+      ::ng-deep .mat-mdc-row:focus {
+        outline: none !important;
       }
 
       ::ng-deep .mat-mdc-cell {
         width: 100%;
         text-align: left;
-        padding: 4px 0;
+        padding: 8px 16px !important;
         border-bottom: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: auto !important;
+        font-size: 14px;
+        outline: none !important;
+      }
+
+      ::ng-deep .mat-mdc-cell:focus {
+        outline: none !important;
       }
 
       ::ng-deep .mat-mdc-cell:before {
         content: attr(data-label);
-        float: left;
         font-weight: 500;
         color: var(--md-sys-color-on-surface-variant);
-        margin-right: 8px;
+        padding-right: 16px;
+        text-align: left;
+        white-space: normal;
+        overflow: visible;
+      }
+
+      ::ng-deep .mat-mdc-cell > * {
+        text-align: right;
+        width: 50%;
+      }
+
+      ::ng-deep .mat-mdc-row:not(:last-child) {
+        margin-bottom: 16px;
+      }
+
+      ::ng-deep .overflow-x-auto {
+        overflow-x: visible;
+      }
+
+      ::ng-deep .w-full {
+        width: 100% !important;
+      }
+
+      ::ng-deep .mat-mdc-cell .mdc-ripple-surface {
+        display: none !important;
+      }
+
+      ::ng-deep .mat-mdc-row .mdc-ripple-surface {
+        display: none !important;
       }
     }
 
@@ -472,6 +583,127 @@ export const MY_DATE_FORMATS = {
     .mat-elevation-z8 {
       width: 100%;
       margin-bottom: 1rem;
+    }
+
+    /* Dark mode calendar styles */
+    ::ng-deep .dark .mat-datepicker-content {
+      background-color: #1d1d1d !important;
+      border: 1px solid rgba(75, 85, 99, 0.3) !important;
+    }
+
+    ::ng-deep .dark .mat-calendar {
+      background-color: #1d1d1d !important;
+    }
+
+    ::ng-deep .dark .mat-calendar-body-cell-content {
+      color: #e5e7eb !important;
+    }
+
+    ::ng-deep .dark .mat-calendar-body-selected {
+      background-color: #F59E0B !important;
+      color: #000000 !important;
+    }
+
+    ::ng-deep .dark .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+      border-color: #F59E0B !important;
+    }
+
+    ::ng-deep .dark .mat-calendar-body-today.mat-calendar-body-selected {
+      box-shadow: inset 0 0 0 1px #000000;
+    }
+
+    ::ng-deep .dark .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected),
+    ::ng-deep .dark .cdk-keyboard-focused .mat-calendar-body-active > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
+      background-color: rgba(245, 158, 11, 0.3) !important;
+    }
+
+    ::ng-deep .dark .mat-calendar-arrow {
+      fill: #e5e7eb !important;
+    }
+
+    ::ng-deep .dark .mat-calendar-next-button,
+    ::ng-deep .dark .mat-calendar-previous-button {
+      color: #e5e7eb !important;
+    }
+
+    ::ng-deep .dark .mat-calendar-table-header {
+      color: #9ca3af !important;
+    }
+
+    ::ng-deep .dark .mat-calendar-body-label {
+      color: #9ca3af !important;
+    }
+
+    ::ng-deep .dark .mat-datepicker-toggle {
+      color: #9ca3af !important;
+    }
+
+    ::ng-deep .dark .mat-datepicker-toggle:hover {
+      color: #F59E0B !important;
+    }
+
+    ::ng-deep .dark .mat-calendar-body-disabled > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
+      color: rgba(156, 163, 175, 0.4) !important;
+    }
+
+    /* Light mode calendar styles */
+    ::ng-deep .mat-datepicker-content {
+      background-color: #ffffff !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    ::ng-deep .mat-calendar {
+      background-color: #ffffff !important;
+    }
+
+    ::ng-deep .mat-calendar-body-cell-content {
+      color: #1f2937 !important;
+    }
+
+    ::ng-deep .mat-calendar-body-selected {
+      background-color: #F59E0B !important;
+      color: #ffffff !important;
+    }
+
+    ::ng-deep .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+      border-color: #F59E0B !important;
+    }
+
+    ::ng-deep .mat-calendar-body-today.mat-calendar-body-selected {
+      box-shadow: inset 0 0 0 1px #ffffff;
+    }
+
+    ::ng-deep .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
+      background-color: rgba(245, 158, 11, 0.1) !important;
+    }
+
+    ::ng-deep .mat-calendar-arrow {
+      fill: #4b5563 !important;
+    }
+
+    ::ng-deep .mat-calendar-next-button,
+    ::ng-deep .mat-calendar-previous-button {
+      color: #4b5563 !important;
+    }
+
+    ::ng-deep .mat-calendar-table-header {
+      color: #6b7280 !important;
+    }
+
+    ::ng-deep .mat-calendar-body-label {
+      color: #6b7280 !important;
+    }
+
+    ::ng-deep .mat-calendar-body-disabled > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
+      color: rgba(107, 114, 128, 0.4) !important;
+    }
+
+    ::ng-deep .mat-datepicker-toggle {
+      color: #6b7280 !important;
+    }
+
+    ::ng-deep .mat-datepicker-toggle:hover {
+      color: #F59E0B !important;
     }
   `]
 })
@@ -570,45 +802,25 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Chart configuration
   public lineChartData: ChartConfiguration['data'] = {
-    datasets: [
-      {
-        data: [],
-        label: 'Giro',
-        backgroundColor: '#F472B620',
-        borderColor: '#F472B6',
-        pointBackgroundColor: '#F472B6',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: '#F472B6',
-        fill: 'origin',
-      },
-      {
-        data: [],
-        label: 'Freio',
-        backgroundColor: '#FB923C20',
-        borderColor: '#FB923C',
-        pointBackgroundColor: '#FB923C',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: '#FB923C',
-        fill: 'origin',
-      },
-      {
-        data: [],
-        label: 'Pedal',
-        backgroundColor: '#A78BFA20',
-        borderColor: '#A78BFA',
-        pointBackgroundColor: '#A78BFA',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: '#A78BFA',
-        fill: 'origin',
-      }
-    ],
+    datasets: [],
     labels: []
   };
 
-  public lineChartOptions: ChartConfiguration['options'] = {
+  // Adicionar propriedade para armazenar dados dos gráficos
+  chartData: {
+    giro: ChartConfiguration['data'];
+    freio: ChartConfiguration['data'];
+    pedal: ChartConfiguration['data'];
+    kml: ChartConfiguration['data'];
+  } = {
+    giro: { datasets: [], labels: [] },
+    freio: { datasets: [], labels: [] },
+    pedal: { datasets: [], labels: [] },
+    kml: { datasets: [], labels: [] }
+  };
+
+  // Configurações comuns para todos os gráficos
+  chartOptions: ChartConfiguration['options'] = {
     responsive: true,
     maintainAspectRatio: false,
     elements: {
@@ -643,16 +855,15 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
     },
     plugins: {
       legend: {
-        display: true,
-        position: 'bottom',
+        display: false,
+        position: 'top',
         labels: {
           usePointStyle: true,
           padding: 20,
           font: {
             family: "'Inter', sans-serif",
             size: 12
-          },
-          color: 'rgb(107, 114, 128)'
+          }
         }
       },
       tooltip: {
@@ -732,6 +943,11 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoadingVehicles = false;
 
   private destroy$ = new Subject<void>();
+
+  @ViewChild('analyticsSection') analyticsSection!: ElementRef;
+  @ViewChild('filterSection') filterSection!: ElementRef;
+
+  last5DaysData: TripData[][] = [];
 
   constructor(
     private readonly fb: FormBuilder,
@@ -879,9 +1095,35 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
   private updateTheme(): void {
     // Remove ambas as classes primeiro
     document.body.classList.remove('dark', 'dark-theme');
+    document.documentElement.classList.remove('dark');
+    
     // Adiciona a classe correta
     if (this.isDarkMode) {
-      document.body.classList.add('dark', 'dark-theme');
+      document.body.classList.add('dark');
+      document.documentElement.classList.add('dark');
+    }
+    
+    // Atualiza a cor do meta theme-color para mobile
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (!metaThemeColor) {
+      // Se não existir, cria o meta tag
+      const meta = document.createElement('meta');
+      meta.name = 'theme-color';
+      meta.content = this.isDarkMode ? '#1d1d1d' : '#ffffff';
+      document.head.appendChild(meta);
+    } else {
+      metaThemeColor.setAttribute('content', this.isDarkMode ? '#1d1d1d' : '#ffffff');
+    }
+
+    // Atualiza a cor da barra de status no iOS
+    const metaAppleStatusBar = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+    if (!metaAppleStatusBar) {
+      const meta = document.createElement('meta');
+      meta.name = 'apple-mobile-web-app-status-bar-style';
+      meta.content = this.isDarkMode ? 'black' : 'default';
+      document.head.appendChild(meta);
+    } else {
+      metaAppleStatusBar.setAttribute('content', this.isDarkMode ? 'black' : 'default');
     }
   }
 
@@ -910,7 +1152,9 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
     const cacheKey = this.cacheService.generateCacheKey({
       empresa: filters.empresa,
       dataInicial: filters.dataInicial,
-      dataFinal: filters.dataFinal
+      dataFinal: filters.dataFinal,
+      horaInicial: filters.horaInicial,
+      horaFinal: filters.horaFinal
     });
 
     // Tentar obter dados do cache
@@ -918,6 +1162,12 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
     if (cachedData) {
       console.log('Usando dados do cache');
       this.processData(cachedData, filters);
+      // Carregar dados dos últimos 5 dias após processar os dados atuais
+      this.loadLast5DaysData();
+      // Rolar para a seção de análise após carregar os dados
+      setTimeout(() => {
+        this.scrollToAnalytics();
+      }, 100);
       return;
     }
 
@@ -925,7 +1175,9 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
       this.graphQLService.getConsumoV4({
         empresa: filters.empresa,
         dataInicial: filters.dataInicial,
-        dataFinal: filters.dataFinal
+        dataFinal: filters.dataFinal,
+        horaInicial: filters.horaInicial,
+        horaFinal: filters.horaFinal
       }).subscribe({
         next: (response: any) => {
           console.log('Resposta completa da API:', response);
@@ -935,6 +1187,12 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
           // Armazenar dados no cache
           this.cacheService.set<any[]>(cacheKey, consumoList);
           this.processData(consumoList, filters);
+          // Carregar dados dos últimos 5 dias após processar os dados atuais
+          this.loadLast5DaysData();
+          // Rolar para a seção de análise após carregar os dados
+          setTimeout(() => {
+            this.scrollToAnalytics();
+          }, 100);
         },
         error: (error) => {
           console.error('Erro na requisição:', error);
@@ -965,28 +1223,23 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private processData(consumoList: any[], filters: any): void {
-    // Log para debug inicial
     console.log('Processando dados:', {
       totalRegistros: consumoList.length,
       primeiroRegistro: consumoList[0],
       filtros: filters
     });
 
-    // Filtrar por veículo
     const filteredData = consumoList.filter(consumo => {
-      // Verificar se o registro é válido
       if (!consumo || typeof consumo !== 'object') {
         console.log('Registro inválido:', consumo);
         return false;
       }
 
-      // Filtro por veículo
       const matchesVehicle = consumo.placa?.toString() === filters.placa?.toString();
       if (!matchesVehicle) {
         return false;
       }
 
-      // Se chegou aqui, o veículo corresponde
       console.log('Dados do veículo encontrado:', {
         placa: consumo.placa,
         modelo: consumo.nmmodelo,
@@ -996,7 +1249,6 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
       return true;
     });
 
-    // Log dos dados filtrados
     console.log('Resultados da filtragem:', {
       totalFiltrados: filteredData.length,
       primeiroFiltrado: filteredData[0]
@@ -1009,32 +1261,24 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     try {
-      // Mapear todos os dados filtrados para TripData
       const tripDataList = filteredData.map(data => this.tripDataMapper.mapConsumoToTripData(data));
       console.log('Dados mapeados:', tripDataList);
 
-      // Atualizar o dataSource com os dados filtrados
       this.dataSource = new MatTableDataSource<TripData>(tripDataList);
       
-      // Usar o primeiro item para a análise detalhada
       const selectedData = filteredData[0];
       console.log('Item selecionado para análise:', selectedData);
 
-      // Mapear dados para análise
       this.dadosViagem = this.tripDataMapper.mapConsumoToAnalysisData(selectedData);
       console.log('Dados de análise:', this.dadosViagem);
 
-      // Atualizar informações da tabela
       this.totalItems = filteredData.length;
       this.dataSource.paginator = this.paginator;
       this.pageIndex = 0;
 
-      // Atualizar métricas e visualizações
-      this.updateMetrics();
-      this.updateChartData();
-      this.updateMapRoute();
+      // Carregar dados do dia anterior após processar os dados atuais
+      this.loadPreviousPeriodData();
       
-      // Atualizar a lista de veículos com apenas o veículo filtrado
       this.veiculos = [{
         value: filters.placa,
         label: `${filters.placa} - ${selectedData.nmmodelo || ''}`
@@ -1051,13 +1295,21 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
     const today = new Date();
     this.filterForm.patchValue({
       empresa: 165,
-      placa: '47457',
+      placa: '',
       dataInicial: today,
       dataFinal: today,
       horaInicial: '06:00',
       horaFinal: '12:00'
     });
-    this.applyFilter();
+    // Limpar os dados da tabela e do veículo
+    this.dataSource.data = [];
+    this.previousPeriodData = [];
+    this.dadosViagem = [];
+    this.routePath = [];
+    this.stopPoints = [];
+    this.clearCustomMarkers();
+    this.updateMetrics();
+    this.updateChartData();
   }
 
   private updateDisplayedData(): void {
@@ -1067,30 +1319,48 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
 
   loadPreviousPeriodData(): void {
     const currentFilters = this.filterForm.value;
-    const previousPeriodFilters = this.calculatePreviousPeriodFilters(currentFilters);
-    
-    this.tripAnalysisService.getTripData(previousPeriodFilters).subscribe({
-      next: (data) => {
-        this.previousPeriodData = data;
-        this.updateMetrics(); // Atualizar métricas com os dados do período anterior
+    const previousDate = new Date(currentFilters.dataInicial);
+    previousDate.setDate(previousDate.getDate() - 1);
+
+    // Criar objeto de filtros conforme a interface esperada
+    const filters = {
+      empresa: currentFilters.empresa,
+      dataInicial: previousDate,
+      dataFinal: previousDate,
+      horaInicial: currentFilters.horaInicial,
+      horaFinal: currentFilters.horaFinal
+    };
+
+    this.graphQLService.getConsumoV4(filters).subscribe({
+      next: (response) => {
+        if (response && response.length > 0) {
+          // Filtrar apenas os dados do veículo selecionado
+          const filteredResponse = response.filter(item => 
+            item.placa?.toString() === currentFilters.placa?.toString()
+          );
+          
+          if (filteredResponse.length > 0) {
+            this.previousPeriodData = filteredResponse.map(data => 
+              this.tripDataMapper.mapConsumoToTripData(data)
+            );
+            console.log('Dados do dia anterior:', this.previousPeriodData);
+          } else {
+            console.log('Nenhum dado encontrado para o veículo no dia anterior');
+            this.previousPeriodData = [];
+          }
+        } else {
+          console.log('Nenhum dado encontrado para o dia anterior');
+          this.previousPeriodData = [];
+        }
+        this.updateMetrics();
+        this.updateChartData();
       },
       error: (error) => {
-        console.error('Error loading previous period data:', error);
+        console.error('Erro ao carregar dados do período anterior:', error);
+        this.previousPeriodData = [];
+        this.updateMetrics();
       }
     });
-  }
-
-  calculatePreviousPeriodFilters(currentFilters: any): any {
-    const { placa, data, horaInicial, horaFinal } = currentFilters;
-    const previousDate = new Date(data);
-    previousDate.setDate(previousDate.getDate() - 1); // Pega o dia anterior
-
-    return {
-      placa,
-      data: previousDate,
-      horaInicial,
-      horaFinal
-    };
   }
 
   onDateChange(event: any, controlName: string): void {
@@ -1129,8 +1399,8 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
         'Litros': currentData.litros?.toFixed(1),
         'Litros Parado': currentData.litrosParado,
         'KM/Litro': currentData.kmPorLitro?.toFixed(2),
-        'Giro (%)': currentData.giro,
-        'Freio (%)': currentData.freio,
+        'Giro (%)': currentData.tfp,
+        'Freio (%)': currentData.efal,
         'Pedal (%)': currentData.pedal,
         'Odômetro Inicial': currentData.odometroInicial?.toFixed(1),
         'Odômetro Final': currentData.odometroFinal?.toFixed(1)
@@ -1141,84 +1411,90 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getTotalDistance(): number {
-    return this.dataSource.data.reduce((total, trip) => total + (trip.distancia || 0), 0);
+    const currentTotal = this.dataSource.data.reduce((total, trip) => total + (trip.distancia || 0), 0);
+    const previousTotal = this.previousPeriodData.reduce((total, trip) => total + (trip.distancia || 0), 0);
+    return Math.round((currentTotal + Number.EPSILON) * 10) / 10;
   }
 
   getDistanceChange(): number {
-    if (!this.previousPeriodData?.[0]) return 0;
-    const currentDistance = this.dataSource.data[0]?.distancia || 0;
-    const previousDistance = this.previousPeriodData[0].distancia;
-    return this.calculatePercentageChange(currentDistance, previousDistance);
+    if (!this.previousPeriodData || this.previousPeriodData.length === 0) return 0;
+    return this.calculatePercentageChange(
+      this.getTotalDistance(),
+      this.previousPeriodData[0]?.distancia || 0
+    );
   }
 
   getFuelConsumptionChange(): number {
-    if (!this.previousPeriodData?.[0]) return 0;
-    const currentConsumption = this.dataSource.data[0]?.litros || 0;
-    const previousConsumption = this.previousPeriodData[0].litros;
-    return this.calculatePercentageChange(currentConsumption, previousConsumption);
+    if (!this.previousPeriodData || this.previousPeriodData.length === 0) return 0;
+    return this.calculatePercentageChange(
+      this.getAverageFuelConsumption(),
+      this.previousPeriodData[0]?.kmPorLitro || 0
+    );
   }
 
   getSpeedChange(): number {
-    if (!this.previousPeriodData?.[0]) return 0;
-    const currentSpeed = this.dataSource.data[0]?.velocidadeMedia || 0;
-    const previousSpeed = this.previousPeriodData[0].velocidadeMedia;
-    return this.calculatePercentageChange(currentSpeed, previousSpeed);
+    if (!this.previousPeriodData || this.previousPeriodData.length === 0) return 0;
+    return this.calculatePercentageChange(
+      this.getAverageSpeed(),
+      this.previousPeriodData[0]?.velocidadeMedia || 0
+    );
   }
 
   getBrakeUsageChange(): number {
-    if (!this.dataSource.data || this.dataSource.data.length === 0) {
-      return 0;
-    }
-    const currentBrake = this.dataSource.data[0].freio;
-    const previousBrake = this.dataSource.data[1]?.freio || currentBrake;
-    return this.calculatePercentageChange(currentBrake, previousBrake);
+    if (!this.previousPeriodData || this.previousPeriodData.length === 0) return 0;
+    return this.calculatePercentageChange(
+      this.getAverageBrakeUsage(),
+      this.previousPeriodData[0]?.efal || 0
+    );
   }
 
   getRPMChange(): number {
-    if (!this.dataSource.data || this.dataSource.data.length === 0) {
-      return 0;
-    }
-    const currentRPM = this.dataSource.data[0].giro;
-    const previousRPM = this.dataSource.data[1]?.giro || currentRPM;
-    return this.calculatePercentageChange(currentRPM, previousRPM);
+    if (!this.previousPeriodData || this.previousPeriodData.length === 0) return 0;
+    return this.calculatePercentageChange(
+      this.getAverageRPM(),
+      this.previousPeriodData[0]?.tfp || 0
+    );
   }
 
   getPedalChange(): number {
-    if (!this.dataSource.data || this.dataSource.data.length === 0) {
-      return 0;
-    }
-    const currentPedal = this.dataSource.data[0].pedal;
-    const previousPedal = this.dataSource.data[1]?.pedal || currentPedal;
-    return this.calculatePercentageChange(currentPedal, previousPedal);
+    if (!this.previousPeriodData || this.previousPeriodData.length === 0) return 0;
+    return this.calculatePercentageChange(
+      this.getAveragePedalUsage(),
+      this.previousPeriodData[0]?.pedal || 0
+    );
   }
 
   private calculatePercentageChange(current: number, previous: number): number {
-    if (previous === 0) return 0;
-    return Number(((current - previous) / previous * 100).toFixed(1));
+    if (!previous || previous === 0) return 0;
+    return Number((((current - previous) / previous) * 100).toFixed(1));
   }
 
   getAverageFuelConsumption(): number {
     const trips = this.dataSource.data;
     if (!trips.length) return 0;
-    return Math.round(trips.reduce((total, trip) => total + (trip.kmPorLitro || 0), 0) / trips.length * 100) / 100;
+    const currentAvg = trips.reduce((total, trip) => total + (trip.kmPorLitro || 0), 0) / trips.length;
+    const previousAvg = this.previousPeriodData.reduce((total, trip) => total + (trip.kmPorLitro || 0), 0) / this.previousPeriodData.length;
+    return Math.round((currentAvg + Number.EPSILON) * 100) / 100;
   }
 
   getAverageSpeed(): number {
     const trips = this.dataSource.data;
     if (!trips.length) return 0;
-    return Math.round(trips.reduce((total, trip) => total + (trip.velocidadeMedia || 0), 0) / trips.length);
+    const currentAvg = trips.reduce((total, trip) => total + (trip.velocidadeMedia || 0), 0) / trips.length;
+    const previousAvg = this.previousPeriodData.reduce((total, trip) => total + (trip.velocidadeMedia || 0), 0) / this.previousPeriodData.length;
+    return Math.round(currentAvg);
   }
 
   getAverageBrakeUsage(): number {
     const trips = this.dataSource.data;
     if (!trips.length) return 0;
-    return Math.round(trips.reduce((total, trip) => total + (trip.freio || 0), 0) / trips.length);
+    return Math.round(trips.reduce((total, trip) => total + (trip.efal || 0), 0) / trips.length);
   }
 
   getAverageRPM(): number {
     const trips = this.dataSource.data;
     if (!trips.length) return 0;
-    return Math.round(trips.reduce((total, trip) => total + (trip.giro || 0), 0) / trips.length);
+    return Math.round(trips.reduce((total, trip) => total + (trip.tfp || 0), 0) / trips.length);
   }
 
   getAveragePedalUsage(): number {
@@ -1339,55 +1615,192 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private updateChartData(): void {
-    if (this.dataSource.data.length > 0) {
-      const data = this.dataSource.data[0];
-      
-      this.lineChartData = {
-        labels: ['Giro', 'Freio', 'Pedal'],
-        datasets: [
-          {
-            data: [
-              data.tfp || 0,
-              data.efal || 0,
-              data.pedal || 0
-            ],
-            label: 'Desempenho',
-            backgroundColor: ['#34D399', '#F59E0B', '#F43F5E'],
-            borderColor: '#F59E0B',
-            fill: false
-          }
-        ]
-      };
+    if (!this.last5DaysData.length) {
+      return;
     }
+
+    // Preparar labels para os últimos 5 dias
+    const labels = this.last5DaysData.map((dayData, index) => {
+      const date = new Date(this.filterForm.value.dataInicial);
+      date.setDate(date.getDate() - index);
+      return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+    }).reverse();
+
+    // Preparar dados para cada métrica
+    const giroData = this.last5DaysData.map(dayData => 
+      dayData.length > 0 ? this.calculateAverageMetric(dayData, 'tfp') : 0
+    ).reverse();
+
+    const freioData = this.last5DaysData.map(dayData => 
+      dayData.length > 0 ? this.calculateAverageMetric(dayData, 'efal') : 0
+    ).reverse();
+
+    const pedalData = this.last5DaysData.map(dayData => 
+      dayData.length > 0 ? this.calculateAverageMetric(dayData, 'pedal') : 0
+    ).reverse();
+
+    const kmlData = this.last5DaysData.map(dayData => 
+      dayData.length > 0 ? this.calculateAverageMetric(dayData, 'kmPorLitro') : 0
+    ).reverse();
+
+    // Atualizar dados dos gráficos
+    this.chartData = {
+      giro: {
+        labels,
+        datasets: [{
+          data: giroData,
+          label: 'Giro (%)',
+          borderColor: '#F472B6',
+          backgroundColor: 'rgba(244, 114, 182, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      freio: {
+        labels,
+        datasets: [{
+          data: freioData,
+          label: 'Freio (%)',
+          borderColor: '#FB923C',
+          backgroundColor: 'rgba(251, 146, 60, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      pedal: {
+        labels,
+        datasets: [{
+          data: pedalData,
+          label: 'Pedal (%)',
+          borderColor: '#A78BFA',
+          backgroundColor: 'rgba(167, 139, 250, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      kml: {
+        labels,
+        datasets: [{
+          data: kmlData,
+          label: 'Consumo (km/l)',
+          borderColor: '#F59E0B',
+          backgroundColor: 'rgba(245, 158, 11, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      }
+    };
+  }
+
+  private calculateAverageMetric(dayData: TripData[], metric: keyof TripData): number {
+    if (!dayData.length) return 0;
+    const sum = dayData.reduce((acc, curr) => acc + (Number(curr[metric]) || 0), 0);
+    return Number((sum / dayData.length).toFixed(2));
   }
 
   updateMetrics(): void {
-    if (this.dataSource.data.length > 0) {
-      const currentData = this.dataSource.data[0];
-      const previousData = this.previousPeriodData?.[0];
-
-      // Atualizar métricas com comparação ao período anterior
-      this.metrics = [
-        {
-          label: 'Distância',
-          value: currentData.distancia,
-          previousValue: previousData?.distancia || 0,
-          color: '#34D399'
-        },
-        {
-          label: 'Consumo',
-          value: currentData.litros,
-          previousValue: previousData?.litros || 0,
-          color: '#F59E0B'
-        },
-        {
-          label: 'Velocidade',
-          value: currentData.velocidadeMedia,
-          previousValue: previousData?.velocidadeMedia || 0,
-          color: '#F43F5E'
-        }
-      ];
+    // Verificar se há dados do dia atual
+    if (!this.dataSource || !this.dataSource.data || this.dataSource.data.length === 0) {
+      console.log('Sem dados atuais para atualizar métricas');
+      return;
     }
+
+    // Verificar se há dados do dia anterior
+    if (!this.previousPeriodData || this.previousPeriodData.length === 0) {
+      console.log('Sem dados do dia anterior para comparação');
+    }
+
+    // Dados do dia atual
+    const currentData = this.dataSource.data;
+    
+    // Dados do dia anterior (usar o primeiro registro se existir)
+    const previousData = this.previousPeriodData && this.previousPeriodData.length > 0 
+      ? this.previousPeriodData[0] 
+      : null;
+
+    console.log('Atualizando métricas:', {
+      dadosAtuais: currentData,
+      dadosAnteriores: previousData
+    });
+
+    // Atualizar os dados do gráfico
+    this.lineChartData = {
+      labels: currentData.map(trip => new Date(trip.inicio).toLocaleTimeString()),
+      datasets: [
+        {
+          data: currentData.map(trip => trip.kmPorLitro || 0),
+          label: 'Consumo (km/l)',
+          borderColor: '#F59E0B',
+          backgroundColor: 'rgba(245, 158, 11, 0.1)',
+          tension: 0.4,
+          fill: true
+        },
+        {
+          data: currentData.map(trip => trip.velocidadeMedia || 0),
+          label: 'Velocidade (km/h)',
+          borderColor: '#10B981',
+          backgroundColor: 'rgba(16, 185, 129, 0.1)',
+          tension: 0.4,
+          fill: true
+        }
+      ]
+    };
+
+    // Atualizar métricas de comparação
+    this.metrics = [
+      {
+        label: 'Giro',
+        color: this.getMetricColor('Giro', this.getAverageRPM()),
+        current: this.getAverageRPM(),
+        previous: previousData?.tfp || 0,
+        change: this.calculatePercentageChange(
+          this.getAverageRPM(),
+          previousData?.tfp || 0
+        )
+      },
+      {
+        label: 'Freio',
+        color: this.getMetricColor('Freio', this.getAverageBrakeUsage()),
+        current: this.getAverageBrakeUsage(),
+        previous: previousData?.efal || 0,
+        change: this.calculatePercentageChange(
+          this.getAverageBrakeUsage(),
+          previousData?.efal || 0
+        )
+      },
+      {
+        label: 'Pedal',
+        color: this.getMetricColor('Pedal', this.getAveragePedalUsage()),
+        current: this.getAveragePedalUsage(),
+        previous: previousData?.pedal || 0,
+        change: this.calculatePercentageChange(
+          this.getAveragePedalUsage(),
+          previousData?.pedal || 0
+        )
+      },
+      {
+        label: 'Consumo',
+        color: '#F59E0B',
+        current: this.getAverageFuelConsumption(),
+        previous: previousData?.kmPorLitro || 0,
+        change: this.calculatePercentageChange(
+          this.getAverageFuelConsumption(),
+          previousData?.kmPorLitro || 0
+        )
+      },
+      {
+        label: 'Velocidade',
+        color: '#10B981',
+        current: this.getAverageSpeed(),
+        previous: previousData?.velocidadeMedia || 0,
+        change: this.calculatePercentageChange(
+          this.getAverageSpeed(),
+          previousData?.velocidadeMedia || 0
+        )
+      }
+    ];
+
+    console.log('Métricas atualizadas:', this.metrics);
   }
 
   nextDay(): void {
@@ -1610,5 +2023,120 @@ export class TripAnalysisComponent implements OnInit, AfterViewInit, OnDestroy {
     return [
       { lat: -23.552520, lng: -46.635308, tempo: 5 }
     ];
+  }
+
+  scrollToAnalytics(): void {
+    // Wait for the data to be loaded and view to be updated
+    if (this.analyticsSection && this.dataSource.data.length > 0) {
+      // Scroll to analytics section with smooth behavior
+      this.analyticsSection.nativeElement.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }
+  }
+
+  isInGreenRange(metricName: string, value: number): boolean {
+    switch (metricName) {
+      case 'Giro':
+        return value >= 0 && value <= 7;
+      case 'Freio':
+        return value >= 0 && value <= 7;
+      case 'Pedal':
+        return value >= 0 && value <= 15;
+      default:
+        return false;
+    }
+  }
+
+  getMetricColor(metricName: string, value: number): string {
+    if (this.isInGreenRange(metricName, value)) {
+      return 'text-green-500';
+    }
+    return 'text-red-500';
+  }
+
+  getMetricChangeClass(metric: Metric): string {
+    // Para Giro, Freio e Pedal, verificar se está na faixa verde
+    if (metric.label === 'Giro' || metric.label === 'Freio' || metric.label === 'Pedal') {
+      return this.isInGreenRange(metric.label, metric.current) ? 'text-green-500' : 'text-red-500';
+    }
+    
+    // Para outras métricas, manter a lógica anterior
+    if (metric.label === 'Consumo') {
+      // Para consumo, maior é melhor
+      return metric.change > 0 ? 'text-green-500' : metric.change < 0 ? 'text-red-500' : 'text-gray-500';
+    } else if (metric.label === 'Velocidade') {
+      // Para velocidade, usar uma faixa ideal (exemplo: entre 40 e 80 km/h)
+      const isIdealSpeed = metric.current >= 40 && metric.current <= 80;
+      return isIdealSpeed ? 'text-green-500' : 'text-red-500';
+    }
+    
+    return 'text-gray-500';
+  }
+
+  getMetricStatus(metricName: string, value: number): string {
+    if (this.isInGreenRange(metricName, value)) {
+      return 'Ideal';
+    }
+    return 'Acima do ideal';
+  }
+
+  loadLast5DaysData(): void {
+    const currentFilters = this.filterForm.value;
+    const promises: Promise<any>[] = [];
+
+    // Carregar dados dos últimos 5 dias
+    for (let i = 0; i < 5; i++) {
+      const date = new Date(currentFilters.dataInicial);
+      date.setDate(date.getDate() - i);
+
+      const filters = {
+        empresa: currentFilters.empresa,
+        dataInicial: date,
+        dataFinal: date,
+        horaInicial: currentFilters.horaInicial,
+        horaFinal: currentFilters.horaFinal
+      };
+
+      const promise = new Promise((resolve, reject) => {
+        this.graphQLService.getConsumoV4(filters).subscribe({
+          next: (response) => {
+            if (response && response.length > 0) {
+              const filteredResponse = response.filter(item => 
+                item.placa?.toString() === currentFilters.placa?.toString()
+              );
+              
+              if (filteredResponse.length > 0) {
+                resolve(filteredResponse.map(data => 
+                  this.tripDataMapper.mapConsumoToTripData(data)
+                ));
+              } else {
+                resolve([]);
+              }
+            } else {
+              resolve([]);
+            }
+          },
+          error: (error) => {
+            console.error(`Erro ao carregar dados do dia ${date.toISOString()}:`, error);
+            resolve([]);
+          }
+        });
+      });
+
+      promises.push(promise);
+    }
+
+    // Processar todos os dados quando estiverem prontos
+    Promise.all(promises).then((results) => {
+      this.last5DaysData = results;
+      this.updateChartData();
+    });
+  }
+
+  calculateLitrosParadoPercentage(trip: TripData): number {
+    if (!trip.litros || trip.litros === 0) return 0;
+    return Number(((trip.litrosParado / trip.litros) * 100).toFixed(1));
   }
 }
